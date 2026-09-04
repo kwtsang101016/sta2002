@@ -48,9 +48,13 @@ export function Formula({ tex, children }: { tex?: string; children?: ReactNode 
 }
 
 export function Figure({ src, alt, width }: { src: string; alt: string; width?: string }) {
+  const resolved =
+    src.startsWith("http") || src.startsWith(import.meta.env.BASE_URL)
+      ? src
+      : `${import.meta.env.BASE_URL}${src.replace(/^\//, "")}`;
   return (
     <div className={styles.figureWrap}>
-      <img src={src} alt={alt} style={{ width: width ?? "100%", maxWidth: "100%" }} />
+      <img src={resolved} alt={alt} style={{ width: width ?? "100%", maxWidth: "100%" }} />
     </div>
   );
 }
