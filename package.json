@@ -1,0 +1,12 @@
+{
+  "name": "sta2002",
+  "private": true,
+  "description": "STA2002 interactive lecture apps (monorepo)",
+  "scripts": {
+    "dev:intro": "npm run dev --prefix introduction",
+    "dev:pe": "npm run dev --prefix parameter-estimation",
+    "build:intro": "npm run build --prefix introduction",
+    "build:pe": "npm run build --prefix parameter-estimation",
+    "build:all": "npm run build:intro && npm run build:pe"
+  }
+}
