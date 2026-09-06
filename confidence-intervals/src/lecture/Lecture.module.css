@@ -71,17 +71,12 @@
 .downloadBtn:hover:not(:disabled) { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.35); }
 .downloadBtn:disabled { opacity: 0.6; cursor: wait; }
 .handoutMount {
-  /* Keep in the layout tree for html2canvas — visibility:hidden / display:none yield blank PDFs */
   position: fixed;
-  left: 0;
+  left: -200vw;
   top: 0;
   width: 1120px;
-  max-height: 100vh;
-  overflow: auto;
-  transform: translateX(-120%);
   pointer-events: none;
-  z-index: -1;
-  opacity: 1;
+  visibility: hidden;
 }
 .handoutToast {
   position: fixed;
