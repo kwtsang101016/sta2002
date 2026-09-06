@@ -8,6 +8,7 @@ Interactive HTML lecture apps for **STA2002 Probability and Statistics II**. Eac
 |-------|--------|---------------------|-----------|
 | Introduction & Preliminary | [`introduction/`](introduction/) | [Open lecture](https://kwtsang101016.github.io/sta2002/introduction/) | `npm run dev` → http://127.0.0.1:5175 |
 | Parameter Estimation | [`parameter-estimation/`](parameter-estimation/) | [Open lecture](https://kwtsang101016.github.io/sta2002/parameter-estimation/) | `npm run dev` → http://127.0.0.1:5176 |
+| Confidence Intervals | [`confidence-intervals/`](confidence-intervals/) | [Open lecture](https://kwtsang101016.github.io/sta2002/confidence-intervals/) | `npm run dev` → http://127.0.0.1:5177 |
 
 **Course hub:** https://kwtsang101016.github.io/sta2002/
 
@@ -32,6 +33,7 @@ From the repo root you can also run:
 ```bash
 npm run dev:intro
 npm run dev:pe
+npm run dev:ci
 npm run build:all
 ```
 

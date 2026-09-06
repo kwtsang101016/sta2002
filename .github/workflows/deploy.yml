@@ -29,6 +29,7 @@ jobs:
           cache-dependency-path: |
             introduction/package-lock.json
             parameter-estimation/package-lock.json
+            confidence-intervals/package-lock.json
 
       - name: Install and build introduction
         run: |
@@ -40,11 +41,17 @@ jobs:
           npm ci --prefix parameter-estimation
           npm run build --prefix parameter-estimation
 
+      - name: Install and build confidence-intervals
+        run: |
+          npm ci --prefix confidence-intervals
+          npm run build --prefix confidence-intervals
+
       - name: Assemble site
         run: |
-          mkdir -p _site/introduction _site/parameter-estimation
+          mkdir -p _site/introduction _site/parameter-estimation _site/confidence-intervals
           cp -r introduction/dist/* _site/introduction/
           cp -r parameter-estimation/dist/* _site/parameter-estimation/
+          cp -r confidence-intervals/dist/* _site/confidence-intervals/
           cp site/index.html _site/index.html
           touch _site/.nojekyll
 

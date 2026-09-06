@@ -5,8 +5,10 @@
   "scripts": {
     "dev:intro": "npm run dev --prefix introduction",
     "dev:pe": "npm run dev --prefix parameter-estimation",
+    "dev:ci": "npm run dev --prefix confidence-intervals",
     "build:intro": "npm run build --prefix introduction",
     "build:pe": "npm run build --prefix parameter-estimation",
-    "build:all": "npm run build:intro && npm run build:pe"
+    "build:ci": "npm run build --prefix confidence-intervals",
+    "build:all": "npm run build:intro && npm run build:pe && npm run build:ci"
   }
 }
