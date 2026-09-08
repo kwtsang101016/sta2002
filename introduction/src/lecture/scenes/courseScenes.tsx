@@ -149,8 +149,83 @@ export function ImportantNotesScene() {
 export function TentativePlanScene() {
   return (
     <SceneFrame kicker="Course arrangement" title="Tentative plan">
-      <Figure src="/figures/tentative_plan.png" alt="Tentative course plan" width="70%" />
+      <p className={styles.muted} style={{ marginTop: 8 }}>
+        The schedule and topics may be adjusted during the semester according to course progress.
+      </p>
+      <div className={styles.scheduleGrid}>
+        <ScheduleTable rows={SCHEDULE_LEFT} />
+        <ScheduleTable rows={SCHEDULE_RIGHT} />
+      </div>
+      <p className={styles.lead} style={{ marginTop: 16 }}>
+        Final exam will be arranged by the school.
+      </p>
     </SceneFrame>
+  );
+}
+
+type ScheduleRow = {
+  week: string;
+  date: string;
+  topic: string;
+  highlight?: boolean;
+};
+
+const SCHEDULE_LEFT: ScheduleRow[] = [
+  { week: "1", date: "8 Sep (Tue)", topic: "Introduction" },
+  { week: "", date: "10 Sep (Thu)", topic: "Review of common distributions, MGF, CLT" },
+  { week: "2", date: "15 Sep (Tue)", topic: "Maximum Likelihood Estimation" },
+  { week: "", date: "17 Sep (Thu)", topic: "Method of moments, Unbiased estimation" },
+  { week: "3", date: "22 Sep (Tue)", topic: "Confidence intervals for means" },
+  { week: "", date: "24 Sep (Thu)", topic: "CIs for difference of two means, CIs for proportions" },
+  { week: "4", date: "29 Sep (Tue)", topic: "Tests of statistical hypotheses" },
+  { week: "", date: "8 Oct (Thu)", topic: "Critical region, p-values" },
+  { week: "5", date: "13 Oct (Tue)", topic: "Student's t-tests" },
+  { week: "", date: "15 Oct (Thu)", topic: "Tests about proportions" },
+  { week: "6", date: "20 Oct (Tue)", topic: "Review session" },
+  { week: "", date: "24 Oct (Sat)", topic: "Midterm 09:00–11:30", highlight: true },
+  { week: "7", date: "27 Oct (Tue)", topic: "Power of a statistical test" },
+  { week: "", date: "29 Oct (Thu)", topic: "Power of a statistical test" },
+];
+
+const SCHEDULE_RIGHT: ScheduleRow[] = [
+  { week: "8", date: "3 Nov (Tue)", topic: "Order statistics" },
+  { week: "", date: "5 Nov (Thu)", topic: "Nonparametric CIs and tests" },
+  { week: "9", date: "10 Nov (Tue)", topic: "Chi-square goodness-of-fit tests" },
+  { week: "", date: "12 Nov (Thu)", topic: "Tests for homogeneity and independence" },
+  { week: "10", date: "17 Nov (Tue)", topic: "One-way ANOVA" },
+  { week: "", date: "19 Nov (Thu)", topic: "F-tests" },
+  { week: "11", date: "24 Nov (Tue)", topic: "Two-way ANOVA" },
+  { week: "", date: "26 Nov (Thu)", topic: "Introduction to regression" },
+  { week: "12", date: "1 Dec (Tue)", topic: "More regression" },
+  { week: "", date: "3 Dec (Thu)", topic: "Tests concerning regression" },
+  { week: "13", date: "8 Dec (Tue)", topic: "Likelihood ratio tests" },
+  { week: "", date: "10 Dec (Thu)", topic: "Review session" },
+  { week: "14", date: "15 Dec (Tue)", topic: "Study break" },
+  { week: "", date: "17 Dec (Thu)", topic: "Study break" },
+];
+
+function ScheduleTable({ rows }: { rows: ScheduleRow[] }) {
+  return (
+    <div className={styles.tableWrap}>
+      <table className={styles.scheduleTable}>
+        <thead>
+          <tr>
+            <th>Week</th>
+            <th>Date</th>
+            <th>Topic</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={`${row.week}-${row.date}`} className={row.highlight ? styles.scheduleHighlight : undefined}>
+              <td className={styles.scheduleWeek}>{row.week}</td>
+              <td className={styles.scheduleDate}>{row.date}</td>
+              <td>{row.topic}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
