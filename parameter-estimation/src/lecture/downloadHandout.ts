@@ -1,18 +1,29 @@
 /**
- * PDF handout export.
- * html2canvas often paints blank pages when the source lives under
- * `visibility: hidden` / far off-screen — especially with KaTeX and many slides.
- * We temporarily move the live handout DOM into an on-page host for capture.
+ * PDF handout export — capture one slide at a time.
+ *
+ * Capturing the full off-screen handout in one html2pdf pass often yields blank
+ * PDFs on STA2002 decks (KaTeX + many slides). Cloning each [data-handout-slide]
+ * into a short-lived on-screen host avoids that.
  */
 
 const FILENAME = "STA2002-Parameter-Estimation.pdf";
+const SLIDE_WIDTH_PX = 900;
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 export async function downloadHandoutPdf(source: HTMLElement): Promise<void> {
-  const { default: html2pdf } = await import("html2pdf.js");
+  const html2canvas = (await import("html2canvas")).default;
+  const { jsPDF } = await import("jspdf");
 
-  const home = source.parentElement;
-  if (!home) {
-    throw new Error("Handout container is missing.");
+  const slides = [...source.querySelectorAll<HTMLElement>("[data-handout-slide]")];
+  if (slides.length === 0) {
+    throw new Error("No handout slides found to export.");
+  }
+
+  if (document.fonts?.ready) {
+    await document.fonts.ready;
   }
 
   const host = document.createElement("div");
@@ -21,7 +32,7 @@ export async function downloadHandoutPdf(source: HTMLElement): Promise<void> {
     position: "fixed",
     left: "0",
     top: "0",
-    width: "1120px",
+    width: `${SLIDE_WIDTH_PX}px`,
     margin: "0",
     padding: "0",
     background: "#fff4d2",
@@ -31,40 +42,50 @@ export async function downloadHandoutPdf(source: HTMLElement): Promise<void> {
     zIndex: "2147483646",
     overflow: "visible",
   } as Partial<CSSStyleDeclaration>);
-
-  // Move (not clone) so KaTeX-rendered nodes and CSS-module classes stay intact.
-  host.appendChild(source);
   document.body.appendChild(host);
 
-  try {
-    if (document.fonts?.ready) {
-      await document.fonts.ready;
-    }
-    await new Promise<void>((resolve) => {
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-    });
+  const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
+  const pageW = pdf.internal.pageSize.getWidth();
+  const pageH = pdf.internal.pageSize.getHeight();
+  const margin = 10;
+  const maxW = pageW - margin * 2;
+  const maxH = pageH - margin * 2;
 
-    await html2pdf()
-      .set({
-        margin: [10, 10, 12, 10],
-        filename: FILENAME,
-        image: { type: "jpeg", quality: 0.92 },
-        html2canvas: {
-          scale: 1.5,
-          useCORS: true,
-          logging: false,
-          scrollX: 0,
-          scrollY: 0,
-          backgroundColor: "#fff4d2",
-          windowWidth: 1120,
-        },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-        pagebreak: { mode: ["css", "legacy"] },
-      } as Record<string, unknown>)
-      .from(source)
-      .save();
+  try {
+    for (let index = 0; index < slides.length; index += 1) {
+      host.replaceChildren();
+      const clone = slides[index].cloneNode(true) as HTMLElement;
+      clone.style.width = `${SLIDE_WIDTH_PX}px`;
+      clone.style.background = "#fff4d2";
+      clone.style.boxSizing = "border-box";
+      host.appendChild(clone);
+
+      await sleep(30);
+
+      const canvas = await html2canvas(clone, {
+        scale: 1.5,
+        useCORS: true,
+        logging: false,
+        backgroundColor: "#fff4d2",
+        windowWidth: SLIDE_WIDTH_PX,
+        scrollX: 0,
+        scrollY: 0,
+      });
+
+      const img = canvas.toDataURL("image/jpeg", 0.92);
+      let drawW = maxW;
+      let drawH = (canvas.height * drawW) / canvas.width;
+      if (drawH > maxH) {
+        drawH = maxH;
+        drawW = (canvas.width * drawH) / canvas.height;
+      }
+
+      if (index > 0) pdf.addPage();
+      pdf.addImage(img, "JPEG", margin, margin, drawW, drawH);
+    }
+
+    pdf.save(FILENAME);
   } finally {
-    home.appendChild(source);
     host.remove();
   }
 }

@@ -19,7 +19,7 @@ export function Lecture() {
       return;
     }
     setDownloading(true);
-    setHandoutMessage("");
+    setHandoutMessage("Generating PDF… for long lectures this can take up to a minute.");
     try {
       await downloadHandoutPdf(source);
       setHandoutMessage("PDF saved. Check your Downloads folder.");
