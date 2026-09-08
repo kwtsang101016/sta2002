@@ -193,7 +193,17 @@ export function MgfMomentsScene() {
         <Formula tex="\mathbb{E}[X] = M_{X}'(0)" />
         <Formula tex="\mathrm{Var}(X) = M_{X}''(0) - \big(M_{X}'(0)\big)^2" />
       </Block>
-      <Block title="Moments of Poisson distributions">
+      <p className={styles.lead}>
+        We will use these formulas first for the Poisson distribution, then for other named families.
+      </p>
+    </SceneFrame>
+  );
+}
+
+export function PoissonMomentsScene() {
+  return (
+    <SceneFrame kicker="Discrete distributions" title="Moments of Poisson distributions">
+      <Block title="From the MGF">
         <p>
           <MathText text="For $X \sim \mathrm{Pois}(\lambda)$, differentiate $M_{X}(t) = \exp\!\big(\lambda(e^{t}-1)\big)$:" />
         </p>
