@@ -7,7 +7,6 @@ import { downloadHandoutPdf, printHandout } from "./downloadHandout";
 export function Lecture() {
   const [index, setIndex] = useState(0);
   const [downloading, setDownloading] = useState(false);
-  const [handoutMessage, setHandoutMessage] = useState("");
   const handoutRef = useRef<HTMLDivElement>(null);
   const scene = SCENES[index];
   const progress = useMemo(() => ((index + 1) / SCENES.length) * 100, [index]);
@@ -15,22 +14,19 @@ export function Lecture() {
   const handleDownloadPdf = async () => {
     const source = handoutRef.current;
     if (!source) {
-      setHandoutMessage("Handout is not ready yet. Refresh and try again.");
+      window.alert("Handout is not ready yet. Refresh and try again.");
       return;
     }
     setDownloading(true);
-    setHandoutMessage("Generating PDF… for long lectures this can take up to a minute.");
     try {
       await downloadHandoutPdf(source);
-      setHandoutMessage("PDF saved. Check your Downloads folder.");
     } catch (error) {
       const message = error instanceof Error ? error.message : "PDF export failed.";
-      setHandoutMessage(message);
       try {
         await printHandout(source);
-        setHandoutMessage("PDF export failed — opened the print dialog instead. Choose Save as PDF.");
+        window.alert("PDF export failed — opened the print dialog instead. Choose Save as PDF.");
       } catch {
-        setHandoutMessage(`${message} Allow pop-ups to use the print fallback.`);
+        window.alert(`${message} Allow pop-ups to use the print fallback.`);
       }
     } finally {
       setDownloading(false);
@@ -103,7 +99,6 @@ export function Lecture() {
       <div className={styles.stage}>
         <Scene />
       </div>
-      {handoutMessage ? <p className={styles.handoutToast}>{handoutMessage}</p> : null}
       <div className={styles.handoutMount} data-handout-mount aria-hidden="true">
         <div ref={handoutRef}>
           <HandoutDocument />
