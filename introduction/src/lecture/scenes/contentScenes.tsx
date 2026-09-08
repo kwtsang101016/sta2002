@@ -1,5 +1,5 @@
 import styles from "../Lecture.module.css";
-import { Block, BulletList, Figure, Formula, MathText, OrderedList, SceneFrame } from "./shared";
+import { Block, BulletList, Figure, Formula, MathText, MotivatingQuestion, OrderedList, SceneFrame } from "./shared";
 
 export function RvDistScene() {
   return (
@@ -115,10 +115,13 @@ export function VarianceScene() {
 export function BinomialScene() {
   return (
     <SceneFrame kicker="Discrete distributions" title="Binomial distribution">
+      <MotivatingQuestion>
+        <MathText text="If each independent trial succeeds with probability $p$, what is the probability of getting exactly $k$ successes in $n$ trials?" />
+      </MotivatingQuestion>
       <Block title="Binomial distribution">
         <p>
-          A discrete random variable <MathText text="$X$" /> has a binomial distribution with parameters <MathText text="$n \in \mathbb{N}$" /> and{" "}
-          <MathText text="$p \in (0, 1)$" /> if its PMF is
+          Call that count <MathText text="$X$" />. Then <MathText text="$X \sim \mathrm{Bin}(n, p)$" /> with{" "}
+          <MathText text="$n \in \mathbb{N}$" />, <MathText text="$p \in (0, 1)$" />, and PMF
         </p>
         <Formula tex="\Pr(X = k) = \binom{n}{k} p^{k}(1-p)^{n-k}, \qquad k = 0, 1, \ldots, n" />
       </Block>
@@ -133,9 +136,13 @@ export function BinomialScene() {
 export function PoissonScene() {
   return (
     <SceneFrame kicker="Discrete distributions" title="Poisson distribution">
+      <MotivatingQuestion>
+        <MathText text="Events occur independently at average rate $\lambda$ per unit time. What is the probability of observing exactly $k$ events in that unit of time?" />
+      </MotivatingQuestion>
       <Block title="Poisson distribution">
         <p>
-          A discrete random variable <MathText text="$X$" /> has a Poisson distribution with rate <MathText text="$\lambda > 0$" /> if its PMF is
+          Call that count <MathText text="$X$" />. Then <MathText text="$X \sim \mathrm{Pois}(\lambda)$" /> (
+          <MathText text="$\lambda > 0$" />) with PMF
         </p>
         <Formula tex="\Pr(X = k) = \frac{\lambda^{k}}{k!} e^{-\lambda}, \qquad k = 0, 1, 2, \ldots" />
         <p>Its moment generating function (MGF) is</p>
@@ -202,9 +209,12 @@ export function MgfMomentsScene() {
 export function ExponentialScene() {
   return (
     <SceneFrame kicker="Continuous distributions" title="Exponential distribution">
+      <MotivatingQuestion>
+        <MathText text="In a Poisson process with mean inter-arrival time $\theta > 0$, what is the distribution of the waiting time until the next event?" />
+      </MotivatingQuestion>
       <Block title="Exponential distribution">
         <p>
-          A random variable <MathText text="$X$" /> has an exponential distribution with parameter <MathText text="$\theta > 0$" /> if its PDF is
+          Call that waiting time <MathText text="$X$" />. Then <MathText text="$X \sim \mathrm{Exp}(\theta)$" /> with PDF
         </p>
         <Formula tex="f(x) = \frac{1}{\theta} e^{-x/\theta}, \quad x > 0" />
         <p>Its MGF is</p>
@@ -222,9 +232,14 @@ export function ExponentialScene() {
 export function GammaScene1() {
   return (
     <SceneFrame kicker="Continuous distributions" title="Gamma distribution">
+      <MotivatingQuestion>
+        <MathText text="Still in a Poisson process with mean inter-arrival $\theta$: what is the distribution of the waiting time until the $\alpha$-th event (for integer $\alpha$)?" />
+      </MotivatingQuestion>
       <Block title="Gamma distribution">
         <p>
-          <MathText text="$X \sim \mathrm{Gamma}(\alpha, \theta)$" /> (shape <MathText text="$\alpha > 0$" />, scale <MathText text="$\theta > 0$" />) has PDF
+          That waiting time is <MathText text="$X \sim \mathrm{Gamma}(\alpha, \theta)$" /> (shape{" "}
+          <MathText text="$\alpha > 0$" />, scale <MathText text="$\theta > 0$" />; the model also
+          allows non-integer <MathText text="$\alpha$" />) with PDF
         </p>
         <Formula tex="f(x) = \frac{1}{\Gamma(\alpha)\theta^\alpha} x^{\alpha-1} e^{-x/\theta}, \quad x > 0" />
         <p>Its MGF is</p>
@@ -275,9 +290,13 @@ export function WaitingTimeScene() {
 export function ChiSquareScene() {
   return (
     <SceneFrame kicker="Continuous distributions" title="Chi-square distribution">
+      <MotivatingQuestion>
+        <MathText text="If $Z_1,\ldots,Z_r$ are i.i.d. $N(0,1)$, what is the distribution of $X = Z_1^2 + \cdots + Z_r^2$?" />
+      </MotivatingQuestion>
       <Block title="Chi-square distribution">
         <p>
-          <MathText text="$X \sim \chi^2(r)$" /> (<MathText text="$r$" /> degrees of freedom) is <MathText text="$\mathrm{Gamma}(r/2, 2)$" />:
+          That sum follows <MathText text="$X \sim \chi^2(r)$" /> (<MathText text="$r$" /> degrees of
+          freedom), which is the special case <MathText text="$\mathrm{Gamma}(r/2, 2)$" />:
         </p>
         <Formula tex="f(x) = \frac{1}{\Gamma(r/2)\,2^{r/2}} x^{r/2-1} e^{-x/2}, \quad x > 0" />
         <p>MGF:</p>
@@ -293,9 +312,12 @@ export function ChiSquareScene() {
 export function NormalScene() {
   return (
     <SceneFrame kicker="Continuous distributions" title="Normal distribution">
+      <MotivatingQuestion>
+        <MathText text="A continuous measurement is concentrated around a center $\mu$ with typical spread $\sigma$. What density gives the classic symmetric “bell curve”?" />
+      </MotivatingQuestion>
       <Block title="Normal distribution">
         <p>
-          <MathText text="$X \sim N(\mu, \sigma^2)$" /> has PDF
+          That model is <MathText text="$X \sim N(\mu, \sigma^2)$" /> with PDF
         </p>
         <Formula tex="f(x) = \frac{1}{\sigma\sqrt{2\pi}} \exp\!\left[ -\frac{(x - \mu)^2}{2\sigma^2} \right], \quad -\infty < x < \infty" />
         <p>MGF:</p>
@@ -329,10 +351,13 @@ export function NormalPropsScene() {
 export function TDistScene() {
   return (
     <SceneFrame kicker="Continuous distributions" title="Student t-distribution">
+      <MotivatingQuestion>
+        <MathText text="If $Z \sim N(0,1)$ is independent of $U \sim \chi^2(r)$, what is the distribution of $T = Z / \sqrt{U/r}$? (This is the pivotal quantity when a normal mean is studentized by $S$.)" />
+      </MotivatingQuestion>
       <Block title="Student t-distribution">
         <Formula tex="T := \frac{Z}{\sqrt{U/r}}" />
         <p>
-          <MathText text="where $Z \sim N(0, 1)$, $U \sim \chi^2(r)$, and $Z$ and $U$ are independent. Then $T$ follows the $t$-distribution with $r$ degrees of freedom." />
+          <MathText text="Then $T$ follows the $t$-distribution with $r$ degrees of freedom." />
         </p>
       </Block>
       <Figure src="/figures/t_dist.png" alt="t-distribution plot" width="70%" />
@@ -343,10 +368,13 @@ export function TDistScene() {
 export function FDistScene() {
   return (
     <SceneFrame kicker="Continuous distributions" title="F-distribution">
+      <MotivatingQuestion>
+        <MathText text="If $U \sim \chi^2(r_1)$ and $V \sim \chi^2(r_2)$ are independent, what is the distribution of the scaled ratio $F = (U/r_1)/(V/r_2)$?" />
+      </MotivatingQuestion>
       <Block title="F-distribution">
         <Formula tex="F := \frac{U/r_1}{V/r_2}" />
         <p>
-          <MathText text="where $U \sim \chi^2(r_1)$, $V \sim \chi^2(r_2)$, and $U$ and $V$ are independent. Then $F$ follows the $F$-distribution with $r_1$ and $r_2$ degrees of freedom." />
+          <MathText text="Then $F$ follows the $F$-distribution with $r_1$ and $r_2$ degrees of freedom." />
         </p>
       </Block>
       <Figure src="/figures/F_dist.png" alt="F-distribution plot" width="70%" />

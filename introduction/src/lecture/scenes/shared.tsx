@@ -26,6 +26,15 @@ export function SceneFrame({
   );
 }
 
+export function MotivatingQuestion({ children }: { children: ReactNode }) {
+  return (
+    <div className={styles.promptItem} style={{ marginTop: 14, marginBottom: 4 }}>
+      <strong>Question</strong>
+      <p>{children}</p>
+    </div>
+  );
+}
+
 export function Block({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className={styles.card}>
