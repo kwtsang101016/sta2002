@@ -193,9 +193,6 @@ export function MgfMomentsScene() {
         <Formula tex="\mathbb{E}[X] = M_{X}'(0)" />
         <Formula tex="\mathrm{Var}(X) = M_{X}''(0) - \big(M_{X}'(0)\big)^2" />
       </Block>
-      <p className={styles.lead}>
-        We will use these formulas first for the Poisson distribution, then for other named families.
-      </p>
     </SceneFrame>
   );
 }
