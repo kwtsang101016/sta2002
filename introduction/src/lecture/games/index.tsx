@@ -145,10 +145,18 @@ export function DiscreteContinuousGame() {
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [feedback, setFeedback] = useState("");
+  const [awaitingNext, setAwaitingNext] = useState(false);
   const deck = useMemo(() => shuffle(TYPE_ITEMS, createRng(seed + 3)), [seed]);
   const current = deck[index % deck.length];
 
+  const goNext = () => {
+    setFeedback("");
+    setAwaitingNext(false);
+    setIndex((v) => v + 1);
+  };
+
   const choose = (guess: string) => {
+    if (feedback) return;
     const ok = guess === current.answer;
     if (ok) setScore((v) => v + 1);
     setFeedback(
@@ -156,10 +164,11 @@ export function DiscreteContinuousGame() {
         ? "Correct!"
         : `This is ${current.answer === "discrete" ? "discrete (countable values)" : "continuous (density on an interval)"}.`,
     );
-    window.setTimeout(() => {
-      setFeedback("");
-      setIndex((v) => v + 1);
-    }, 900);
+    if (ok) {
+      window.setTimeout(goNext, 900);
+    } else {
+      setAwaitingNext(true);
+    }
   };
 
   if (print) {
@@ -191,15 +200,20 @@ export function DiscreteContinuousGame() {
     <SceneFrame kicker="Game" title="Discrete or continuous?" tone="gold">
       <p className={styles.lead}>{current.text}</p>
       <div className={styles.choices}>
-        <button className={styles.choice} type="button" onClick={() => choose("discrete")}>
+        <button className={styles.choice} type="button" disabled={Boolean(feedback)} onClick={() => choose("discrete")}>
           Discrete · countable set
         </button>
-        <button className={styles.choice} type="button" onClick={() => choose("continuous")}>
+        <button className={styles.choice} type="button" disabled={Boolean(feedback)} onClick={() => choose("continuous")}>
           Continuous · density
         </button>
       </div>
       {feedback ? <p className={styles.answer}>{feedback}</p> : null}
       <div className={styles.tools}>
+        {awaitingNext ? (
+          <button className={styles.toolBtn} type="button" onClick={goNext}>
+            NEXT
+          </button>
+        ) : null}
         <button
           className={styles.ghost}
           type="button"
@@ -207,6 +221,8 @@ export function DiscreteContinuousGame() {
             setSeed((v) => v + 1);
             setIndex(0);
             setScore(0);
+            setFeedback("");
+            setAwaitingNext(false);
           }}
         >
           New deck
@@ -241,9 +257,18 @@ export function ExpectationGame() {
   const [index, setIndex] = useState(0);
   const [guess, setGuess] = useState("");
   const [feedback, setFeedback] = useState<ReactNode>("");
+  const [awaitingNext, setAwaitingNext] = useState(false);
   const item = EXPECT_ITEMS[index % EXPECT_ITEMS.length];
 
+  const goNext = () => {
+    setFeedback("");
+    setGuess("");
+    setAwaitingNext(false);
+    setIndex((v) => v + 1);
+  };
+
   const check = () => {
+    if (awaitingNext) return;
     const val = parseFloat(guess);
     if (Number.isNaN(val)) {
       setFeedback("Enter a number.");
@@ -262,11 +287,9 @@ export function ExpectationGame() {
       ),
     );
     if (ok) {
-      window.setTimeout(() => {
-        setFeedback("");
-        setGuess("");
-        setIndex((v) => v + 1);
-      }, 1500);
+      window.setTimeout(goNext, 1500);
+    } else {
+      setAwaitingNext(true);
     }
   };
 
@@ -301,9 +324,14 @@ export function ExpectationGame() {
           value={guess}
           onChange={(e) => setGuess(e.target.value)}
         />
-        <button className={styles.toolBtn} type="button" onClick={check}>
+        <button className={styles.toolBtn} type="button" disabled={awaitingNext} onClick={check}>
           CHECK
         </button>
+        {awaitingNext ? (
+          <button className={styles.toolBtn} type="button" onClick={goNext}>
+            NEXT
+          </button>
+        ) : null}
       </div>
       {feedback ? <p className={styles.answer}>{feedback}</p> : null}
     </SceneFrame>
@@ -341,9 +369,17 @@ export function VarianceGame() {
   const print = usePrintMode();
   const [index, setIndex] = useState(0);
   const [feedback, setFeedback] = useState<ReactNode>("");
+  const [awaitingNext, setAwaitingNext] = useState(false);
   const item = VAR_ITEMS[index % VAR_ITEMS.length];
 
+  const goNext = () => {
+    setFeedback("");
+    setAwaitingNext(false);
+    setIndex((v) => v + 1);
+  };
+
   const choose = (choice: string) => {
+    if (feedback) return;
     const ok = choice === item.answer;
     setFeedback(
       ok ? (
@@ -356,10 +392,11 @@ export function VarianceGame() {
         </>
       ),
     );
-    window.setTimeout(() => {
-      setFeedback("");
-      setIndex((v) => v + 1);
-    }, 1400);
+    if (ok) {
+      window.setTimeout(goNext, 1400);
+    } else {
+      setAwaitingNext(true);
+    }
   };
 
   if (print) {
@@ -380,12 +417,19 @@ export function VarianceGame() {
       <p className={styles.lead}><MathText text={item.q} /></p>
       <div className={styles.choices}>
         {item.choices.map((c) => (
-          <button key={c} className={styles.choice} type="button" onClick={() => choose(c)}>
+          <button key={c} className={styles.choice} type="button" disabled={Boolean(feedback)} onClick={() => choose(c)}>
             <MathText text={c.startsWith("$") ? c : `$${c}$`} />
           </button>
         ))}
       </div>
       {feedback ? <p className={styles.answer}>{feedback}</p> : null}
+      {awaitingNext ? (
+        <div className={styles.tools}>
+          <button className={styles.toolBtn} type="button" onClick={goNext}>
+            NEXT
+          </button>
+        </div>
+      ) : null}
     </SceneFrame>
   );
 }
@@ -667,7 +711,7 @@ export function DistributionMatchGame() {
       {selected && selected !== target.id ? (
         <div className={styles.tools}>
           <button className={styles.toolBtn} type="button" onClick={nextRound}>
-            NEXT QUESTION
+            NEXT
           </button>
         </div>
       ) : null}
@@ -1072,9 +1116,17 @@ export function StudentTheoremQuiz() {
   const print = usePrintMode();
   const [index, setIndex] = useState(0);
   const [feedback, setFeedback] = useState<ReactNode>("");
+  const [awaitingNext, setAwaitingNext] = useState(false);
   const item = STUDENT_ITEMS[index % STUDENT_ITEMS.length];
 
+  const goNext = () => {
+    setFeedback("");
+    setAwaitingNext(false);
+    setIndex((v) => v + 1);
+  };
+
   const choose = (choice: string) => {
+    if (feedback) return;
     const ok = choice === item.answer;
     setFeedback(
       ok ? (
@@ -1086,10 +1138,11 @@ export function StudentTheoremQuiz() {
         </>
       ),
     );
-    window.setTimeout(() => {
-      setFeedback("");
-      setIndex((v) => v + 1);
-    }, 1200);
+    if (ok) {
+      window.setTimeout(goNext, 1200);
+    } else {
+      setAwaitingNext(true);
+    }
   };
 
   if (print) {
@@ -1110,12 +1163,19 @@ export function StudentTheoremQuiz() {
       <p className={styles.lead}><MathText text={item.q} /></p>
       <div className={styles.choices}>
         {item.choices.map((c) => (
-          <button key={c} className={styles.choice} type="button" onClick={() => choose(c)}>
+          <button key={c} className={styles.choice} type="button" disabled={Boolean(feedback)} onClick={() => choose(c)}>
             <MathText text={c.startsWith("$") ? c : c} />
           </button>
         ))}
       </div>
       {feedback ? <p className={styles.answer}>{feedback}</p> : null}
+      {awaitingNext ? (
+        <div className={styles.tools}>
+          <button className={styles.toolBtn} type="button" onClick={goNext}>
+            NEXT
+          </button>
+        </div>
+      ) : null}
     </SceneFrame>
   );
 }

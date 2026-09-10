@@ -91,6 +91,9 @@ export function TasScene() {
           <>
             <strong>Runkai Zhao (USTF)</strong> — 123090863@link.cuhk.edu.cn
           </>,
+          <>
+            <strong>Yanxiang Xi (USTF)</strong> — 124090713@link.cuhk.edu.cn
+          </>,
         ]}
       />
     </SceneFrame>
