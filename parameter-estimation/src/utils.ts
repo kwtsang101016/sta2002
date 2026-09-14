@@ -73,7 +73,13 @@ export function binomialCdf(n: number, p: number, k: number): number {
 }
 
 export function poissonPmf(lambda: number, k: number): number {
-  if (k < 0) return 0;
+  if (k < 0 || lambda < 0) return 0;
+  if (lambda === 0) return k === 0 ? 1 : 0;
+  // Direct e^{-λ} λ^k / k! underflows for large λ; use log-gamma style product from the mode.
+  if (Math.exp(-lambda) === 0) {
+    // Normal density approximation for a single point (rare in UI; CDF uses a better method).
+    return normalPdf(k, lambda, Math.sqrt(lambda));
+  }
   let term = Math.exp(-lambda);
   for (let i = 1; i <= k; i += 1) {
     term = (term * lambda) / i;
@@ -81,16 +87,29 @@ export function poissonPmf(lambda: number, k: number): number {
   return term;
 }
 
-/** P(X ≤ k) for X ~ Poisson(λ). Uses recursive PMF terms. */
+/**
+ * P(X ≤ k) for X ~ Poisson(λ).
+ * For moderate λ, sums recursive PMF terms. For large λ (e^{-λ} underflows in double
+ * precision), uses a continuity-corrected normal approximation:
+ * P(X ≤ k) ≈ Φ((k + 0.5 − λ) / √λ).
+ */
 export function poissonCdf(lambda: number, k: number): number {
   if (k < 0) return 0;
-  let term = Math.exp(-lambda);
-  let total = term;
-  for (let i = 1; i <= k; i += 1) {
-    term = (term * lambda) / i;
-    total += term;
+  if (lambda <= 0) return 1;
+  const kInt = Math.floor(k);
+
+  if (Math.exp(-lambda) > 0) {
+    let term = Math.exp(-lambda);
+    let total = term;
+    for (let i = 1; i <= kInt; i += 1) {
+      term = (term * lambda) / i;
+      total += term;
+    }
+    return Math.min(1, Math.max(0, total));
   }
-  return Math.min(1, total);
+
+  const z = (kInt + 0.5 - lambda) / Math.sqrt(lambda);
+  return normalCdf(z);
 }
 
 /** Sample from Poisson(λ) via Knuth for small λ, else normal approx. */

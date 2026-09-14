@@ -1,6 +1,7 @@
 import type { ReactElement } from "react";
 import {
   BernoulliLikelihoodGame,
+  BoxplotWhiskerGame,
   CovidEdaGame,
   CovidPredictionGame,
   PoissonMomGame,
@@ -25,6 +26,7 @@ export const SCENES: SceneDef[] = [
   { id: "hist-1", chapter: "EDA", label: "Histogram", Scene: content.HistogramScene1 },
   { id: "hist-2", chapter: "EDA", label: "Bin width", Scene: content.HistogramScene2 },
   { id: "box-1", chapter: "EDA", label: "Boxplot", Scene: content.BoxplotScene1 },
+  { id: "box-game", chapter: "Game", label: "Build the whiskers", Scene: BoxplotWhiskerGame },
   { id: "box-2", chapter: "EDA", label: "Reading boxplots", Scene: content.BoxplotScene2 },
 
   { id: "covid-intro", chapter: "COVID", label: "EDA questions", Scene: content.CovidIntroScene },
@@ -33,6 +35,7 @@ export const SCENES: SceneDef[] = [
   { id: "covid-pred", chapter: "COVID", label: "Predictions", Scene: content.CovidPredictionScene },
   { id: "covid-pred-game", chapter: "Game", label: "COVID calculator", Scene: CovidPredictionGame },
 
+  { id: "mle-idea", chapter: "MLE", label: "Idea of MLE", Scene: content.MleMotivationScene },
   { id: "viz-est", chapter: "Estimation", label: "From viz to estimation", Scene: content.FromVizToEstimationScene },
   { id: "param-space", chapter: "Estimation", label: "Parameter space", Scene: content.ParameterSpaceScene },
   { id: "est-vs-est", chapter: "Estimation", label: "Estimator vs estimate", Scene: content.EstimatorEstimateScene },

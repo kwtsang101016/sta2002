@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STA2002 · UM COVID data explorer</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .controls {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .control-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        select, input {
+            padding: 8px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        select {
+            width: 200px;
+        }
+        input[type="number"] {
+            width: 100px;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .plot-container {
+            margin-top: 20px;
+            border: 1px solid #bdc3c7;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .plot-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .data-info {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        .error {
+            color: #e74c3c;
+            background-color: #fadbd8;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success {
+            color: #27ae60;
+            background-color: #d5f4e6;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>STA2002 · UM COVID data explorer</h1>
+        
+        <div class="data-info">
+            <strong>📊 Dataset Information:</strong><br>
+            • Faculty/Staff Population: 16,000<br>
+            • Students Off-campus Population: 13,000<br>
+            • Students On-campus Population: 4,000<br>
+            • Data includes daily positive cases, negative tests<br>
+            • <strong>Rate column is calculated automatically</strong> as Positive/Population for each group
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>Upload Dataset:</label> <span style="font-size:12px;color:#7f8c8d;">(optional — course CSV loads automatically)</span>
+                <input type="file" id="fileInput" accept=".csv" onchange="loadDataset()">
+                <div id="datasetInfo" style="margin-top: 10px; font-size: 12px; color: #7f8c8d;"></div>
+            </div>
+
+            <div class="control-group">
+                <label>Select Groups:</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="group_fs" checked>
+                        <label for="group_fs">Faculty/Staff (Non-Residential)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="group_ns" checked>
+                        <label for="group_ns">Students Off-campus (Students - Non-Residential)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="group_rs" checked>
+                        <label for="group_rs">Students On-campus (Students - Residential)</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Select Column:</label>
+                <select id="columnSelect">
+                    <option value="Positive">Positive Cases</option>
+                    <option value="Negative">Negative Tests</option>
+                    <option value="Rate">Infection Rate</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Histogram Bin Widths:</label>
+                <div style="margin-top: 10px;">
+                    <div style="margin-bottom: 8px;">
+                        <label for="binWidth_fs" style="width: 120px;">Faculty/Staff:</label>
+                        <input type="number" id="binWidth_fs" value="1" min="0.1" max="10" step="0.1">
+                        <span style="margin-left: 10px; color: #7f8c8d; font-size: 11px;">(Default: 1 - suitable for 0-17 range)</span>
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <label for="binWidth_ns" style="width: 120px;">Students Off-campus:</label>
+                        <input type="number" id="binWidth_ns" value="5" min="0.1" max="20" step="0.1">
+                        <span style="margin-left: 10px; color: #7f8c8d; font-size: 11px;">(Default: 5 - suitable for 0-100+ range)</span>
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <label for="binWidth_rs" style="width: 120px;">Students On-campus:</label>
+                        <input type="number" id="binWidth_rs" value="2" min="0.1" max="10" step="0.1">
+                        <span style="margin-left: 10px; color: #7f8c8d; font-size: 11px;">(Default: 2 - suitable for 0-30 range)</span>
+                    </div>
+                </div>
+                <span style="color: #7f8c8d; font-size: 12px;">(Lower values = more bins, higher resolution)</span>
+            </div>
+
+            <div class="control-group">
+                <button onclick="generateHistogram()">📊 Generate Histogram</button>
+                <button onclick="generateBoxplot()">📦 Generate Boxplot</button>
+                <button onclick="generateBoth()">📈 Generate Both</button>
+            </div>
+        </div>
+
+        <div id="errorMessage"></div>
+        <div id="successMessage"></div>
+
+        <div id="histogramContainer" class="plot-container" style="display: none;">
+            <div class="plot-title">Histogram Analysis</div>
+            <div id="histogram"></div>
+        </div>
+
+        <div id="boxplotContainer" class="plot-container" style="display: none;">
+            <div class="plot-title">Boxplot Comparison</div>
+            <div id="boxplot"></div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables for loaded data
+        let loadedData = null;
+        let dataValid = false;
+
+        function showError(message) {
+            document.getElementById('errorMessage').innerHTML = '<div class="error">' + message + '</div>';
+            document.getElementById('successMessage').innerHTML = '';
+        }
+
+        function showSuccess(message) {
+            document.getElementById('successMessage').innerHTML = '<div class="success">' + message + '</div>';
+            document.getElementById('errorMessage').innerHTML = '';
+        }
+
+        function loadDataset() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showError('Please select a CSV file.');
+                return;
+            }
+
+            Papa.parse(file, {
+                header: true,
+                skipEmptyLines: true,
+                transform: function(value) {
+                    return value.trim();
+                },
+                complete: processParsedCsv
+            });
+        }
+
+        function getSelectedGroups() {
+            const groups = [];
+            if (document.getElementById('group_fs').checked) groups.push('Faculty/Staff');
+            if (document.getElementById('group_ns').checked) groups.push('Students Off-campus');
+            if (document.getElementById('group_rs').checked) groups.push('Students On-campus');
+            return groups;
+        }
+
+        function getSelectedColumn() {
+            return document.getElementById('columnSelect').value;
+        }
+
+        function getBinWidths() {
+            return {
+                'Faculty/Staff': parseFloat(document.getElementById('binWidth_fs').value),
+                'Students Off-campus': parseFloat(document.getElementById('binWidth_ns').value),
+                'Students On-campus': parseFloat(document.getElementById('binWidth_rs').value)
+            };
+        }
+
+        /** Hogg sample 100p-th percentile from ascending y_(1)≤⋯≤y_(n). */
+        function samplePercentile(sorted, p) {
+            const n = sorted.length;
+            const np = n * p;
+            if (Number.isInteger(np)) {
+                const k = np; // 1-based
+                return (sorted[k - 1] + sorted[k]) / 2;
+            }
+            return sorted[Math.ceil(np) - 1];
+        }
+
+        /**
+         * Tukey box summary matching the lecture:
+         * Q1/median/Q3 = sample 25th/50th/75th percentiles (Hogg);
+         * whiskers = most extreme data still inside the inner fences (not the fences themselves).
+         */
+        function tukeyBoxSummary(data) {
+            const sorted = data.filter((v) => Number.isFinite(v)).slice().sort((a, b) => a - b);
+            if (sorted.length === 0) {
+                return null;
+            }
+            const q1 = samplePercentile(sorted, 0.25);
+            const median = samplePercentile(sorted, 0.5);
+            const q3 = samplePercentile(sorted, 0.75);
+            const iqr = q3 - q1;
+            const innerFenceLower = q1 - 1.5 * iqr;
+            const innerFenceUpper = q3 + 1.5 * iqr;
+            const outerFenceLower = q1 - 3 * iqr;
+            const outerFenceUpper = q3 + 3 * iqr;
+            const inside = sorted.filter((v) => v >= innerFenceLower && v <= innerFenceUpper);
+            const whiskerLow = Math.min(...inside);
+            const whiskerHigh = Math.max(...inside);
+            return {
+                q1, median, q3, iqr,
+                innerFenceLower, innerFenceUpper,
+                outerFenceLower, outerFenceUpper,
+                whiskerLow, whiskerHigh
+            };
+        }
+
+        function generateHistogram() {
+            if (!dataValid) {
+                showError('Please upload a valid dataset first.');
+                return;
+            }
+
+            const selectedGroups = getSelectedGroups();
+            const selectedColumn = getSelectedColumn();
+            const binWidths = getBinWidths();
+
+            if (selectedGroups.length === 0) {
+                showError('Please select at least one group.');
+                return;
+            }
+
+            const colors = ['#3498db', '#e74c3c', '#27ae60'];
+            
+            // Create subplots layout with better spacing
+            const rows = Math.ceil(selectedGroups.length / 2);
+            const cols = Math.min(2, selectedGroups.length);
+            
+            const layout = {
+                title: `Histogram Analysis: ${selectedColumn} Distribution`,
+                grid: { 
+                    rows: rows, 
+                    columns: cols, 
+                    pattern: 'independent',
+                    xgap: 0.1,
+                    ygap: 0.15
+                },
+                showlegend: false,
+                margin: { t: 80, r: 50, b: 80, l: 80 },
+                height: 400 * rows + 100
+            };
+
+            // Add subplot titles and axes with better spacing
+            selectedGroups.forEach((group, index) => {
+                const row = Math.floor(index / cols) + 1;
+                const col = (index % cols) + 1;
+                
+                layout[`xaxis${index + 1}`] = {
+                    title: selectedColumn,
+                    domain: [(col - 1) / cols + 0.05, col / cols - 0.05],
+                    anchor: `y${index + 1}`,
+                    showticklabels: true
+                };
+                layout[`yaxis${index + 1}`] = {
+                    title: 'Frequency',
+                    domain: [1 - row / rows + 0.1, 1 - (row - 1) / rows - 0.1],
+                    anchor: `x${index + 1}`,
+                    showticklabels: true
+                };
+                
+                // Add subplot titles
+                layout[`title${index + 1}`] = group;
+            });
+
+            // Create subplot traces
+            const subplotTraces = [];
+            selectedGroups.forEach((group, index) => {
+                const data = loadedData[group][selectedColumn];
+                const binWidth = binWidths[group];
+                
+                const minVal = Math.min(...data);
+                const maxVal = Math.max(...data);
+                
+                // Create bins for this group
+                const bins = [];
+                for (let i = minVal; i <= maxVal + binWidth; i += binWidth) {
+                    bins.push(i);
+                }
+                
+                // Count data points in each bin
+                const histogram = new Array(bins.length - 1).fill(0);
+                data.forEach(value => {
+                    for (let i = 0; i < bins.length - 1; i++) {
+                        if (value >= bins[i] && value < bins[i + 1]) {
+                            histogram[i]++;
+                            break;
+                        }
+                    }
+                });
+
+                // Create histogram with touching bars
+                const x = bins.slice(0, -1);
+                const y = histogram;
+
+                subplotTraces.push({
+                    x: x,
+                    y: y,
+                    type: 'bar',
+                    name: group,
+                    marker: { 
+                        color: colors[index % colors.length],
+                        line: { width: 0 } // Remove gaps between bars
+                    },
+                    opacity: 0.8,
+                    xaxis: `x${index + 1}`,
+                    yaxis: `y${index + 1}`,
+                    width: binWidth, // Set bar width to bin width for touching bars
+                    offset: 0
+                });
+            });
+
+            Plotly.newPlot('histogram', subplotTraces, layout);
+            document.getElementById('histogramContainer').style.display = 'block';
+            showSuccess(`Histogram generated for ${selectedGroups.length} group(s)!`);
+        }
+
+        function generateBoxplot() {
+            if (!dataValid) {
+                showError('Please upload a valid dataset first.');
+                return;
+            }
+
+            const selectedGroups = getSelectedGroups();
+            const selectedColumn = getSelectedColumn();
+
+            if (selectedGroups.length === 0) {
+                showError('Please select at least one group.');
+                return;
+            }
+
+            const colors = ['#3498db', '#e74c3c', '#27ae60'];
+            const shapes = [];
+            const traces = [];
+            const tickvals = [];
+            const ticktext = [];
+            let yMin = Infinity;
+            let yMax = -Infinity;
+
+            selectedGroups.forEach((group, index) => {
+                const data = loadedData[group][selectedColumn];
+                const stats = tukeyBoxSummary(data);
+                if (!stats) {
+                    return;
+                }
+
+                const color = colors[index % colors.length];
+                const x = index;
+                const half = 0.28;
+                const cap = 0.14;
+
+                tickvals.push(x);
+                ticktext.push(group);
+
+                yMin = Math.min(yMin, stats.whiskerLow, ...data.filter(Number.isFinite));
+                yMax = Math.max(yMax, stats.whiskerHigh, ...data.filter(Number.isFinite));
+
+                // Box (Q1–Q3)
+                shapes.push({
+                    type: 'rect',
+                    xref: 'x',
+                    yref: 'y',
+                    x0: x - half,
+                    x1: x + half,
+                    y0: stats.q1,
+                    y1: stats.q3,
+                    line: { width: 2, color: color },
+                    fillcolor: 'rgba(255,255,255,0.15)'
+                });
+                // Median
+                shapes.push({
+                    type: 'line',
+                    xref: 'x',
+                    yref: 'y',
+                    x0: x - half,
+                    x1: x + half,
+                    y0: stats.median,
+                    y1: stats.median,
+                    line: { width: 3, color: '#c0392b' }
+                });
+                // Whisker stems (to extreme in-fence points)
+                shapes.push({
+                    type: 'line',
+                    xref: 'x',
+                    yref: 'y',
+                    x0: x,
+                    x1: x,
+                    y0: stats.whiskerLow,
+                    y1: stats.q1,
+                    line: { width: 2, color: color }
+                });
+                shapes.push({
+                    type: 'line',
+                    xref: 'x',
+                    yref: 'y',
+                    x0: x,
+                    x1: x,
+                    y0: stats.q3,
+                    y1: stats.whiskerHigh,
+                    line: { width: 2, color: color }
+                });
+                // Whisker caps
+                shapes.push({
+                    type: 'line',
+                    xref: 'x',
+                    yref: 'y',
+                    x0: x - cap,
+                    x1: x + cap,
+                    y0: stats.whiskerLow,
+                    y1: stats.whiskerLow,
+                    line: { width: 2, color: color }
+                });
+                shapes.push({
+                    type: 'line',
+                    xref: 'x',
+                    yref: 'y',
+                    x0: x - cap,
+                    x1: x + cap,
+                    y0: stats.whiskerHigh,
+                    y1: stats.whiskerHigh,
+                    line: { width: 2, color: color }
+                });
+
+                // Legend / hover anchor for the group
+                traces.push({
+                    type: 'scatter',
+                    name: group,
+                    x: [x],
+                    y: [stats.median],
+                    mode: 'markers',
+                    marker: { size: 10, color: color, symbol: 'square-open', line: { width: 2, color: color } },
+                    hovertemplate:
+                        `<b>${group}</b><br>` +
+                        `Q1: ${stats.q1}<br>` +
+                        `Median: ${stats.median}<br>` +
+                        `Q3: ${stats.q3}<br>` +
+                        `Whiskers: ${stats.whiskerLow} – ${stats.whiskerHigh}<br>` +
+                        `Inner fences: ${stats.innerFenceLower.toFixed(3)} – ${stats.innerFenceUpper.toFixed(3)}` +
+                        `<extra></extra>`
+                });
+
+                const outliers = data.filter(
+                    (v) => Number.isFinite(v) && (v < stats.innerFenceLower || v > stats.innerFenceUpper)
+                );
+                if (outliers.length > 0) {
+                    traces.push({
+                        type: 'scatter',
+                        name: `${group} outliers`,
+                        x: outliers.map(() => x),
+                        y: outliers,
+                        mode: 'markers',
+                        marker: { size: 8, color: color },
+                        showlegend: false,
+                        hovertemplate: `${group}<br>%{y}<extra>outlier</extra>`
+                    });
+                }
+            });
+
+            if (tickvals.length === 0) {
+                showError('No finite values available for the selected groups/column.');
+                return;
+            }
+
+            const pad = Math.max(0.5, (yMax - yMin) * 0.05 || 1);
+            const layout = {
+                title: `Boxplot: ${selectedColumn} Distribution`,
+                shapes,
+                yaxis: {
+                    title: selectedColumn,
+                    range: [yMin - pad, yMax + pad],
+                    showgrid: true,
+                    gridcolor: 'lightgray',
+                    zeroline: false
+                },
+                xaxis: {
+                    title: 'Group',
+                    tickmode: 'array',
+                    tickvals,
+                    ticktext,
+                    range: [-0.7, selectedGroups.length - 0.3],
+                    showgrid: false,
+                    zeroline: false
+                },
+                showlegend: true,
+                margin: { t: 80, r: 40, b: 100, l: 80 },
+                height: 520,
+                annotations: [
+                    {
+                        text: "Box: Q1–Q3 (Hogg sample percentiles)<br>Whiskers: most extreme data still inside the inner fences<br>(not the fences themselves: Q1−1.5×IQR and Q3+1.5×IQR)<br>Dots: outliers beyond the inner fences",
+                        x: 0.02,
+                        y: 0.98,
+                        xref: 'paper',
+                        yref: 'paper',
+                        showarrow: false,
+                        bgcolor: 'rgba(255,255,255,0.9)',
+                        bordercolor: 'black',
+                        borderwidth: 1,
+                        font: { size: 11 },
+                        align: 'left'
+                    }
+                ]
+            };
+
+            Plotly.newPlot('boxplot', traces, layout);
+            document.getElementById('boxplotContainer').style.display = 'block';
+            showSuccess('Boxplot generated successfully!');
+        }
+
+        function generateBoth() {
+            generateHistogram();
+            generateBoxplot();
+        }
+
+        function processParsedCsv(results) {
+            console.log('Parsing results:', results);
+
+            if (results.errors.length > 0) {
+                console.log('Parsing errors:', results.errors);
+                showError('Error parsing CSV: ' + results.errors[0].message);
+                return;
+            }
+
+            if (!results.data || results.data.length === 0) {
+                showError('No data found in CSV file.');
+                return;
+            }
+
+            const requiredColumns = ['Date', 'Type', 'residence', 'Positive', 'Negative'];
+            const actualColumns = results.meta.fields || Object.keys(results.data[0] || {});
+            const hasRequiredColumns = requiredColumns.every(col =>
+                actualColumns.includes(col)
+            );
+
+            if (!hasRequiredColumns) {
+                showError('Wrong dataset! Required columns: ' + requiredColumns.join(', ') + '. Found: ' + actualColumns.join(', '));
+                dataValid = false;
+                return;
+            }
+
+            loadedData = {
+                'Faculty/Staff': { 'Positive': [], 'Negative': [], 'Rate': [] },
+                'Students Off-campus': { 'Positive': [], 'Negative': [], 'Rate': [] },
+                'Students On-campus': { 'Positive': [], 'Negative': [], 'Rate': [] }
+            };
+
+            const populations = {
+                'Non-Residential': 16000,
+                'Students - Non-Residential': 13000,
+                'Students - Residential': 4000
+            };
+
+            let processedRows = 0;
+            results.data.forEach(row => {
+                if (!row || Object.keys(row).length === 0) return;
+
+                const positive = parseInt(row.Positive) || 0;
+                const negative = parseInt(row.Negative) || 0;
+
+                if (row.residence === 'Non-Residential') {
+                    loadedData['Faculty/Staff']['Positive'].push(positive);
+                    loadedData['Faculty/Staff']['Negative'].push(negative);
+                    loadedData['Faculty/Staff']['Rate'].push(positive / populations['Non-Residential']);
+                    processedRows++;
+                } else if (row.residence === 'Students - Non-Residential') {
+                    loadedData['Students Off-campus']['Positive'].push(positive);
+                    loadedData['Students Off-campus']['Negative'].push(negative);
+                    loadedData['Students Off-campus']['Rate'].push(positive / populations['Students - Non-Residential']);
+                    processedRows++;
+                } else if (row.residence === 'Students - Residential') {
+                    loadedData['Students On-campus']['Positive'].push(positive);
+                    loadedData['Students On-campus']['Negative'].push(negative);
+                    loadedData['Students On-campus']['Rate'].push(positive / populations['Students - Residential']);
+                    processedRows++;
+                }
+            });
+
+            dataValid = true;
+            showSuccess('Dataset loaded successfully! ' + processedRows + ' rows processed. Try histograms and boxplots below.');
+
+            const info = 'Rows: ' + processedRows + ' | Faculty/Staff: ' + loadedData['Faculty/Staff']['Positive'].length + ' | Students Off-campus: ' + loadedData['Students Off-campus']['Positive'].length + ' | Students On-campus: ' + loadedData['Students On-campus']['Positive'].length;
+            document.getElementById('datasetInfo').innerHTML = info;
+        }
+
+        // Prefer the bundled course CSV; students can still upload another file.
+        window.onload = function() {
+            fetch('UM_C19_2021.csv')
+                .then(function(response) {
+                    if (!response.ok) throw new Error('HTTP ' + response.status);
+                    return response.text();
+                })
+                .then(function(csvText) {
+                    Papa.parse(csvText, {
+                        header: true,
+                        skipEmptyLines: true,
+                        transform: function(value) { return value.trim(); },
+                        complete: processParsedCsv
+                    });
+                })
+                .catch(function(err) {
+                    showSuccess('Webapp ready. Auto-load failed (' + err.message + ') — upload UM_C19_2021.csv to start.');
+                });
+        };
+    </script>
+</body>
+</html>

@@ -353,6 +353,47 @@ th, td {
 th:first-child, td:first-child { text-align: left; }
 th { font: 800 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.06em; }
 
+.dataPreview {
+  margin-top: 14px;
+  overflow-x: auto;
+}
+
+.dataPreview table {
+  font-size: 12.5px;
+}
+
+.dataPreview th,
+.dataPreview td {
+  text-align: left;
+  white-space: nowrap;
+  padding: 5px 8px;
+}
+
+.toolLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.toolLinks a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 14px;
+  color: var(--ink);
+  background: var(--cream);
+  border: 3px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  font: 800 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-decoration: none;
+}
+
+.toolLinks a:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
 .chips {
   display: flex;
   flex-wrap: wrap;

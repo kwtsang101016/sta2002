@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   COVID_SUMMARY,
   FACULTY_INFECTION_RATE,
@@ -23,7 +23,344 @@ import {
 } from "../../utils";
 import styles from "../Lecture.module.css";
 import { usePrintMode } from "../printContext";
-import { Formula, InlineMath, SceneFrame } from "../scenes/shared";
+import { Formula, InlineMath, MathText, SceneFrame } from "../scenes/shared";
+
+/* ── Boxplot whisker builder ── */
+type BoxSummary = {
+  sorted: number[];
+  q1: number;
+  median: number;
+  q3: number;
+  iqr: number;
+  innerLow: number;
+  innerHigh: number;
+  outerLow: number;
+  outerHigh: number;
+  whiskerLow: number;
+  whiskerHigh: number;
+  outliers: number[];
+};
+
+/** Hogg sample 100p-th percentile from ascending order stats y_(1)≤⋯≤y_(n). */
+function samplePercentile(sorted: number[], p: number): number {
+  const n = sorted.length;
+  const np = n * p;
+  if (Number.isInteger(np)) {
+    const k = np; // 1-based index
+    return (sorted[k - 1] + sorted[k]) / 2;
+  }
+  const k = Math.ceil(np);
+  return sorted[k - 1];
+}
+
+/** Quartiles via Hogg percentiles: Q1 = 25th, median = 50th, Q3 = 75th. */
+function hoggBoxSummary(data: number[]): BoxSummary {
+  const sorted = [...data].sort((a, b) => a - b);
+  const q1 = samplePercentile(sorted, 0.25);
+  const median = samplePercentile(sorted, 0.5);
+  const q3 = samplePercentile(sorted, 0.75);
+  const iqr = q3 - q1;
+  const innerLow = q1 - 1.5 * iqr;
+  const innerHigh = q3 + 1.5 * iqr;
+  const outerLow = q1 - 3 * iqr;
+  const outerHigh = q3 + 3 * iqr;
+  const inside = sorted.filter((value) => value >= innerLow && value <= innerHigh);
+  const whiskerLow = Math.min(...inside);
+  const whiskerHigh = Math.max(...inside);
+  const outliers = sorted.filter((value) => value < innerLow || value > innerHigh);
+  return {
+    sorted,
+    q1,
+    median,
+    q3,
+    iqr,
+    innerLow,
+    innerHigh,
+    outerLow,
+    outerHigh,
+    whiskerLow,
+    whiskerHigh,
+    outliers,
+  };
+}
+
+function formatNum(value: number): string {
+  return Number.isInteger(value) ? String(value) : value.toFixed(1);
+}
+
+const BOX_EXAMPLES: { label: string; data: number[] }[] = [
+  { label: "Exam scores with one high outlier", data: [62, 68, 70, 72, 74, 76, 78, 95] },
+  { label: "Wait times with a late arrival", data: [2, 3, 4, 5, 5, 6, 7, 8, 20] },
+  { label: "No outliers — whiskers reach min and max", data: [10, 12, 13, 14, 15, 16, 18] },
+  { label: "Two mild outliers on the right", data: [1, 2, 3, 4, 5, 6, 7, 12, 14] },
+];
+
+function BoxplotSvg({ summary }: { summary: BoxSummary }) {
+  const values = [...summary.sorted, summary.innerLow, summary.innerHigh];
+  const minX = Math.min(...values) - 1;
+  const maxX = Math.max(...values) + 1;
+  const pad = 28;
+  const width = 520;
+  const height = 150;
+  const y = 70;
+  const scale = (value: number) => pad + ((value - minX) / (maxX - minX)) * (width - 2 * pad);
+  const boxLeft = scale(summary.q1);
+  const boxRight = scale(summary.q3);
+  const medX = scale(summary.median);
+  const wLow = scale(summary.whiskerLow);
+  const wHigh = scale(summary.whiskerHigh);
+
+  return (
+    <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Constructed boxplot" className={styles.chartCard} style={{ width: "100%" }}>
+      <line x1={pad} y1={y} x2={width - pad} y2={y} stroke="var(--ink)" strokeWidth="2" />
+      <line x1={scale(summary.innerLow)} y1={y - 34} x2={scale(summary.innerLow)} y2={y + 34} stroke="var(--red)" strokeWidth="2" strokeDasharray="4 3" />
+      <line x1={scale(summary.innerHigh)} y1={y - 34} x2={scale(summary.innerHigh)} y2={y + 34} stroke="var(--red)" strokeWidth="2" strokeDasharray="4 3" />
+      <line x1={wLow} y1={y} x2={boxLeft} y2={y} stroke="var(--ink)" strokeWidth="3" />
+      <line x1={boxRight} y1={y} x2={wHigh} y2={y} stroke="var(--ink)" strokeWidth="3" />
+      <line x1={wLow} y1={y - 14} x2={wLow} y2={y + 14} stroke="var(--ink)" strokeWidth="3" />
+      <line x1={wHigh} y1={y - 14} x2={wHigh} y2={y + 14} stroke="var(--ink)" strokeWidth="3" />
+      <rect x={boxLeft} y={y - 22} width={Math.max(2, boxRight - boxLeft)} height={44} fill="var(--paper)" stroke="var(--ink)" strokeWidth="3" />
+      <line x1={medX} y1={y - 22} x2={medX} y2={y + 22} stroke="var(--red)" strokeWidth="4" />
+      {summary.outliers.map((value, index) => (
+        <circle key={`${value}-${index}`} cx={scale(value)} cy={y} r={5} fill="var(--red)" stroke="var(--ink)" />
+      ))}
+      <text x={scale(summary.innerLow)} y={18} textAnchor="middle" fontSize="10" fill="var(--red)">
+        inner fence
+      </text>
+      <text x={scale(summary.innerHigh)} y={18} textAnchor="middle" fontSize="10" fill="var(--red)">
+        inner fence
+      </text>
+      <text x={wLow} y={height - 12} textAnchor="middle" fontSize="11" fill="var(--ink)">
+        {formatNum(summary.whiskerLow)}
+      </text>
+      <text x={wHigh} y={height - 12} textAnchor="middle" fontSize="11" fill="var(--ink)">
+        {formatNum(summary.whiskerHigh)}
+      </text>
+    </svg>
+  );
+}
+
+function NumberLine({
+  summary,
+  highlight,
+}: {
+  summary: BoxSummary;
+  highlight?: { low?: boolean; high?: boolean };
+}) {
+  const minX = Math.min(...summary.sorted, summary.innerLow) - 1;
+  const maxX = Math.max(...summary.sorted, summary.innerHigh) + 1;
+  const pad = 24;
+  const width = 520;
+  const height = 110;
+  const y = 55;
+  const scale = (value: number) => pad + ((value - minX) / (maxX - minX)) * (width - 2 * pad);
+
+  return (
+    <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Data on a number line" style={{ width: "100%", background: "var(--white)", border: "3px solid var(--ink)" }}>
+      <line x1={pad} y1={y} x2={width - pad} y2={y} stroke="var(--ink)" strokeWidth="2" />
+      <line x1={scale(summary.innerLow)} y1={y - 28} x2={scale(summary.innerLow)} y2={y + 28} stroke="var(--red)" strokeWidth="2" strokeDasharray="4 3" />
+      <line x1={scale(summary.innerHigh)} y1={y - 28} x2={scale(summary.innerHigh)} y2={y + 28} stroke="var(--red)" strokeWidth="2" strokeDasharray="4 3" />
+      <rect
+        x={scale(summary.q1)}
+        y={y - 16}
+        width={Math.max(2, scale(summary.q3) - scale(summary.q1))}
+        height={32}
+        fill="rgba(79, 70, 229, 0.12)"
+        stroke="var(--blue)"
+        strokeWidth="2"
+      />
+      {summary.sorted.map((value, index) => {
+        const outside = value < summary.innerLow || value > summary.innerHigh;
+        const isLow = highlight?.low && value === summary.whiskerLow;
+        const isHigh = highlight?.high && value === summary.whiskerHigh;
+        return (
+          <g key={`${value}-${index}`}>
+            <circle
+              cx={scale(value)}
+              cy={y}
+              r={isLow || isHigh ? 8 : 6}
+              fill={outside ? "var(--red)" : isLow || isHigh ? "var(--blue)" : "var(--cream)"}
+              stroke="var(--ink)"
+              strokeWidth="2"
+            />
+            <text x={scale(value)} y={y + 28} textAnchor="middle" fontSize="10" fill="var(--ink)">
+              {formatNum(value)}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+export function BoxplotWhiskerGame() {
+  const print = usePrintMode();
+  const [exampleIndex, setExampleIndex] = useState(0);
+  const [step, setStep] = useState<"upper" | "lower" | "done">("upper");
+  const [feedback, setFeedback] = useState<ReactNode>("");
+  const [awaitingRetry, setAwaitingRetry] = useState(false);
+  const example = BOX_EXAMPLES[exampleIndex % BOX_EXAMPLES.length];
+  const summary = useMemo(() => hoggBoxSummary(example.data), [example]);
+
+  const resetExample = (nextIndex: number) => {
+    setExampleIndex(nextIndex);
+    setStep("upper");
+    setFeedback("");
+    setAwaitingRetry(false);
+  };
+
+  const choose = (value: number) => {
+    if (awaitingRetry || step === "done") return;
+    const target = step === "upper" ? summary.whiskerHigh : summary.whiskerLow;
+    const ok = value === target;
+    if (ok) {
+      setFeedback(
+        step === "upper" ? (
+          <>
+            Correct — the upper whisker ends at <strong>{formatNum(value)}</strong>, the largest data point still ≤ the
+            upper inner fence ({formatNum(summary.innerHigh)}).
+          </>
+        ) : (
+          <>
+            Correct — the lower whisker ends at <strong>{formatNum(value)}</strong>, the smallest data point still ≥ the
+            lower inner fence ({formatNum(summary.innerLow)}).
+          </>
+        ),
+      );
+      window.setTimeout(() => {
+        setFeedback("");
+        setStep((current) => (current === "upper" ? "lower" : "done"));
+      }, 1100);
+    } else {
+      const outside = value < summary.innerLow || value > summary.innerHigh;
+      setAwaitingRetry(true);
+      setFeedback(
+        outside ? (
+          <>
+            Not a whisker end. <strong>{formatNum(value)}</strong> lies outside the inner fence
+            [{formatNum(summary.innerLow)}, {formatNum(summary.innerHigh)}], so it is plotted as an outlier (a dot), not
+            a whisker tip.
+          </>
+        ) : (
+          <>
+            Close, but whiskers stop at the <em>most extreme</em> points still inside the fences.{" "}
+            <strong>{formatNum(value)}</strong> is inside, yet there is a more extreme in-fence point for this side.
+          </>
+        ),
+      );
+    }
+  };
+
+  if (print) {
+    const demo = hoggBoxSummary(BOX_EXAMPLES[0].data);
+    return (
+      <SceneFrame kicker="Game" title="Build the whiskers" tone="gold">
+        <p className={styles.lead}>
+          Example data: {BOX_EXAMPLES[0].data.join(", ")}. Inner fences at {formatNum(demo.innerLow)} and{" "}
+          {formatNum(demo.innerHigh)}. Whiskers end at {formatNum(demo.whiskerLow)} and {formatNum(demo.whiskerHigh)};
+          outliers: {demo.outliers.length ? demo.outliers.join(", ") : "none"}.
+        </p>
+        <BoxplotSvg summary={demo} />
+      </SceneFrame>
+    );
+  }
+
+  return (
+    <SceneFrame kicker="Game" title="Build the whiskers" tone="gold">
+      <p className={styles.lead}>
+        Rule to practice: <strong>whiskers reach the most extreme data points still inside the inner fences</strong>{" "}
+        (Q1 − 1.5·IQR and Q3 + 1.5·IQR). Here Q1 / median / Q3 are the sample 25th / 50th / 75th percentiles (Hogg’s{" "}
+        <MathText text={String.raw`$np$`} /> rule). Points beyond those fences become outlier dots — they do{" "}
+        <em>not</em> stretch the whiskers.
+      </p>
+      <p className={styles.muted}>
+        Example {exampleIndex + 1}/{BOX_EXAMPLES.length}: {example.label}
+      </p>
+      <p>
+        Sorted data:{" "}
+        <code>{summary.sorted.map(formatNum).join(", ")}</code>
+      </p>
+      <div className={styles.twoCol}>
+        <div className={styles.card}>
+          <p className={styles.kicker}>FIVE-NUMBER + FENCES</p>
+          <p>
+            <MathText text={`$Q_1=${formatNum(summary.q1)}$, median $=${formatNum(summary.median)}$, $Q_3=${formatNum(summary.q3)}$`} />
+          </p>
+          <p>
+            <MathText text={`$\\mathrm{IQR}=${formatNum(summary.iqr)}$`} />
+          </p>
+          <p>
+            Inner fences: [{formatNum(summary.innerLow)}, {formatNum(summary.innerHigh)}]
+          </p>
+          <p className={styles.small}>Dashed red lines on the number line mark the inner fences; the blue band is the box.</p>
+        </div>
+        <NumberLine
+          summary={summary}
+          highlight={{
+            high: step !== "upper",
+            low: step === "done",
+          }}
+        />
+      </div>
+
+      {step !== "done" ? (
+        <>
+          <p className={styles.promptItem} style={{ marginTop: 14 }}>
+            <strong>{step === "upper" ? "Step 1 · Upper whisker" : "Step 2 · Lower whisker"}</strong>
+            <span style={{ display: "block", marginTop: 6 }}>
+              Click the data value where the {step === "upper" ? "upper" : "lower"} whisker should end.
+            </span>
+          </p>
+          <div className={styles.choices}>
+            {[...new Set(summary.sorted)].map((value) => (
+              <button
+                key={value}
+                className={styles.choice}
+                type="button"
+                disabled={awaitingRetry}
+                onClick={() => choose(value)}
+              >
+                {formatNum(value)}
+              </button>
+            ))}
+          </div>
+        </>
+      ) : (
+        <>
+          <p className={styles.answer}>
+            Whiskers: [{formatNum(summary.whiskerLow)}, {formatNum(summary.whiskerHigh)}]. Outliers:{" "}
+            {summary.outliers.length ? summary.outliers.map(formatNum).join(", ") : "none"}.
+          </p>
+          <BoxplotSvg summary={summary} />
+        </>
+      )}
+
+      {feedback ? <p className={styles.answer}>{feedback}</p> : null}
+      <div className={styles.tools}>
+        {awaitingRetry ? (
+          <button
+            className={styles.toolBtn}
+            type="button"
+            onClick={() => {
+              setFeedback("");
+              setAwaitingRetry(false);
+            }}
+          >
+            TRY AGAIN
+          </button>
+        ) : null}
+        {step === "done" ? (
+          <button className={styles.toolBtn} type="button" onClick={() => resetExample((exampleIndex + 1) % BOX_EXAMPLES.length)}>
+            NEXT EXAMPLE
+          </button>
+        ) : null}
+        <button className={styles.ghost} type="button" onClick={() => resetExample((exampleIndex + 1) % BOX_EXAMPLES.length)}>
+          Skip example
+        </button>
+      </div>
+    </SceneFrame>
+  );
+}
 
 /* ── COVID EDA explorer ── */
 export function CovidEdaGame() {
@@ -69,7 +406,9 @@ export function CovidEdaGame() {
   return (
     <SceneFrame kicker="Game" title="COVID EDA: daily positives" tone="gold">
       <p className={styles.lead}>
-        Explore <code>UM_C19_2021.csv</code> — daily positive counts by campus group.
+        <strong>Question 1:</strong> What do the data say about infections at UM? Explore daily positive counts by
+        campus group (histograms / summaries). Download the CSV here, or open the Appendix explorer for adjustable bin
+        widths and boxplots.
       </p>
       {!print ? (
         <div className={styles.tools}>
@@ -148,9 +487,21 @@ export function CovidEdaGame() {
             </figure>
           </div>
           <p className={styles.note}>
-            Positives are right-skewed. Faculty/staff yearly total {FACULTY_YEARLY_POSITIVES} feeds the Poisson
-            prediction on the next game.
+            Positives are right-skewed. Faculty/staff yearly total {FACULTY_YEARLY_POSITIVES} is the μ we use for
+            Question 2 (Poisson) on the next slides.
           </p>
+          {!print ? (
+            <div className={styles.toolLinks}>
+              <a href={`${import.meta.env.BASE_URL}appendix/UM_C19_2021.csv`} download>
+                Download CSV
+              </a>
+              <a href={`${import.meta.env.BASE_URL}appendix/index.html`} target="_blank" rel="noreferrer">
+                Open Appendix explorer
+              </a>
+            </div>
+          ) : (
+            <p className={styles.small}>Download CSV / Appendix explorer available on the live site.</p>
+          )}
         </>
       ) : null}
     </SceneFrame>
@@ -172,8 +523,12 @@ export function CovidPredictionGame() {
   return (
     <SceneFrame kicker="Game" title="COVID prediction calculator" tone="gold">
       <p className={styles.lead}>
-        Faculty/Staff yearly positives from the CSV: <InlineMath tex={`\\mu=${FACULTY_YEARLY_POSITIVES}`} />. Model
-        next year as Poisson; department size as Binomial.
+        <strong>Question 2:</strong> <InlineMath tex="X" /> = next year’s faculty/staff total positives, modeled as{" "}
+        <InlineMath tex={`\\mathrm{Poisson}(\\mu)`} />. <strong>Question 3:</strong> <InlineMath tex="Y" /> = positives
+        among <InlineMath tex="n" /> Statistics faculty/staff, modeled as{" "}
+        <InlineMath tex={String.raw`\mathrm{Bin}(n,\hat p)`} /> with{" "}
+        <InlineMath tex={`\\hat p=\\mu/${POPULATION.facultyStaff}`} />. Default μ from the CSV is{" "}
+        <InlineMath tex={`${FACULTY_YEARLY_POSITIVES}`} />.
       </p>
       {!print ? (
         <div className={styles.tools}>
@@ -205,7 +560,7 @@ export function CovidPredictionGame() {
       ) : null}
       <div className={styles.twoCol}>
         <div className={styles.card}>
-          <p className={styles.kicker}>POISSON(μ)</p>
+          <p className={styles.kicker}>Q2 · POISSON(μ) FOR X</p>
           <p>
             <InlineMath tex={`P(X\\le 800)=${poisLe800.toFixed(4)}`} />
           </p>
@@ -214,7 +569,7 @@ export function CovidPredictionGame() {
           </p>
         </div>
         <div className={styles.card}>
-          <p className={styles.kicker}>BIN(n, p̂)</p>
+          <p className={styles.kicker}>Q3 · BIN(n, p̂) FOR Y</p>
           <p>
             <InlineMath tex={`\\hat p=${p.toFixed(5)}`} /> (default CSV: {pHat.toFixed(5)})
           </p>

@@ -57,6 +57,43 @@ export function BoxplotScene1() {
       <p className={styles.lead}>
         A boxplot summarizes a sample with the <strong>five-number summary</strong>: min, Q1, median, Q3, max.
       </p>
+      <Block title="Quartiles are percentiles">
+        <BulletList
+          items={[
+            <span key="q1">
+              <InlineMath tex="Q_1" /> = first quartile = <strong>25th percentile</strong>
+            </span>,
+            <span key="q2">
+              Median = second quartile <InlineMath tex="Q_2" /> = <strong>50th percentile</strong>
+            </span>,
+            <span key="q3">
+              <InlineMath tex="Q_3" /> = third quartile = <strong>75th percentile</strong>
+            </span>,
+          ]}
+        />
+        <p>
+          <MathText
+            text={String.raw`To find the sample $100p$-th percentile from ordered data $y_{(1)}\le \cdots\le y_{(n)}$ (Hogg):`}
+          />
+        </p>
+        <BulletList
+          items={[
+            <MathText key="a" text={String.raw`Compute the product $np$.`} />,
+            <span key="b">
+              If <InlineMath tex="np" /> is <strong>not</strong> an integer, round <strong>up</strong> to the next
+              integer <InlineMath tex="k" /> and take <InlineMath tex="y_{(k)}" />.
+            </span>,
+            <MathText
+              key="c"
+              text={String.raw`If $np=k$ is an integer, take the average $\dfrac{y_{(k)}+y_{(k+1)}}{2}$.`}
+            />,
+          ]}
+        />
+        <p className={styles.muted}>
+          Example: for <InlineMath tex="Q_1" /> use <InlineMath tex="p=0.25" />; for <InlineMath tex="Q_3" /> use{" "}
+          <InlineMath tex="p=0.75" />.
+        </p>
+      </Block>
       <Block title="Construction">
         <Formula tex={String.raw`\mathrm{IQR} = Q_3 - Q_1`} />
         <BulletList
@@ -68,7 +105,7 @@ export function BoxplotScene1() {
           ]}
         />
       </Block>
-      <Figure src="/figures/boxplot_example.png" alt="Annotated Tukey boxplot with fences" width="85%" />
+      <Figure src="/figures/boxplot_example.png" alt="Annotated Tukey boxplot with fences" width="70%" />
     </SceneFrame>
   );
 }
@@ -90,6 +127,16 @@ export function BoxplotScene2() {
 }
 
 export function CovidIntroScene() {
+  const previewRows = [
+    ["Date", "Type", "residence", "Positive", "Negative"],
+    ["8/16/2020", "Faculty/Staff", "Non-Residential", "0", "3"],
+    ["8/16/2020", "Students", "Students - Non-Residential", "1", "34"],
+    ["8/16/2020", "Students", "Students - Residential", "0", "3"],
+    ["8/17/2020", "Faculty/Staff", "Non-Residential", "0", "56"],
+    ["8/17/2020", "Students", "Students - Non-Residential", "5", "97"],
+    ["8/17/2020", "Students", "Students - Residential", "0", "17"],
+  ] as const;
+
   return (
     <SceneFrame kicker="EDA" title="Exploratory data analysis">
       <p className={styles.lead}>
@@ -105,6 +152,32 @@ export function CovidIntroScene() {
           ]}
         />
       </Block>
+      <Block title="First rows of UM_C19_2021.csv">
+        <p className={styles.muted}>
+          Each day appears as up to three rows (one per campus group). Columns record the date, group type,
+          residence label, and daily positive / negative test counts.
+        </p>
+        <div className={`${styles.tableWrap} ${styles.dataPreview}`}>
+          <table>
+            <thead>
+              <tr>
+                {previewRows[0].map((header) => (
+                  <th key={header}>{header}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {previewRows.slice(1).map((row) => (
+                <tr key={row.join("|")}>
+                  {row.map((cell, index) => (
+                    <td key={`${row[0]}-${index}`}>{cell}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Block>
     </SceneFrame>
   );
 }
@@ -115,6 +188,10 @@ export function CovidDataScene() {
   const rs = COVID_SUMMARY.residentialStudents;
   return (
     <SceneFrame kicker="EDA" title="UM COVID data">
+      <p className={styles.lead}>
+        <strong>Question 1 (preview):</strong> What do the data say about infections at UM? First we summarize the
+        yearly totals and population sizes for each campus group.
+      </p>
       <p>
         Daily test counts by campus group. Columns: <code>Date</code>, <code>Type</code>, <code>residence</code>,{" "}
         <code>Positive</code>, <code>Negative</code>. Define{" "}
@@ -175,21 +252,88 @@ export function CovidPredictionScene() {
   const p = FACULTY_INFECTION_RATE;
   return (
     <SceneFrame kicker="EDA" title="COVID predictions (setup)">
-      <Block title="1. Next year’s faculty/staff total">
+      <p className={styles.lead}>
+        Questions 2 and 3 turn last year’s faculty/staff summary into probability models. Define the random variables
+        carefully before computing.
+      </p>
+      <Block title="Question 2 — next year’s faculty/staff total">
         <p>
-          Estimate <InlineMath tex={`\\mu=${mu}`} /> as last year’s total faculty/staff positives. Model{" "}
-          <InlineMath tex={`X\\sim\\mathrm{Poisson}(${mu})`} />.
+          <em>If next year’s faculty/staff positives arrive at last year’s rate, what about next year’s total?</em>
+        </p>
+        <p>
+          Let <InlineMath tex="X" /> = total number of faculty/staff positives next year. Using last year’s total{" "}
+          <InlineMath tex={`${mu}`} /> as the mean rate, model{" "}
+          <InlineMath tex={`X\\sim\\mathrm{Poisson}(\\mu=${mu})`} />.
         </p>
         <Formula tex={String.raw`P(X\le 800)\approx 0.674,\quad P(X>800)\approx 0.326`} />
       </Block>
-      <Block title="2. Statistics department (n = 20)">
+      <Block title="Question 3 — positives among 20 Statistics faculty/staff">
         <p>
-          <InlineMath tex={`\\hat p = ${mu}/${POPULATION.facultyStaff} = ${p.toFixed(5)}`} />. Then{" "}
-          <InlineMath tex={String.raw`Y\sim\mathrm{Bin}(20,\hat p)`} />.
+          <em>
+            If the faculty infection rate stays the same, what about positives among 20 Statistics faculty/staff?
+          </em>
+        </p>
+        <p>
+          Let <InlineMath tex="Y" /> = number of positives in a fixed group of{" "}
+          <InlineMath tex="n=20" /> faculty/staff in Statistics. Estimate the per-person infection probability by{" "}
+          <InlineMath tex={`\\hat p = ${mu}/${POPULATION.facultyStaff} = ${p.toFixed(5)}`} />, then model{" "}
+          <InlineMath tex={String.raw`Y\sim\mathrm{Bin}(n=20,\hat p)`} />.
         </p>
         <Formula tex={String.raw`P(Y=0)\approx 0.364,\quad P(Y\ge 2)\approx 0.259`} />
       </Block>
-      <p className={styles.muted}>Interactive calculator on the next game slide uses the same CSV totals.</p>
+      <p className={styles.muted}>The next game lets you vary μ and n while keeping these meanings of X and Y.</p>
+    </SceneFrame>
+  );
+}
+
+export function MleMotivationScene() {
+  return (
+    <SceneFrame kicker="MLE" title="The idea of maximum likelihood">
+      <p className={styles.lead}>
+        Suppose you flipped a coin <strong>10</strong> times and observed <strong>1 Head</strong> and{" "}
+        <strong>9 Tails</strong>. What would you guess for the probability of Heads,{" "}
+        <InlineMath tex="p" />?
+      </p>
+      <Block title="A natural guess">
+        <BulletList
+          items={[
+            <span key="g">
+              Many people guess <InlineMath tex="0.1" /> (that is, 1 out of 10). Why?
+            </span>,
+            <span key="w">
+              Why <strong>not</strong> <InlineMath tex="0.9" />?
+            </span>,
+            <span key="s">
+              If the true probability were <InlineMath tex="0.9" />, the chance of seeing only 1 Head in 10 flips
+              would be <strong>tiny</strong>.
+            </span>,
+          ]}
+        />
+        <Formula
+          tex={String.raw`P(X=1\mid p)=\binom{10}{1}p(1-p)^{9}`}
+        />
+        <Formula
+          tex={String.raw`P(X=1\mid p=0.1)\approx 0.387,\qquad P(X=1\mid p=0.9)\approx 9\times 10^{-9}`}
+        />
+      </Block>
+      <Block title="The MLE idea">
+        <p>
+          So you are really choosing a value of <InlineMath tex="p" /> that{" "}
+          <strong>maximizes the chance (likelihood)</strong> of the sample you observed.
+        </p>
+        <BulletList
+          items={[
+            <span key="m">
+              Your guess <InlineMath tex="0.1" /> is the value that maximizes{" "}
+              <InlineMath tex={String.raw`P(1\text{ H and }9\text{ T}\mid p)`} />.
+            </span>,
+            "That is the main idea of maximum likelihood estimation (MLE): pick the parameter that makes the observed data most probable.",
+          ]}
+        />
+      </Block>
+      <p className={styles.muted}>
+        Next we set up the formal language (parameter space, likelihood), then define the MLE precisely.
+      </p>
     </SceneFrame>
   );
 }
