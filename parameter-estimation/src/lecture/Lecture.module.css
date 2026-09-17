@@ -255,6 +255,14 @@
   overflow-x: auto;
 }
 
+.note a,
+.lead a {
+  color: var(--paper);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .mathDisplay {
   display: block;
   text-align: center;

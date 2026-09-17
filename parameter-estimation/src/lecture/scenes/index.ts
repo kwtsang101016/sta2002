@@ -4,6 +4,7 @@ import {
   BoxplotWhiskerGame,
   CovidEdaGame,
   CovidPredictionGame,
+  GammaMomMleGame,
   PoissonMomGame,
   UniformMomGame,
   VarianceBiasGame,
@@ -58,9 +59,13 @@ export const SCENES: SceneDef[] = [
 
   { id: "mom-def", chapter: "MoM", label: "Method of moments", Scene: content.MomDefinitionScene },
   { id: "mom-gamma", chapter: "MoM", label: "Gamma MoM", Scene: content.GammaMomScene },
+  { id: "mom-gamma-game", chapter: "Game", label: "Gamma MLE vs MoM", Scene: GammaMomMleGame },
   { id: "mom-pois", chapter: "MoM", label: "Poisson MoM", Scene: content.PoissonMomScene },
   { id: "mom-pois-game", chapter: "Game", label: "Poisson MoM sim", Scene: PoissonMomGame },
   { id: "mom-unif", chapter: "MoM", label: "Uniform MLE vs MoM", Scene: content.UniformMomScene },
   { id: "mom-unif-game", chapter: "Game", label: "Uniform compare", Scene: UniformMomGame },
   { id: "summary", chapter: "Summary", label: "Takeaways", Scene: content.SummaryScene },
+  { id: "ai-download", chapter: "Practice", label: "AI · download data", Scene: content.AiPracticeDownloadScene },
+  { id: "ai-eda", chapter: "Practice", label: "AI · returns EDA", Scene: content.AiPracticeEdaScene },
+  { id: "ai-gamma", chapter: "Practice", label: "AI · Gamma fit", Scene: content.AiPracticeGammaFitScene },
 ];

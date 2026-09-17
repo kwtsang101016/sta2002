@@ -34,6 +34,7 @@ export function OutlineScene() {
           "Maximum likelihood estimation (MLE)",
           "Unbiasedness",
           "Method of moments (MoM)",
+          "Practice with AI — Apple returns, EDA, Gamma MLE vs MoM",
         ]}
       />
       <p className={styles.muted} style={{ marginTop: 16 }}>
@@ -64,6 +65,7 @@ export function ReadingScene() {
               "Unbiased vs biased estimators",
               "Method of moments",
               "Comparing MLE and MoM",
+              "AI practice on real returns",
             ]}
           />
         </Block>

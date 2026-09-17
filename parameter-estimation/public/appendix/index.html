@@ -262,20 +262,25 @@
             };
         }
 
-        /** Hogg sample 100p-th percentile from ascending y_(1)≤⋯≤y_(n). */
+        /** Hogg sample 100p-th percentile: (n+1)p-th order statistic with linear interpolation.
+         *  Extreme p: below 1/(n+1) → min; above n/(n+1) → max. */
         function samplePercentile(sorted, p) {
             const n = sorted.length;
-            const np = n * p;
-            if (Number.isInteger(np)) {
-                const k = np; // 1-based
-                return (sorted[k - 1] + sorted[k]) / 2;
+            if (n === 0) return NaN;
+            if (p < 1 / (n + 1)) return sorted[0];
+            if (p > n / (n + 1)) return sorted[n - 1];
+            const x = (n + 1) * p;
+            const r = Math.floor(x + 1e-12);
+            const f = x - r;
+            if (f < 1e-12) {
+                return sorted[r - 1];
             }
-            return sorted[Math.ceil(np) - 1];
+            return (1 - f) * sorted[r - 1] + f * sorted[r];
         }
 
         /**
          * Tukey box summary matching the lecture:
-         * Q1/median/Q3 = sample 25th/50th/75th percentiles (Hogg);
+         * Q1/median/Q3 = sample 25th/50th/75th percentiles (Hogg (n+1)p rule);
          * whiskers = most extreme data still inside the inner fences (not the fences themselves).
          */
         function tukeyBoxSummary(data) {
@@ -582,7 +587,7 @@
                 height: 520,
                 annotations: [
                     {
-                        text: "Box: Q1–Q3 (Hogg sample percentiles)<br>Whiskers: most extreme data still inside the inner fences<br>(not the fences themselves: Q1−1.5×IQR and Q3+1.5×IQR)<br>Dots: outliers beyond the inner fences",
+                        text: "Box: Q1–Q3 (Hogg (n+1)p percentiles)<br>Whiskers: most extreme data still inside the inner fences<br>(not the fences themselves: Q1−1.5×IQR and Q3+1.5×IQR)<br>Dots: outliers beyond the inner fences",
                         x: 0.02,
                         y: 0.98,
                         xref: 'paper',

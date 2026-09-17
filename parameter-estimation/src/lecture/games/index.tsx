@@ -10,11 +10,16 @@ import {
   type CovidRow,
 } from "../../covidData";
 import {
+  biasOf,
   binomialCdf,
   binomialPmf,
   createRng,
+  gammaMleShapeScale,
+  gammaMomShapeScale,
   mean,
+  mseOf,
   poissonCdf,
+  sampleGammaShapeScale,
   sampleNormal,
   samplePoisson,
   sampleUniform,
@@ -23,7 +28,7 @@ import {
 } from "../../utils";
 import styles from "../Lecture.module.css";
 import { usePrintMode } from "../printContext";
-import { Formula, InlineMath, MathText, SceneFrame } from "../scenes/shared";
+import { Block, Formula, InlineMath, MathText, SceneFrame } from "../scenes/shared";
 
 /* ── Boxplot whisker builder ── */
 type BoxSummary = {
@@ -41,16 +46,20 @@ type BoxSummary = {
   outliers: number[];
 };
 
-/** Hogg sample 100p-th percentile from ascending order stats y_(1)≤⋯≤y_(n). */
+/** Hogg sample 100p-th percentile: (n+1)p-th order statistic with linear interpolation.
+ *  Extreme p: below 1/(n+1) → min; above n/(n+1) → max. */
 function samplePercentile(sorted: number[], p: number): number {
   const n = sorted.length;
-  const np = n * p;
-  if (Number.isInteger(np)) {
-    const k = np; // 1-based index
-    return (sorted[k - 1] + sorted[k]) / 2;
+  if (n === 0) return NaN;
+  if (p < 1 / (n + 1)) return sorted[0];
+  if (p > n / (n + 1)) return sorted[n - 1];
+  const x = (n + 1) * p;
+  const r = Math.floor(x + 1e-12); // integer part (1-based index when x is integer)
+  const f = x - r; // fractional part
+  if (f < 1e-12) {
+    return sorted[r - 1];
   }
-  const k = Math.ceil(np);
-  return sorted[k - 1];
+  return (1 - f) * sorted[r - 1] + f * sorted[r];
 }
 
 /** Quartiles via Hogg percentiles: Q1 = 25th, median = 50th, Q3 = 75th. */
@@ -270,7 +279,7 @@ export function BoxplotWhiskerGame() {
       <p className={styles.lead}>
         Rule to practice: <strong>whiskers reach the most extreme data points still inside the inner fences</strong>{" "}
         (Q1 − 1.5·IQR and Q3 + 1.5·IQR). Here Q1 / median / Q3 are the sample 25th / 50th / 75th percentiles (Hogg’s{" "}
-        <MathText text={String.raw`$np$`} /> rule). Points beyond those fences become outlier dots — they do{" "}
+        <MathText text={String.raw`$(n+1)p$`} /> rule). Points beyond those fences become outlier dots — they do{" "}
         <em>not</em> stretch the whiskers.
       </p>
       <p className={styles.muted}>
@@ -865,6 +874,183 @@ export function PoissonMomGame() {
         </svg>
       </figure>
       <p className={styles.note}>Prefer lowest-order moments: the mean-based estimator is more stable.</p>
+    </SceneFrame>
+  );
+}
+
+/* ── Gamma MLE vs MoM comparison ── */
+export function GammaMomMleGame() {
+  const print = usePrintMode();
+  const [n, setN] = useState(50);
+  const [shape, setShape] = useState(2);
+  const [scale, setScale] = useState(1);
+  const [reps, setReps] = useState(20);
+  const [seed, setSeed] = useState(7);
+
+  const result = useMemo(() => {
+    const rng = createRng(seed);
+    const mleShapes: number[] = [];
+    const mleScales: number[] = [];
+    const momShapes: number[] = [];
+    const momScales: number[] = [];
+    for (let r = 0; r < reps; r += 1) {
+      const sample = Array.from({ length: n }, () => sampleGammaShapeScale(shape, scale, rng));
+      const mle = gammaMleShapeScale(sample);
+      const mom = gammaMomShapeScale(sample);
+      if (Number.isFinite(mle.shape) && Number.isFinite(mle.scale)) {
+        mleShapes.push(mle.shape);
+        mleScales.push(mle.scale);
+      }
+      if (Number.isFinite(mom.shape) && Number.isFinite(mom.scale)) {
+        momShapes.push(mom.shape);
+        momScales.push(mom.scale);
+      }
+    }
+    return {
+      mle: {
+        shapeAvg: mean(mleShapes),
+        scaleAvg: mean(mleScales),
+        shapeBias: biasOf(mleShapes, shape),
+        scaleBias: biasOf(mleScales, scale),
+        shapeMse: mseOf(mleShapes, shape),
+        scaleMse: mseOf(mleScales, scale),
+      },
+      mom: {
+        shapeAvg: mean(momShapes),
+        scaleAvg: mean(momScales),
+        shapeBias: biasOf(momShapes, shape),
+        scaleBias: biasOf(momScales, scale),
+        shapeMse: mseOf(momShapes, shape),
+        scaleMse: mseOf(momScales, scale),
+      },
+    };
+  }, [n, shape, scale, reps, seed]);
+
+  const fmt = (value: number) => (Number.isFinite(value) ? value.toFixed(4) : "—");
+
+  return (
+    <SceneFrame kicker="Game" title="Gamma: MLE vs MoM" tone="gold">
+      <p className={styles.lead}>
+        Simulate i.i.d. samples from <InlineMath tex={String.raw`\mathrm{Gamma}(\theta_1,\theta_2)`} /> (shape–scale:
+        mean <InlineMath tex={String.raw`\theta_1\theta_2`} />). Compare numerical MLE with closed-form MoM.
+      </p>
+
+      {!print ? (
+        <div className={styles.tools} style={{ flexWrap: "wrap", gap: 12 }}>
+          <label>
+            <span className={styles.muted}>n </span>
+            <input
+              className={styles.numberInput}
+              type="number"
+              min={10}
+              max={300}
+              value={n}
+              onChange={(e) => setN(Math.max(10, Math.min(300, Number(e.target.value) || 10)))}
+            />
+          </label>
+          <label>
+            <InlineMath tex={String.raw`\theta_1`} />{" "}
+            <input
+              className={styles.numberInput}
+              type="number"
+              min={0.2}
+              max={20}
+              step={0.1}
+              value={shape}
+              onChange={(e) => setShape(Math.max(0.2, Number(e.target.value) || 0.2))}
+            />
+          </label>
+          <label>
+            <InlineMath tex={String.raw`\theta_2`} />{" "}
+            <input
+              className={styles.numberInput}
+              type="number"
+              min={0.2}
+              max={10}
+              step={0.1}
+              value={scale}
+              onChange={(e) => setScale(Math.max(0.2, Number(e.target.value) || 0.2))}
+            />
+          </label>
+          <label>
+            <span className={styles.muted}>reps </span>
+            <input
+              className={styles.numberInput}
+              type="number"
+              min={1}
+              max={100}
+              value={reps}
+              onChange={(e) => setReps(Math.max(1, Math.min(100, Number(e.target.value) || 1)))}
+            />
+          </label>
+          <button className={styles.toolBtn} type="button" onClick={() => setSeed((s) => s + 1)}>
+            RESIMULATE
+          </button>
+        </div>
+      ) : (
+        <p className={styles.muted}>
+          Fixed demo: <InlineMath tex={`n=${n}`} />, <InlineMath tex={`\\theta_1=${shape}`} />,{" "}
+          <InlineMath tex={`\\theta_2=${scale}`} />, {reps} replications.
+        </p>
+      )}
+
+      <div className={styles.twoCol}>
+        <Block title="MLE (numerical)">
+          <p>
+            Avg <InlineMath tex={String.raw`\hat\theta_1`} />: <strong>{fmt(result.mle.shapeAvg)}</strong>{" "}
+            <span className={styles.muted}>(true {shape.toFixed(2)})</span>
+          </p>
+          <p>
+            Avg <InlineMath tex={String.raw`\hat\theta_2`} />: <strong>{fmt(result.mle.scaleAvg)}</strong>{" "}
+            <span className={styles.muted}>(true {scale.toFixed(2)})</span>
+          </p>
+          <p className={styles.muted}>
+            Bias: {fmt(result.mle.shapeBias)}, {fmt(result.mle.scaleBias)}
+          </p>
+          <p className={styles.muted}>
+            MSE: {fmt(result.mle.shapeMse)}, {fmt(result.mle.scaleMse)}
+          </p>
+        </Block>
+        <Block title="MoM (closed form)">
+          <p>
+            Avg <InlineMath tex={String.raw`\tilde\theta_1`} />: <strong>{fmt(result.mom.shapeAvg)}</strong>{" "}
+            <span className={styles.muted}>(true {shape.toFixed(2)})</span>
+          </p>
+          <p>
+            Avg <InlineMath tex={String.raw`\tilde\theta_2`} />: <strong>{fmt(result.mom.scaleAvg)}</strong>{" "}
+            <span className={styles.muted}>(true {scale.toFixed(2)})</span>
+          </p>
+          <p className={styles.muted}>
+            Bias: {fmt(result.mom.shapeBias)}, {fmt(result.mom.scaleBias)}
+          </p>
+          <p className={styles.muted}>
+            MSE: {fmt(result.mom.shapeMse)}, {fmt(result.mom.scaleMse)}
+          </p>
+        </Block>
+      </div>
+
+      <div className={styles.twoCol} style={{ marginTop: 12 }}>
+        <Block title="MLE equations">
+          <Formula
+            tex={String.raw`\log\hat\theta_1-\psi(\hat\theta_1)=\log\bar X-\dfrac{1}{n}\sum\log X_i`}
+          />
+          <Formula tex={String.raw`\hat\theta_2=\bar X/\hat\theta_1`} />
+          <p className={styles.muted}>
+            <InlineMath tex={String.raw`\psi`} /> is the digamma function — solve numerically for{" "}
+            <InlineMath tex={String.raw`\hat\theta_1`} />.
+          </p>
+        </Block>
+        <Block title="MoM equations">
+          <Formula tex={String.raw`V=\dfrac{1}{n}\sum(X_i-\bar X)^2`} />
+          <Formula tex={String.raw`\tilde\theta_1=\bar X^2/V,\qquad \tilde\theta_2=V/\bar X`} />
+          <p className={styles.muted}>Algebra only — no iterative solver.</p>
+        </Block>
+      </div>
+
+      <p className={styles.note} style={{ marginTop: 12 }}>
+        Takeaway: for Gamma, MoM is easy to compute by hand; MLE needs a computer. The averages above are over the
+        chosen number of replications.
+      </p>
     </SceneFrame>
   );
 }

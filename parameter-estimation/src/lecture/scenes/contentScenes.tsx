@@ -73,21 +73,27 @@ export function BoxplotScene1() {
         />
         <p>
           <MathText
-            text={String.raw`To find the sample $100p$-th percentile from ordered data $y_{(1)}\le \cdots\le y_{(n)}$ (Hogg):`}
+            text={String.raw`Sample $100p$-th percentile from ordered data $y_{(1)}\le \cdots\le y_{(n)}$ (Hogg): take the $(n+1)p$-th order statistic (with endpoint conventions below).`}
           />
         </p>
         <BulletList
           items={[
-            <MathText key="a" text={String.raw`Compute the product $np$.`} />,
-            <span key="b">
-              If <InlineMath tex="np" /> is <strong>not</strong> an integer, round <strong>up</strong> to the next
-              integer <InlineMath tex="k" /> and take <InlineMath tex="y_{(k)}" />.
-            </span>,
             <MathText
-              key="c"
-              text={String.raw`If $np=k$ is an integer, take the average $\dfrac{y_{(k)}+y_{(k+1)}}{2}$.`}
+              key="a"
+              text={String.raw`If $p<\dfrac{1}{n+1}$, use the minimum $y_{(1)}$; if $p>\dfrac{n}{n+1}$, use the maximum $y_{(n)}$.`}
             />,
+            <MathText
+              key="b"
+              text={String.raw`Otherwise, if $(n+1)p=k$ is an integer, the percentile is $y_{(k)}$.`}
+            />,
+            <span key="c">
+              If <InlineMath tex={String.raw`(n+1)p=r+f`} /> is not an integer (
+              <InlineMath tex="r" /> integer part, <InlineMath tex="f" /> fractional part), interpolate:
+            </span>,
           ]}
+        />
+        <Formula
+          tex={String.raw`\tilde\pi_p=(1-f)\,y_{(r)}+f\,y_{(r+1)}`}
         />
         <p className={styles.muted}>
           Example: for <InlineMath tex="Q_1" /> use <InlineMath tex="p=0.25" />; for <InlineMath tex="Q_3" /> use{" "}
@@ -644,9 +650,14 @@ export function GammaMomScene() {
       </p>
       <Formula tex={String.raw`V:=\frac{1}{n}\sum_{i=1}^n(X_i-\bar X)^2`} />
       <Formula tex={String.raw`\tilde\theta_2=\frac{V}{\bar X},\qquad \tilde\theta_1=\frac{\bar X^2}{V}`} />
-      <p className={styles.muted}>
-        Gamma MLE typically has no closed form; MoM gives an analytic estimator (MLE via numerical maximization).
+      <p>
+        By contrast, the MLE has <strong>no closed form</strong>: one must solve{" "}
+        <InlineMath
+          tex={String.raw`\log\hat\theta_1-\psi(\hat\theta_1)=\log\bar X-\frac{1}{n}\sum\log X_i`}
+        />{" "}
+        numerically, then set <InlineMath tex={String.raw`\hat\theta_2=\bar X/\hat\theta_1`} />.
       </p>
+      <p className={styles.muted}>Next: simulate both estimators side by side.</p>
     </SceneFrame>
   );
 }
@@ -698,6 +709,112 @@ export function SummaryScene() {
           "Check unbiasedness separately: MLE of normal variance is biased.",
         ]}
       />
+    </SceneFrame>
+  );
+}
+
+function AiPracticeNote() {
+  return (
+    <p className={styles.note}>
+      <strong>You may try:</strong> paste the prompt into{" "}
+      <a href="https://copilot.microsoft.com/" target="_blank" rel="noopener noreferrer">
+        Microsoft Copilot
+      </a>{" "}
+      (copilot.microsoft.com), then run the Python in{" "}
+      <a href="https://colab.research.google.com/" target="_blank" rel="noopener noreferrer">
+        Google Colab
+      </a>{" "}
+      (colab.research.google.com). Download any files, and <strong>read the code</strong> so you know what the assistant
+      did — do not simply accept the output.
+    </p>
+  );
+}
+
+export function AiPracticeDownloadScene() {
+  return (
+    <SceneFrame kicker="Practice with AI" title="Step 1 — download Apple prices with akshare." tone="white">
+      <p className={styles.lead}>
+        Use an AI coding assistant to fetch <strong>real data</strong>, then check that the result matches what this
+        course taught you about samples and files — not just “the chatbot said so.”
+      </p>
+      <AiPracticeNote />
+      <p className={styles.kicker} style={{ marginTop: 18 }}>
+        EXAMPLE PROMPT · COPY AND ADAPT
+      </p>
+      <pre className={styles.promptCard}>{`Write a Python script that uses the akshare package to download Apple's
+(AAPL) daily stock prices for the past one year.
+Save the data to a CSV file (for example aapl_one_year.csv).
+Print the first five rows and list the column names.
+If akshare needs a special ticker or market code for Apple, explain what you used.`}</pre>
+      <p className={styles.note}>
+        <strong>Check before you continue:</strong> open the CSV — you should see dates and prices. Confirm the span is
+        about one year and that the file really came from <code>akshare</code> (not a silent switch to another package).
+      </p>
+    </SceneFrame>
+  );
+}
+
+export function AiPracticeEdaScene() {
+  return (
+    <SceneFrame kicker="Practice with AI" title="Step 2 — histograms and boxplots of returns." tone="white">
+      <p className={styles.lead}>
+        Apply the EDA tools from this lecture: <strong>histograms</strong> and <strong>boxplots</strong>, with
+        quartiles / percentiles computed as in Hogg.
+      </p>
+      <AiPracticeNote />
+      <p className={styles.kicker} style={{ marginTop: 18 }}>
+        EXAMPLE PROMPT · COPY AND ADAPT
+      </p>
+      <pre className={styles.promptCard}>{`Read aapl_one_year.csv.
+Compute daily returns from the closing prices
+  (for example r_t = (Close_t - Close_{t-1}) / Close_{t-1}).
+Also compute squared daily returns r_t^2.
+
+Generate TWO sets of plots:
+  (1) histogram and boxplot of the daily returns;
+  (2) histogram and boxplot of the squared daily returns.
+Label axes clearly. Save the figures (PNG is fine).
+In the boxplots, state how Q1 / median / Q3 were computed.`}</pre>
+      <p className={styles.note}>
+        <strong>Questions to ask yourself:</strong> Are returns roughly centered near 0? Are squared returns skewed and
+        nonnegative (as a Gamma model would require)? Do the boxplot whiskers look like “extreme points inside the
+        fences,” not the fences themselves?
+      </p>
+    </SceneFrame>
+  );
+}
+
+export function AiPracticeGammaFitScene() {
+  return (
+    <SceneFrame kicker="Practice with AI" title="Step 3 — Gamma MLE vs MoM on squared returns." tone="white">
+      <p className={styles.lead}>
+        Squared returns are positive — a natural place to try{" "}
+        <InlineMath tex={String.raw`\mathrm{Gamma}(\theta_1,\theta_2)`} /> and compare{" "}
+        <strong>MLE</strong> (numerical) with <strong>MoM</strong> (closed form), including runtime.
+      </p>
+      <AiPracticeNote />
+      <p className={styles.kicker} style={{ marginTop: 18 }}>
+        EXAMPLE PROMPT · COPY AND ADAPT
+      </p>
+      <pre className={styles.promptCard}>{`Using the squared daily returns from aapl_one_year.csv, fit a Gamma
+distribution in the shape–scale parameterization (mean = θ1 * θ2).
+
+1) Method of moments: use the closed-form estimators
+   θ̃1 = (sample mean)^2 / (sample variance),
+   θ̃2 = (sample variance) / (sample mean)
+   (population variance with divisor n is fine if you state it).
+2) Maximum likelihood: solve the digamma equation numerically for θ1,
+   then set θ2 = mean / θ1.
+
+Time (1) and (2) SEPARATELY (e.g. time.perf_counter) and print:
+  - MoM estimates and elapsed seconds
+  - MLE estimates and elapsed seconds
+Do not mix the two timings into one stopwatch.`}</pre>
+      <p className={styles.note}>
+        <strong>Check what you learned:</strong> MoM should be nearly instant; MLE should need iteration. Are both
+        shape and scale positive? If MLE fails or is slower only because of bad code, ask the assistant to fix the
+        solver — then verify the formulas against the lecture.
+      </p>
     </SceneFrame>
   );
 }
