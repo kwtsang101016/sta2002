@@ -456,9 +456,44 @@ h1 {
   white-space: nowrap;
 }
 
-.name-card__english {
+.name-card__true {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.72em;
+  line-height: 1.15;
+  font-weight: 600;
+}
+
+.name-card--compact .name-card__true {
+  font-size: clamp(7px, 0.9vw, 10px);
+}
+
+.name-card--aa .name-card__true {
+  color: #efd9a8;
+}
+
+.name-card__english,
+.name-card__meta {
   font-size: 11px;
   color: var(--muted);
+}
+
+.name-card--aa .name-card__meta {
+  color: #efd9a8;
+}
+
+.name-card__photo {
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+  border-radius: 2px;
+  flex: 0 0 auto;
+  background: #ddd;
+}
+
+.name-card--enlarged .name-card__photo {
+  width: 72px;
+  height: 72px;
 }
 
 .name-card--compact {

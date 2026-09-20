@@ -18,7 +18,19 @@ function matchesQuery(person: DisplayPerson, query: string): boolean {
   if (!needle) {
     return true;
   }
-  return [person.displayName, person.englishName, person.role].join(" ").toLowerCase().includes(needle);
+  return [
+    person.displayName,
+    person.trueName,
+    person.englishName,
+    person.displayCollege,
+    person.displayCountry,
+    person.displayHobbies,
+    person.plan,
+    person.role,
+  ]
+    .join(" ")
+    .toLowerCase()
+    .includes(needle);
 }
 
 function byDisplayName(a: DisplayPerson, b: DisplayPerson): number {
@@ -226,7 +238,10 @@ export function ReadonlyClassroom({ snapshot, onBack }: ReadonlyClassroomProps) 
               {query.trim() && seatedMatches.length > 0 ? ` · ${seatedMatches.length} seated match` : ""}
             </p>
           </div>
-          <p className="tray__hint">Read-only attendance. Search to find who was present or absent.</p>
+          <p className="tray__hint">
+            Read-only attendance. Search name, college, country, or hobbies. Press and hold a seat to
+            see the full name card.
+          </p>
           <label className="tray__search">
             <span>Find people</span>
             <input
