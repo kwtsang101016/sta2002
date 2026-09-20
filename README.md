@@ -10,6 +10,7 @@ Interactive HTML lecture apps for **STA2002 Probability and Statistics II**. Eac
 | Parameter Estimation | [`parameter-estimation/`](parameter-estimation/) | [Open lecture](https://kwtsang101016.github.io/sta2002/parameter-estimation/) | `npm run dev` → http://127.0.0.1:5176 |
 | Confidence Intervals | [`confidence-intervals/`](confidence-intervals/) | [Open lecture](https://kwtsang101016.github.io/sta2002/confidence-intervals/) | `npm run dev` → http://127.0.0.1:5177 |
 | Hypothesis Testing | [`hypothesis-testing/`](hypothesis-testing/) | [Open lecture](https://kwtsang101016.github.io/sta2002/hypothesis-testing/) | `npm run dev` → http://127.0.0.1:5178 |
+| Course Calendar | [`calendar/`](calendar/) | [Open calendar](https://kwtsang101016.github.io/sta2002/calendar/) | `npm run dev` → http://127.0.0.1:5179 |
 
 **Course hub:** https://kwtsang101016.github.io/sta2002/
 
@@ -36,6 +37,7 @@ npm run dev:intro
 npm run dev:pe
 npm run dev:ci
 npm run dev:ht
+npm run dev:cal
 npm run build:all
 ```
 

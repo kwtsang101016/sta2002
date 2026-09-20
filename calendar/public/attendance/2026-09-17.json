@@ -1,0 +1,975 @@
+{
+  "date": "2026-09-17",
+  "course": "STA2002",
+  "section": "L02",
+  "recordedAt": "2026-09-17T08:50:37.453Z",
+  "label": "L02 · Method of moments, Unbiased estimation",
+  "studentRowCount": 8,
+  "seatsPerRow": 18,
+  "people": [
+    {
+      "id": "instructor-tsang",
+      "name": "曾家炜",
+      "englishName": "Ka Wai Tsang",
+      "role": "aa",
+      "present": true,
+      "placement": {
+        "zone": "advisor",
+        "row": 0,
+        "seat": 8
+      }
+    },
+    {
+      "id": "stu-124020002",
+      "name": "Vivian AILEEN",
+      "englishName": "",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090003",
+      "name": "毕紫晨",
+      "englishName": "BI, Zichen",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 1,
+        "seat": 12
+      }
+    },
+    {
+      "id": "stu-125090007",
+      "name": "蔡劭宇",
+      "englishName": "CAI, Shaoyu",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 3,
+        "seat": 11
+      }
+    },
+    {
+      "id": "stu-1155258124",
+      "name": "翟頌熙",
+      "englishName": "CHAK, Chung Hei",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090077",
+      "name": "陈梓淇",
+      "englishName": "CHEN, Ziqi",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125020113",
+      "name": "程可欣",
+      "englishName": "CHENG, Kexin",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-123020075",
+      "name": "成雨桐",
+      "englishName": "CHENG, Yutong",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124020161",
+      "name": "戴黎乐",
+      "englishName": "DAI, Lile",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124090083",
+      "name": "戴玺竹",
+      "englishName": "DAI, Xizhu",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090105",
+      "name": "董子渊",
+      "englishName": "DONG, Ziyuan",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124040016",
+      "name": "Bryan EDELSON",
+      "englishName": "",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 2,
+        "seat": 10
+      }
+    },
+    {
+      "id": "stu-125020129",
+      "name": "范羽萱",
+      "englishName": "FAN, Yuxuan",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090130",
+      "name": "冯梓轩",
+      "englishName": "FENG, Zixuan",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-123020097",
+      "name": "傅思源",
+      "englishName": "FU, Siyuan",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125020136",
+      "name": "傅资为",
+      "englishName": "FU, Ziwei",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 1,
+        "seat": 11
+      }
+    },
+    {
+      "id": "stu-125090155",
+      "name": "郭大有",
+      "englishName": "GUO, Dayou",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 4,
+        "seat": 11
+      }
+    },
+    {
+      "id": "stu-125020142",
+      "name": "韩昊洋",
+      "englishName": "HAN, Haoyang",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124090178",
+      "name": "何瀚宇",
+      "englishName": "HE, Hanyu",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090185",
+      "name": "贺杨天",
+      "englishName": "HE, Yangtian",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125030025",
+      "name": "何月田田",
+      "englishName": "HE, Yuetiantian",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 1,
+        "seat": 8
+      }
+    },
+    {
+      "id": "stu-125020149",
+      "name": "胡捷晞",
+      "englishName": "HU, Jiexi",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 4,
+        "seat": 0
+      }
+    },
+    {
+      "id": "stu-125090203",
+      "name": "胡诗睿",
+      "englishName": "HU, Shirui",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 1,
+        "seat": 10
+      }
+    },
+    {
+      "id": "stu-125020155",
+      "name": "黄嘉悦",
+      "englishName": "HUANG, Jiayue",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 1,
+        "seat": 15
+      }
+    },
+    {
+      "id": "stu-125090219",
+      "name": "黄俊凯",
+      "englishName": "HUANG, Junkai",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125091062",
+      "name": "黄莉乔",
+      "englishName": "HUANG, Leekiu",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090239",
+      "name": "黄梓城",
+      "englishName": "HUANG, Zicheng",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090268",
+      "name": "蒋智文",
+      "englishName": "JIANG, Zhiwen",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124090258",
+      "name": "蒋子琛",
+      "englishName": "JIANG, Zichen",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 6,
+        "seat": 8
+      }
+    },
+    {
+      "id": "stu-124040027",
+      "name": "Christabelle Feyfel JOHAN",
+      "englishName": "",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 2,
+        "seat": 9
+      }
+    },
+    {
+      "id": "stu-124040028",
+      "name": "Kellen JOUDAN",
+      "englishName": "",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 2,
+        "seat": 1
+      }
+    },
+    {
+      "id": "stu-125020179",
+      "name": "孔晨晰",
+      "englishName": "KONG, Chenxi",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124040033",
+      "name": "Kaylinn venezia KURNIAWAN",
+      "englishName": "",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 2,
+        "seat": 2
+      }
+    },
+    {
+      "id": "stu-125090292",
+      "name": "雷经瀚",
+      "englishName": "LEI, Jinghan",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124040039",
+      "name": "Vincentius LI",
+      "englishName": "",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 5,
+        "seat": 17
+      }
+    },
+    {
+      "id": "stu-1155257391",
+      "name": "李炯弘",
+      "englishName": "LI, Kwing Wang",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090322",
+      "name": "李沐阳",
+      "englishName": "LI, Muyang",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125020195",
+      "name": "李秋实",
+      "englishName": "LI, Qiushi",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 2,
+        "seat": 14
+      }
+    },
+    {
+      "id": "stu-125090349",
+      "name": "李妍凝",
+      "englishName": "LI, Yanning",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090364",
+      "name": "李则铭",
+      "englishName": "LI, Zeming",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125020203",
+      "name": "黎子姗",
+      "englishName": "LI, Zishan",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124040041",
+      "name": "Clayton LIE",
+      "englishName": "",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 2,
+        "seat": 8
+      }
+    },
+    {
+      "id": "stu-125020216",
+      "name": "林伊璇",
+      "englishName": "LIN, Yixuan",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-123090356",
+      "name": "刘清莹",
+      "englishName": "LIU, Qingying",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090433",
+      "name": "刘鑫宇",
+      "englishName": "LIU, Xinyu",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124090403",
+      "name": "刘钊丞",
+      "englishName": "LIU, Zhaocheng",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124020305",
+      "name": "洛欣睿",
+      "englishName": "LUO, Xinrui",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090467",
+      "name": "罗钰林",
+      "englishName": "LUO, Yulin",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 3,
+        "seat": 16
+      }
+    },
+    {
+      "id": "stu-125020248",
+      "name": "孟新雨",
+      "englishName": "MENG, Xinyu",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125020251",
+      "name": "莫媛婷",
+      "englishName": "MO, Yuanting",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124020317",
+      "name": "宁尚飞",
+      "englishName": "NING, Shangfei",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125040015",
+      "name": "CHERYLL ANTOINETTE TANU",
+      "englishName": "",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125040022",
+      "name": "DAVIN SEBASTIAN ISKANDAR",
+      "englishName": "",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 2,
+        "seat": 15
+      }
+    },
+    {
+      "id": "stu-125040030",
+      "name": "ELVANIA GELVARETTA",
+      "englishName": "",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125040061",
+      "name": "NICHOLAS EVAN FERDINAND",
+      "englishName": "",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 4,
+        "seat": 13
+      }
+    },
+    {
+      "id": "stu-125020272",
+      "name": "邱铖毅",
+      "englishName": "QIU, Chengyi",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090545",
+      "name": "单一川",
+      "englishName": "SHAN, Yichuan",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090548",
+      "name": "邵一涵",
+      "englishName": "SHAO, Yihan",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090564",
+      "name": "沈梓研",
+      "englishName": "SHEN, Ziyan",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090569",
+      "name": "施李宸",
+      "englishName": "SHI, Lichen",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-123090502",
+      "name": "史文博",
+      "englishName": "SHI, Wenbo",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090593",
+      "name": "孙鹤衍",
+      "englishName": "SUN, Heyan",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124090552",
+      "name": "孙健壹",
+      "englishName": "SUN, Jianyi",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125020289",
+      "name": "孙予同",
+      "englishName": "SUN, Yutong",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124090574",
+      "name": "谭湘妃",
+      "englishName": "TAN, Xiangfei",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125020294",
+      "name": "唐世泽",
+      "englishName": "TANG, Shize",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124090578",
+      "name": "唐彦雄",
+      "englishName": "TANG, Yanxiong",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124020352",
+      "name": "汪丁一",
+      "englishName": "WANG, Dingyi",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090638",
+      "name": "王恩泽",
+      "englishName": "WANG, Enze",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 7,
+        "seat": 14
+      }
+    },
+    {
+      "id": "stu-125030076",
+      "name": "王嘉阳",
+      "englishName": "WANG, Jiayang",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090652",
+      "name": "王柯樵",
+      "englishName": "WANG, Keqiao",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124090620",
+      "name": "王敏韬",
+      "englishName": "WANG, Mintao",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090658",
+      "name": "王启铭",
+      "englishName": "WANG, Qiming",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124020355",
+      "name": "王仁智",
+      "englishName": "WANG, Renzhi",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 5,
+        "seat": 13
+      }
+    },
+    {
+      "id": "stu-125090687",
+      "name": "王韵翔",
+      "englishName": "WANG, Yunxiang",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124020364",
+      "name": "王雨欣",
+      "englishName": "WANG, Yuxin",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 5,
+        "seat": 12
+      }
+    },
+    {
+      "id": "stu-125090694",
+      "name": "王茁宇",
+      "englishName": "WANG, Zhuoyu",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090711",
+      "name": "魏凯程",
+      "englishName": "WEI, Kaicheng",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124020111",
+      "name": "James Richard WHEATER",
+      "englishName": "",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 5,
+        "seat": 16
+      }
+    },
+    {
+      "id": "stu-125090723",
+      "name": "伍柏睿",
+      "englishName": "WU, Bairui",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-122010037",
+      "name": "吴若宁",
+      "englishName": "WU, Ruoning",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090754",
+      "name": "吴泳逸",
+      "englishName": "WU, Yongyi",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 0,
+        "seat": 10
+      }
+    },
+    {
+      "id": "stu-125020327",
+      "name": "吴悠",
+      "englishName": "WU, You",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090767",
+      "name": "项子淼",
+      "englishName": "XIANG, Zimiao",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090786",
+      "name": "谢雨菲",
+      "englishName": "XIE, Yufei",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 7,
+        "seat": 9
+      }
+    },
+    {
+      "id": "stu-123030074",
+      "name": "徐天玥",
+      "englishName": "XU, Tianyue",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125020352",
+      "name": "杨翰远",
+      "englishName": "YANG, Hanyuan",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125020365",
+      "name": "杨子立",
+      "englishName": "YANG, Zili",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 2,
+        "seat": 4
+      }
+    },
+    {
+      "id": "stu-125090866",
+      "name": "叶强",
+      "englishName": "YE, Qiang",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090884",
+      "name": "于晓涛",
+      "englishName": "YU, Xiaotao",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090897",
+      "name": "曾凯文",
+      "englishName": "ZENG, Kaiwen",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-123020323",
+      "name": "章传景",
+      "englishName": "ZHANG, Chuanjing",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090916",
+      "name": "张瀚文",
+      "englishName": "ZHANG, Hanwen",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-124090881",
+      "name": "张绍楠",
+      "englishName": "ZHANG, Shaonan",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090940",
+      "name": "张文越",
+      "englishName": "ZHANG, Wenyue",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 7,
+        "seat": 10
+      }
+    },
+    {
+      "id": "stu-125020397",
+      "name": "张芯语",
+      "englishName": "ZHANG, Xinyu",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090950",
+      "name": "张雅婧",
+      "englishName": "ZHANG, Yajing",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 0,
+        "seat": 7
+      }
+    },
+    {
+      "id": "stu-124020444",
+      "name": "张雨荷",
+      "englishName": "ZHANG, Yuhe",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090957",
+      "name": "张云瞰",
+      "englishName": "ZHANG, Yunkan",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125020402",
+      "name": "张禹阳",
+      "englishName": "ZHANG, Yuyang",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125090991",
+      "name": "赵一鸣",
+      "englishName": "ZHAO, Yiming",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-125020414",
+      "name": "郑天乐",
+      "englishName": "ZHENG, Tianle",
+      "role": "student",
+      "present": false,
+      "placement": null
+    },
+    {
+      "id": "stu-123090921",
+      "name": "祝可馨",
+      "englishName": "ZHU, Kexin",
+      "role": "student",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 6,
+        "seat": 11
+      }
+    },
+    {
+      "id": "guest-85ba10e6-734c-43f1-b036-0d8d4ace3242",
+      "name": "67",
+      "englishName": "67",
+      "role": "guest",
+      "present": true,
+      "placement": {
+        "zone": "student",
+        "row": 3,
+        "seat": 14
+      }
+    },
+    {
+      "id": "guest-a34f4c01-b9a9-42de-8627-471708727f86",
+      "name": "Davin",
+      "englishName": "",
+      "role": "guest",
+      "present": false,
+      "placement": null
+    }
+  ]
+}
