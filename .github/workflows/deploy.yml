@@ -30,6 +30,7 @@ jobs:
             introduction/package-lock.json
             parameter-estimation/package-lock.json
             confidence-intervals/package-lock.json
+            hypothesis-testing/package-lock.json
 
       - name: Install and build introduction
         run: |
@@ -46,12 +47,18 @@ jobs:
           npm ci --prefix confidence-intervals
           npm run build --prefix confidence-intervals
 
+      - name: Install and build hypothesis-testing
+        run: |
+          npm ci --prefix hypothesis-testing
+          npm run build --prefix hypothesis-testing
+
       - name: Assemble site
         run: |
-          mkdir -p _site/introduction _site/parameter-estimation _site/confidence-intervals
+          mkdir -p _site/introduction _site/parameter-estimation _site/confidence-intervals _site/hypothesis-testing
           cp -r introduction/dist/* _site/introduction/
           cp -r parameter-estimation/dist/* _site/parameter-estimation/
           cp -r confidence-intervals/dist/* _site/confidence-intervals/
+          cp -r hypothesis-testing/dist/* _site/hypothesis-testing/
           cp site/index.html _site/index.html
           touch _site/.nojekyll
 

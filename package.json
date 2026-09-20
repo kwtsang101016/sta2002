@@ -6,9 +6,11 @@
     "dev:intro": "npm run dev --prefix introduction",
     "dev:pe": "npm run dev --prefix parameter-estimation",
     "dev:ci": "npm run dev --prefix confidence-intervals",
+    "dev:ht": "npm run dev --prefix hypothesis-testing",
     "build:intro": "npm run build --prefix introduction",
     "build:pe": "npm run build --prefix parameter-estimation",
     "build:ci": "npm run build --prefix confidence-intervals",
-    "build:all": "npm run build:intro && npm run build:pe && npm run build:ci"
+    "build:ht": "npm run build --prefix hypothesis-testing",
+    "build:all": "npm run build:intro && npm run build:pe && npm run build:ci && npm run build:ht"
   }
 }
