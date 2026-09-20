@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { AttendanceSnapshot, DisplayPerson } from "../lib/attendance";
 import { toDisplayPerson } from "../lib/attendance";
 import { NameCard } from "./NameCard";
@@ -41,7 +41,9 @@ export function ReadonlyClassroom({ snapshot, onBack }: ReadonlyClassroomProps) 
   const [query, setQuery] = useState("");
   const [tool, setTool] = useState<"view" | "zoomIn" | "zoomOut">("view");
   const [zoom, setZoom] = useState(1);
-  const [zoomOrigin, setZoomOrigin] = useState({ x: 50, y: 40 });
+  const hallViewportRef = useRef<HTMLDivElement | null>(null);
+  const prevZoomRef = useRef(1);
+  const zoomAnchorRef = useRef<{ contentX: number; contentY: number } | null>(null);
 
   const people = useMemo(() => snapshot.people.map(toDisplayPerson), [snapshot.people]);
 
@@ -80,18 +82,23 @@ export function ReadonlyClassroom({ snapshot, onBack }: ReadonlyClassroomProps) 
   const guests = unseated.filter((person) => person.role === "guest");
 
   const seatCount = snapshot.seatsPerRow;
+  const seatGap = 4 * zoom;
+  const seatMin = Math.max(36, 44 * zoom);
+  const seatsGridWidth = seatCount * seatMin + Math.max(0, seatCount - 1) * seatGap;
+  const hallMinWidth = 72 + 8 + seatsGridWidth + 24;
   const seatLabel = (zone: "advisor" | "student", row: number, seat: number) =>
     zone === "advisor" ? `I-${seat + 1}` : `R${row + 1}-${seat + 1}`;
 
-  const applyZoom = (clientX: number, clientY: number, direction: "in" | "out", hall: HTMLElement) => {
-    const rect = hall.getBoundingClientRect();
-    if (rect.width <= 0 || rect.height <= 0) {
+  const applyZoomAtClientPoint = (clientX: number, clientY: number, direction: "in" | "out") => {
+    const viewport = hallViewportRef.current;
+    if (!viewport) {
       return;
     }
-    setZoomOrigin({
-      x: Math.min(100, Math.max(0, ((clientX - rect.left) / rect.width) * 100)),
-      y: Math.min(100, Math.max(0, ((clientY - rect.top) / rect.height) * 100)),
-    });
+    const vpRect = viewport.getBoundingClientRect();
+    zoomAnchorRef.current = {
+      contentX: viewport.scrollLeft + (clientX - vpRect.left),
+      contentY: viewport.scrollTop + (clientY - vpRect.top),
+    };
     setZoom((current) => {
       if (direction === "in") {
         return Math.min(3.2, Number((current * 1.4).toFixed(2)));
@@ -99,6 +106,22 @@ export function ReadonlyClassroom({ snapshot, onBack }: ReadonlyClassroomProps) 
       return Math.max(1, Number((current / 1.4).toFixed(2)));
     });
   };
+
+  useLayoutEffect(() => {
+    const viewport = hallViewportRef.current;
+    const anchor = zoomAnchorRef.current;
+    if (!viewport || !anchor) {
+      prevZoomRef.current = zoom;
+      return;
+    }
+    const ratio = zoom / prevZoomRef.current;
+    if (ratio !== 1) {
+      viewport.scrollLeft = Math.max(0, anchor.contentX * ratio - viewport.clientWidth / 2);
+      viewport.scrollTop = Math.max(0, anchor.contentY * ratio - viewport.clientHeight / 2);
+    }
+    prevZoomRef.current = zoom;
+    zoomAnchorRef.current = null;
+  }, [zoom]);
 
   return (
     <div className="page cat-page">
@@ -130,7 +153,7 @@ export function ReadonlyClassroom({ snapshot, onBack }: ReadonlyClassroomProps) 
 
       <p className="howto">
         This is a saved attendance record. Seats cannot be changed. Press and hold a filled seat to
-        preview the name card. Use zoom tools to inspect crowded rows.
+        preview the name card. Use magnifier tools to spread seats for crowded rows.
       </p>
 
       <section className="controls" aria-label="View tools">
@@ -160,31 +183,39 @@ export function ReadonlyClassroom({ snapshot, onBack }: ReadonlyClassroomProps) 
             type="button"
             className="tool-button"
             onClick={() => {
+              zoomAnchorRef.current = null;
               setZoom(1);
-              setZoomOrigin({ x: 50, y: 40 });
               setTool("view");
             }}
           >
             Reset zoom
           </button>
         </div>
-        <p className="zoom-readout">Zoom {zoom.toFixed(2)}×</p>
+        <p className="zoom-readout">
+          Spacing {zoom.toFixed(2)}×
+          {tool !== "view" ? " · tap the hall to spread or tighten seats" : ""}
+        </p>
       </section>
 
       <div className="workspace">
-        <div className={`hall-viewport${tool !== "view" ? " hall-viewport--zoom-tool" : ""}`}>
+        <div
+          ref={hallViewportRef}
+          className={`hall-viewport${tool !== "view" ? " hall-viewport--zoom-tool" : ""}`}
+          onClick={(event) => {
+            if (tool === "view") {
+              return;
+            }
+            applyZoomAtClientPoint(event.clientX, event.clientY, tool === "zoomIn" ? "in" : "out");
+          }}
+        >
           <main
             className="hall"
             style={{
               ["--seats-per-row" as string]: seatCount,
-              transform: `scale(${zoom})`,
-              transformOrigin: `${zoomOrigin.x}% ${zoomOrigin.y}%`,
-            }}
-            onClick={(event) => {
-              if (tool === "view") {
-                return;
-              }
-              applyZoom(event.clientX, event.clientY, tool === "zoomIn" ? "in" : "out", event.currentTarget);
+              ["--zoom" as string]: zoom,
+              ["--seat-gap" as string]: `${seatGap}px`,
+              ["--seat-min" as string]: `${seatMin}px`,
+              minWidth: `${hallMinWidth}px`,
             }}
           >
             <div className="blackboard">Front · 讲台</div>

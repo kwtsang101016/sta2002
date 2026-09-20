@@ -259,9 +259,7 @@ h1 {
   padding: 12px;
   display: grid;
   gap: 10px;
-  transform-origin: 50% 40%;
-  transition: transform 0.12s ease-out;
-  will-change: transform;
+  box-sizing: border-box;
 }
 
 .blackboard {
@@ -297,8 +295,8 @@ h1 {
 
 .class-row__seats {
   display: grid;
-  grid-template-columns: repeat(var(--seats-per-row), minmax(0, 1fr));
-  gap: 4px;
+  grid-template-columns: repeat(var(--seats-per-row), minmax(var(--seat-min, 36px), 1fr));
+  gap: var(--seat-gap, 4px);
   width: 100%;
 }
 
