@@ -905,6 +905,29 @@ export function CaseLabGame() {
     return { hits, bars, rate: hits / trials };
   }, [seed, n, normal, known, side, crit]);
 
+  const twoSidedWidths = useMemo(() => {
+    const z = zCrit(alpha);
+    const t = tCrit(alpha, Math.max(1, n - 1));
+    const knownWidth = (2 * z * sigma) / Math.sqrt(n);
+    const averageUnknown = (skewed: boolean) => {
+      const rng = createRng(seed + (skewed ? 17 : 3));
+      let total = 0;
+      for (let i = 0; i < trials; i += 1) {
+        const sample = Array.from({ length: n }, () =>
+          skewed ? sampleMeanSdSkew(mu, sigma, skew, rng) : sampleNormal(mu, sigma, rng),
+        );
+        total += (2 * t * Math.sqrt(varianceN1(sample))) / Math.sqrt(n);
+      }
+      return total / trials;
+    };
+    return [
+      { id: 1, label: "Normal, σ known", width: knownWidth },
+      { id: 2, label: "Skewed, σ known", width: knownWidth },
+      { id: 3, label: "Normal, σ unknown", width: averageUnknown(false) },
+      { id: 4, label: "Skewed, σ unknown", width: averageUnknown(true) },
+    ];
+  }, [alpha, n, seed]);
+
   const formula =
     side === "two"
       ? known
@@ -978,6 +1001,32 @@ export function CaseLabGame() {
         Critical value {formatNum(crit, 3)} · empirical coverage{" "}
         <strong>{formatNum(100 * sim.rate, 1)}%</strong> of {trials} (target {formatNum(100 * conf, 0)}%)
       </p>
+      <div className={styles.tableWrap}>
+        <p className={styles.kicker}>Average two-sided width</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Case</th>
+              <th>Assumptions</th>
+              <th>Mean width</th>
+            </tr>
+          </thead>
+          <tbody>
+            {twoSidedWidths.map((row) => (
+              <tr key={row.id}>
+                <td>{row.id === caseId && side === "two" ? <strong>{row.id}</strong> : row.id}</td>
+                <td>{row.label}</td>
+                <td>{formatNum(row.width, 3)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p className={styles.muted}>
+          Knowing <MathText text="$\sigma$" /> replaces <MathText text="$s$" /> and <MathText text="$z$" /> replaces{" "}
+          <MathText text="$t$" />, so Cases 1 and 2 are shorter. They share one width because that formula does not use the
+          shape of the data. Cases 3 and 4 pay for estimating the spread from the sample.
+        </p>
+      </div>
       <figure className={styles.chartCard}>
         <svg viewBox="0 0 640 182" className={styles.chartSvg} role="img" aria-label="Simulated confidence intervals">
           <line x1={24} x2={620} y1={yOf(mu)} y2={yOf(mu)} stroke="#333" strokeDasharray="6 4" strokeWidth={1.5} />
