@@ -75,7 +75,8 @@ export function ZIntervalGame() {
 \text{CI}=[${formatNum(lo)},\,${formatNum(hi)}],\quad
 \text{width}=${formatNum(2 * half)}`}
       />
-      <CiBar lo={lo} hi={hi} center={xbar} />
+      <CiBar lo={lo} hi={hi} center={xbar} domain={[1280, 1680]} />
+      <p className={styles.muted}>The bar uses a fixed scale from 1280 to 1680, so its length and position change with the sliders.</p>
     </SceneFrame>
   );
 }
@@ -850,15 +851,37 @@ export function WhichCaseGame() {
   );
 }
 
-function CiBar({ lo, hi, center }: { lo: number; hi: number; center: number }) {
-  const pad = (hi - lo) * 0.15 || 1;
-  const min = lo - pad;
-  const max = hi + pad;
+function CiBar({
+  lo,
+  hi,
+  center,
+  domain,
+}: {
+  lo: number;
+  hi: number;
+  center: number;
+  /** Fixed axis. Without it the bar is rescaled to itself and never changes shape. */
+  domain?: [number, number];
+}) {
+  const span = hi - lo;
+  const pad = span * 0.15 || 1;
+  const min = domain ? domain[0] : lo - pad;
+  const max = domain ? domain[1] : hi + pad;
   const x = (v: number) => ((v - min) / (max - min)) * 100;
+  const left = Math.min(100, Math.max(0, x(lo)));
+  const right = Math.min(100, Math.max(0, x(hi)));
   return (
-    <div className={styles.ciBarTrack} aria-hidden="true">
-      <i className={styles.ciBarFill} style={{ left: `${x(lo)}%`, width: `${Math.max(0, x(hi) - x(lo))}%` }} />
-      <i className={styles.ciBarCenter} style={{ left: `${x(center)}%` }} />
+    <div>
+      <div className={styles.ciBarTrack} aria-hidden="true">
+        <i className={styles.ciBarFill} style={{ left: `${left}%`, width: `${Math.max(0, right - left)}%` }} />
+        <i className={styles.ciBarCenter} style={{ left: `${Math.min(100, Math.max(0, x(center)))}%` }} />
+      </div>
+      {domain ? (
+        <p className={styles.muted} style={{ display: "flex", justifyContent: "space-between", margin: 0 }}>
+          <span>{domain[0]}</span>
+          <span>{domain[1]}</span>
+        </p>
+      ) : null}
     </div>
   );
 }
