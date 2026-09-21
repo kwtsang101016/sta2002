@@ -185,7 +185,7 @@ const SCHEDULE_LEFT: ScheduleRow[] = [
   { week: "5", date: "13 Oct (Tue)", topic: "Student's t-tests" },
   { week: "", date: "15 Oct (Thu)", topic: "Tests about proportions" },
   { week: "6", date: "20 Oct (Tue)", topic: "Review session" },
-  { week: "", date: "24 Oct (Sat)", topic: "Midterm 09:00–11:30", highlight: true },
+  { week: "", date: "24 Oct (Sat)", topic: "Midterm 14:00–16:30", highlight: true },
   { week: "7", date: "27 Oct (Tue)", topic: "Power of a statistical test" },
   { week: "", date: "29 Oct (Thu)", topic: "Power of a statistical test" },
 ];
