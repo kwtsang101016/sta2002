@@ -11,7 +11,7 @@ import {
 } from "../../utils";
 import styles from "../Lecture.module.css";
 import { usePrintMode } from "../printContext";
-import { Formula, InlineMath, MathText, SceneFrame } from "../scenes/shared";
+import { Block, Formula, InlineMath, MathText, SceneFrame } from "../scenes/shared";
 
 export function ZIntervalGame() {
   const print = usePrintMode();
@@ -690,6 +690,162 @@ export function SampleSizeGame() {
       <Formula
         tex={String.raw`n\ge ${formatNum(nRaw, 2)}\;\Longrightarrow\; n=${n}`}
       />
+    </SceneFrame>
+  );
+}
+
+type CaseId = 1 | 2 | 3 | 4;
+
+const CASE_LABEL: Record<CaseId, string> = {
+  1: "Case 1 · normal, σ known",
+  2: "Case 2 · not normal, σ known",
+  3: "Case 3 · normal, σ unknown",
+  4: "Case 4 · not normal, σ unknown",
+};
+
+const CASE_SITUATIONS: {
+  title: string;
+  story: string;
+  bins: number[];
+  answer: CaseId;
+  why: string;
+}[] = [
+  {
+    title: "Bolt diameters",
+    bins: [2, 5, 12, 22, 28, 22, 12, 5, 2],
+    story:
+      "A plant has measured this bolt for years. Engineers trust the historical standard deviation and believe the spread has not changed. Today’s sample is only a check on the mean. The histogram of the new measurements is roughly symmetric.",
+    answer: 1,
+    why: "Roughly symmetric → willing to assume normal. A trusted, unchanged historical σ → treat variance as known.",
+  },
+  {
+    title: "New lab assay",
+    bins: [1, 4, 10, 18, 26, 20, 12, 6, 3],
+    story:
+      "A new instrument was installed last week. There is no long history of its variability — the only spread information is this sample. The histogram of the 12 readings is roughly symmetric.",
+    answer: 3,
+    why: "Roughly symmetric → willing to assume normal. No trustworthy out-of-sample σ → variance unknown, so use s from this sample.",
+  },
+  {
+    title: "Daily coffee spend",
+    bins: [28, 22, 14, 9, 6, 4, 3, 2, 1],
+    story:
+      "A chain has years of transactions. The day-to-day standard deviation is well estimated and believed stable, so they do not re-estimate it from this survey. The histogram is strongly right-skewed: many small spends, a few very large ones.",
+    answer: 2,
+    why: "Clearly skewed → do not assume normal (CLT can still justify a z interval if n is large). Historical σ we believe is unchanged → variance known.",
+  },
+  {
+    title: "New clinic wait times",
+    bins: [26, 18, 12, 8, 5, 4, 3, 2, 1],
+    story:
+      "A clinic opened this month. There is no historical standard deviation. This week’s waits are all the data we have, and the histogram has a long right tail.",
+    answer: 4,
+    why: "Skewed → do not assume normal. No trusted out-of-sample σ → variance unknown. This is the Case 4 fallback.",
+  },
+];
+
+function MiniHistogram({ bins }: { bins: number[] }) {
+  const width = 320;
+  const height = 110;
+  const gap = 4;
+  const max = Math.max(...bins);
+  const barW = (width - gap * (bins.length - 1)) / bins.length;
+  return (
+    <svg viewBox={`0 0 ${width} ${height}`} className={styles.chartSvg} role="img" aria-label="Histogram of the sample">
+      {bins.map((value, index) => {
+        const barH = (value / max) * (height - 8);
+        return (
+          <rect
+            key={index}
+            x={index * (barW + gap)}
+            y={height - barH}
+            width={barW}
+            height={barH}
+            fill="#5b2a86"
+          />
+        );
+      })}
+    </svg>
+  );
+}
+
+export function WhichCaseGame() {
+  const print = usePrintMode();
+  const [index, setIndex] = useState(0);
+  const [picked, setPicked] = useState<CaseId | null>(null);
+  const situation = CASE_SITUATIONS[index]!;
+  const correct = picked === situation.answer;
+
+  const go = (next: number) => {
+    setIndex(next);
+    setPicked(null);
+  };
+
+  if (print) {
+    return (
+      <SceneFrame kicker="Game" title="Which case for μ?" tone="gold">
+        <p>
+          Two checks: is the histogram roughly symmetric (willing to assume normal)? Is there a trusted
+          out-of-sample <MathText text="$\sigma$" /> we believe is unchanged (treat variance as known)?
+        </p>
+        {CASE_SITUATIONS.map((item) => (
+          <Block key={item.title} title={item.title}>
+            <MiniHistogram bins={item.bins} />
+            <p>{item.story}</p>
+            <p>
+              <strong>{CASE_LABEL[item.answer]}.</strong> {item.why}
+            </p>
+          </Block>
+        ))}
+      </SceneFrame>
+    );
+  }
+
+  return (
+    <SceneFrame kicker="Game" title="Which case for μ?" tone="gold">
+      <p>
+        The true distribution and variance are unknown. Decide from the histogram and the story.
+        Symmetric histogram → willing to assume normal. A good out-of-sample estimate of{" "}
+        <MathText text="$\sigma$" />, which we believe is unchanged → treat the variance as known.
+      </p>
+      <p className={styles.muted}>
+        Situation {index + 1} of {CASE_SITUATIONS.length}
+      </p>
+      <Block title={situation.title}>
+        <MiniHistogram bins={situation.bins} />
+        <p>{situation.story}</p>
+      </Block>
+      <div className={styles.tools}>
+        {([1, 2, 3, 4] as CaseId[]).map((caseId) => (
+          <button
+            key={caseId}
+            type="button"
+            className={picked === caseId ? styles.toolBtnActive : styles.toolBtn}
+            onClick={() => setPicked(caseId)}
+          >
+            {CASE_LABEL[caseId]}
+          </button>
+        ))}
+      </div>
+      {picked !== null ? (
+        <p>
+          {correct ? "Right. " : `Not quite — this is ${CASE_LABEL[situation.answer]}. `}
+          {situation.why}
+        </p>
+      ) : null}
+      <div className={styles.tools}>
+        <button type="button" className={styles.toolBtn} disabled={index === 0} onClick={() => go(index - 1)}>
+          Previous
+        </button>
+        <button
+          type="button"
+          className={styles.toolBtn}
+          disabled={index === CASE_SITUATIONS.length - 1}
+          onClick={() => go(index + 1)}
+        >
+          Next
+        </button>
+      </div>
     </SceneFrame>
   );
 }

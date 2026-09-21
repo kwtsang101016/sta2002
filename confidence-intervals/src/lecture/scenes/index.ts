@@ -6,6 +6,7 @@ import {
   SampleSizeGame,
   TVsZGame,
   TwoSampleGame,
+  WhichCaseGame,
   ZIntervalGame,
 } from "../games";
 import {
@@ -63,6 +64,7 @@ export const SCENES: SceneDef[] = [
   { id: "reading", chapter: "Welcome", label: "What we learn", Scene: ReadingScene },
   { id: "ci-def", chapter: "Foundations", label: "CI definition", Scene: CiDefinitionScene },
   { id: "four-cases", chapter: "Mean", label: "Four cases", Scene: FourCasesScene },
+  { id: "game-which-case", chapter: "Game", label: "Which case for μ?", Scene: WhichCaseGame },
   { id: "case1-derive", chapter: "Case 1", label: "Normal σ known", Scene: Case1DeriveScene },
   { id: "case1-props", chapter: "Case 1", label: "z-interval properties", Scene: Case1PropsScene },
   { id: "case1-ex", chapter: "Case 1", label: "Bulb example", Scene: Case1ExampleScene },

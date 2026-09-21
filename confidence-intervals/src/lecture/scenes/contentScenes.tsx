@@ -1,4 +1,6 @@
+import { useState } from "react";
 import styles from "../Lecture.module.css";
+import { usePrintMode } from "../printContext";
 import { Block, BulletList, Formula, MathText, OrderedList, SceneFrame } from "./shared";
 
 export function CiDefinitionScene() {
@@ -24,6 +26,10 @@ export function CiDefinitionScene() {
 }
 
 export function FourCasesScene() {
+  const print = usePrintMode();
+  const [showAnswer, setShowAnswer] = useState(false);
+  const revealed = print || showAnswer;
+
   return (
     <SceneFrame kicker="CI for a mean" title="Four cases for μ">
       <p>
@@ -49,6 +55,30 @@ export function FourCasesScene() {
           </>,
         ]}
       />
+      <Block title="Discussion">
+        <p>
+          In practice the true distribution and the true variance are unknown. Should we always use{" "}
+          <strong>Case 4</strong>?
+        </p>
+        {!print ? (
+          <button type="button" className={styles.toolBtn} onClick={() => setShowAnswer((open) => !open)}>
+            {showAnswer ? "Hide answer" : "Show answer"}
+          </button>
+        ) : null}
+        {revealed ? (
+          <p>
+            Not always. Case 4 is the fallback when we will not assume either piece — not the automatic
+            choice just because the truth is unknown. More usable information gives a shorter interval
+            that is still approximately valid. A roughly symmetric histogram lets us treat the data as
+            normal. A trusted out-of-sample <MathText text="$\sigma$" /> (a long history we believe is
+            unchanged) lets us treat the variance as known. A slightly wrong assumption usually costs a
+            confidence level that is a bit off, not a biased center. We accept that small coverage error
+            when the gain in length is large. If either assumption looks unreasonable, use Case 4.
+          </p>
+        ) : (
+          <p className={styles.muted}>Answer hidden — discuss first, then reveal.</p>
+        )}
+      </Block>
     </SceneFrame>
   );
 }
