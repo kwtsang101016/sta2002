@@ -46,7 +46,7 @@ export const COURSE_EVENTS: CourseEvent[] = [
   { date: "2026-10-20", title: "Review session", kind: "review" },
   {
     date: "2026-10-24",
-    title: "Midterm 09:00–11:30",
+    title: "Midterm 14:00–16:30",
     kind: "midterm",
     special: true,
   },
