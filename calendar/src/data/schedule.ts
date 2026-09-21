@@ -34,6 +34,12 @@ export const COURSE_EVENTS: CourseEvent[] = [
     kind: "lecture",
   },
   { date: "2026-09-29", title: "Tests of statistical hypotheses", kind: "lecture" },
+  {
+    date: "2026-09-30",
+    title: "HW1 due 23:59",
+    kind: "assignment",
+    special: true,
+  },
   { date: "2026-10-08", title: "Critical region, p-values", kind: "lecture" },
   { date: "2026-10-13", title: "Student's t-tests", kind: "lecture" },
   { date: "2026-10-15", title: "Tests about proportions", kind: "lecture" },
