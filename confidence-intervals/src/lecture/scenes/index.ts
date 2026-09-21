@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 import {
   CltCoverageGame,
   CoverageGame,
+  CaseLabGame,
   PropCiGame,
   SampleSizeGame,
   TVsZGame,
@@ -81,6 +82,7 @@ export const SCENES: SceneDef[] = [
   { id: "onesided", chapter: "One-sided", label: "Motivation", Scene: OneSidedScene },
   { id: "onesided-f", chapter: "One-sided", label: "Bounds", Scene: OneSidedFormulaScene },
   { id: "part1-sum", chapter: "Summary", label: "CI for μ table", Scene: Part1SummaryScene },
+  { id: "game-case-lab", chapter: "Part I", label: "Try the four cases", Scene: CaseLabGame },
   { id: "part2", chapter: "Part II", label: "Beyond one mean", Scene: Part2IntroScene },
   { id: "diff-setup", chapter: "Two means", label: "Three designs", Scene: DiffMeansSetupScene },
   { id: "pooled", chapter: "Pooled t", label: "Equal σ²", Scene: PooledTheoremScene },

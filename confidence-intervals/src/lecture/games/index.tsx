@@ -851,6 +851,162 @@ export function WhichCaseGame() {
   );
 }
 
+type Side = "two" | "lower" | "upper";
+
+/**
+ * Coverage lab for the four mean cases and one-sided bounds.
+ * Critical values: two-sided uses z_{α/2} or t_{α/2}; one-sided uses z_α or t_α.
+ */
+export function CaseLabGame() {
+  const print = usePrintMode();
+  const [seed, setSeed] = useState(3);
+  const [n, setN] = useState(30);
+  const [conf, setConf] = useState(0.95);
+  const [normal, setNormal] = useState(true);
+  const [known, setKnown] = useState(true);
+  const [side, setSide] = useState<Side>("two");
+  const mu = 0;
+  const sigma = 1;
+  const skew = 1.6;
+  const trials = 400;
+  const showBars = 28;
+
+  const caseId = normal && known ? 1 : !normal && known ? 2 : normal && !known ? 3 : 4;
+  const alpha = 1 - conf;
+  const crit = known
+    ? side === "two"
+      ? zCrit(alpha)
+      : zCrit(2 * alpha)
+    : side === "two"
+      ? tCrit(alpha, n - 1)
+      : tCrit(2 * alpha, n - 1);
+
+  const sim = useMemo(() => {
+    const rng = createRng(seed);
+    let hits = 0;
+    const bars: { lo: number; hi: number; covers: boolean }[] = [];
+    for (let t = 0; t < trials; t += 1) {
+      const sample = Array.from({ length: n }, () =>
+        normal ? sampleNormal(mu, sigma, rng) : sampleMeanSdSkew(mu, sigma, skew, rng),
+      );
+      const xbar = mean(sample);
+      const scale = known ? sigma : Math.sqrt(varianceN1(sample));
+      const se = scale / Math.sqrt(n);
+      const margin = crit * se;
+      let lo = xbar - margin;
+      let hi = xbar + margin;
+      if (side === "lower") hi = Infinity;
+      if (side === "upper") lo = -Infinity;
+      const covers =
+        side === "lower" ? mu >= lo : side === "upper" ? mu <= hi : lo <= mu && mu <= hi;
+      if (covers) hits += 1;
+      if (t < showBars) bars.push({ lo, hi, covers });
+    }
+    return { hits, bars, rate: hits / trials };
+  }, [seed, n, normal, known, side, crit]);
+
+  const formula =
+    side === "two"
+      ? known
+        ? String.raw`\bar x\pm z_{\alpha/2}\sigma/\sqrt{n}`
+        : String.raw`\bar x\pm t_{\alpha/2}(n-1)\,s/\sqrt{n}`
+      : side === "lower"
+        ? known
+          ? String.raw`\bigl[\bar x-z_{\alpha}\sigma/\sqrt{n},\,\infty\bigr)`
+          : String.raw`\bigl[\bar x-t_{\alpha}(n-1)\,s/\sqrt{n},\,\infty\bigr)`
+        : known
+          ? String.raw`\bigl(-\infty,\,\bar x+z_{\alpha}\sigma/\sqrt{n}\bigr]`
+          : String.raw`\bigl(-\infty,\,\bar x+t_{\alpha}(n-1)\,s/\sqrt{n}\bigr]`;
+
+  const windowHalf = Math.max(0.35, 4 * crit * (sigma / Math.sqrt(n)));
+  const yOf = (value: number) => {
+    const clipped = Math.min(mu + windowHalf, Math.max(mu - windowHalf, value));
+    return 16 + ((mu + windowHalf - clipped) / (2 * windowHalf)) * 150;
+  };
+
+  return (
+    <SceneFrame kicker="Part I" title="Try the four cases" tone="gold">
+      <p>
+        Each bar is one simulated interval for <MathText text="$\mu=0$" />. Green covers{" "}
+        <MathText text="$\mu$" />; red misses. Non-normal draws are skewed but still have variance{" "}
+        <MathText text="$\sigma^2=1$" />. Case {caseId}
+        {caseId === 2 || caseId === 4 ? " is an approximation — coverage can slip when n is small." : " should land near the nominal level."}
+      </p>
+      {!print ? (
+        <div className={styles.tools}>
+          <button type="button" className={normal ? styles.toolBtnActive : styles.toolBtn} onClick={() => setNormal(true)}>
+            Normal
+          </button>
+          <button type="button" className={!normal ? styles.toolBtnActive : styles.toolBtn} onClick={() => setNormal(false)}>
+            Skewed
+          </button>
+          <button type="button" className={known ? styles.toolBtnActive : styles.toolBtn} onClick={() => setKnown(true)}>
+            σ known
+          </button>
+          <button type="button" className={!known ? styles.toolBtnActive : styles.toolBtn} onClick={() => setKnown(false)}>
+            σ unknown
+          </button>
+          <button type="button" className={side === "two" ? styles.toolBtnActive : styles.toolBtn} onClick={() => setSide("two")}>
+            Two-sided
+          </button>
+          <button type="button" className={side === "lower" ? styles.toolBtnActive : styles.toolBtn} onClick={() => setSide("lower")}>
+            Lower bound
+          </button>
+          <button type="button" className={side === "upper" ? styles.toolBtnActive : styles.toolBtn} onClick={() => setSide("upper")}>
+            Upper bound
+          </button>
+          <label className={styles.small}>
+            n
+            <input type="range" min={8} max={80} value={n} onChange={(e) => setN(Number(e.target.value))} />
+            <span>{n}</span>
+          </label>
+          <label className={styles.small}>
+            <InlineMath tex={String.raw`1-\alpha`} />
+            <select value={conf} onChange={(e) => setConf(Number(e.target.value))}>
+              <option value={0.9}>90%</option>
+              <option value={0.95}>95%</option>
+              <option value={0.99}>99%</option>
+            </select>
+          </label>
+          <button type="button" className={styles.toolBtn} onClick={() => setSeed((s) => s + 1)}>
+            Resample
+          </button>
+        </div>
+      ) : null}
+      <Formula tex={formula} />
+      <p>
+        Critical value {formatNum(crit, 3)} · empirical coverage{" "}
+        <strong>{formatNum(100 * sim.rate, 1)}%</strong> of {trials} (target {formatNum(100 * conf, 0)}%)
+      </p>
+      <figure className={styles.chartCard}>
+        <svg viewBox="0 0 640 182" className={styles.chartSvg} role="img" aria-label="Simulated confidence intervals">
+          <line x1={24} x2={620} y1={yOf(mu)} y2={yOf(mu)} stroke="#333" strokeDasharray="6 4" strokeWidth={1.5} />
+          {sim.bars.map((row, i) => {
+            const x = 36 + i * 21;
+            const y1 = yOf(row.lo);
+            const y2 = yOf(row.hi);
+            return (
+              <line
+                key={i}
+                x1={x}
+                x2={x}
+                y1={Math.min(y1, y2)}
+                y2={Math.max(y1, y2)}
+                stroke={row.covers ? "#2a7a4b" : "#b33"}
+                strokeWidth={4}
+              />
+            );
+          })}
+        </svg>
+      </figure>
+      <p className={styles.muted}>
+        Dashed line is <MathText text="$\mu$" />. A one-sided bar is cut at the edge of the window; the open side continues to{" "}
+        <MathText text="$\pm\infty$" />.
+      </p>
+    </SceneFrame>
+  );
+}
+
 function CiBar({
   lo,
   hi,
