@@ -11,7 +11,7 @@ import {
 } from "../../utils";
 import styles from "../Lecture.module.css";
 import { usePrintMode } from "../printContext";
-import { Block, Formula, InlineMath, MathText, SceneFrame } from "../scenes/shared";
+import { Block, Formula, InlineMath, MathText, OrderedList, SceneFrame } from "../scenes/shared";
 
 export function ZIntervalGame() {
   const print = usePrintMode();
@@ -185,6 +185,8 @@ export function CltCoverageGame() {
     const z = zCrit(1 - conf);
     const halfWidth = z * (sigma / Math.sqrt(n));
     let hits = 0;
+    let missHigh = 0; // x̄ too large: whole interval sits above μ
+    let missLow = 0; // x̄ too small: whole interval sits below μ
     const bars: { lo: number; hi: number; covers: boolean }[] = [];
     for (let t = 0; t < trials; t += 1) {
       const sample = Array.from({ length: n }, () => sampleMeanSdSkew(mu, sigma, skew, rng));
@@ -192,7 +194,13 @@ export function CltCoverageGame() {
       const lo = xbar - halfWidth;
       const hi = xbar + halfWidth;
       const covers = lo <= mu && mu <= hi;
-      if (covers) hits += 1;
+      if (covers) {
+        hits += 1;
+      } else if (mu < lo) {
+        missHigh += 1;
+      } else {
+        missLow += 1;
+      }
       if (t < showBars) bars.push({ lo, hi, covers });
     }
     const histRng = createRng(seed + 999);
@@ -209,6 +217,8 @@ export function CltCoverageGame() {
     const maxCount = Math.max(...counts, 1);
     return {
       rate: hits / trials,
+      missHigh: missHigh / trials,
+      missLow: missLow / trials,
       bars,
       halfWidth,
       hist: counts.map((count, i) => ({
@@ -277,8 +287,36 @@ export function CltCoverageGame() {
       ) : null}
       <p>
         Parent shape: <strong>{skewLabel}</strong>. Empirical coverage over {trials} samples:{" "}
-        <strong>{formatNum(100 * sim.rate, 1)}%</strong> (target {formatNum(100 * conf, 0)}%).
+        <strong>{formatNum(100 * sim.rate, 1)}%</strong> (target {formatNum(100 * conf, 0)}%). Misses
+        with <MathText text="$\bar x$" /> too high: {formatNum(100 * sim.missHigh, 1)}%; too low:{" "}
+        {formatNum(100 * sim.missLow, 1)}%.
       </p>
+      <Block title="For large skewness with small n, why can coverage look higher?">
+        <p className={styles.muted} style={{ marginTop: 0 }}>
+          This page uses <strong>known</strong> <MathText text="$\sigma$" />. The story is different when
+          variance is unknown (Cases&nbsp;3–4).
+        </p>
+        <OrderedList
+          items={[
+            <>
+              Coverage fails when the gap <MathText text="$|\bar x-\mu|$" /> is bigger than the
+              half-width of the interval.
+            </>,
+            <>
+              Small <MathText text="$n$" /> with right skew: sample means are often below{" "}
+              <MathText text="$\mu$" />. With known <MathText text="$\sigma$" />, the fixed half-width
+              is usually still large enough to reach <MathText text="$\mu$" />. (If we used the sample
+              standard deviation <MathText text="$s$" /> instead, those typical samples would often
+              produce a <em>short</em> interval — we return to that in Cases&nbsp;3–4.)
+            </>,
+            <>
+              Almost all misses are “<MathText text="$\bar x$" /> too large”; left-side misses nearly
+              vanish. That imbalance can push <strong>two-sided</strong> coverage slightly{" "}
+              <strong>above</strong> the nominal level.
+            </>,
+          ]}
+        />
+      </Block>
       <div className={styles.twoCol}>
         <figure className={styles.chartCard}>
           <p className={styles.kicker}>PARENT (sketch)</p>
@@ -955,6 +993,33 @@ export function CaseLabGame() {
         <MathText text="$\sigma^2=1$" />. Case {caseId}
         {caseId === 2 || caseId === 4 ? " is an approximation — coverage can slip when n is small." : " should land near the nominal level."}
       </p>
+      <Block title="Why can coverage drop for skewed data when σ is unknown?">
+        <p style={{ marginTop: 0 }}>
+          Toggle <strong>Skewed</strong> + <strong>σ unknown</strong> (Case&nbsp;4) with small{" "}
+          <MathText text="$n$" /> and compare to Case&nbsp;2 (skewed, σ known).
+        </p>
+        <OrderedList
+          items={[
+            <>
+              Coverage still fails when <MathText text="$|\bar x-\mu|$" /> exceeds the half-width{" "}
+              <MathText text="$t\,s/\sqrt{n}$" />.
+            </>,
+            <>
+              Under right skew, <MathText text="$\bar X$" /> and <MathText text="$S$" />{" "}
+              <strong>move together</strong>: typical samples (no big outlier) have{" "}
+              <MathText text="$\bar x<\mu$" /> and a <strong>small</strong>{" "}
+              <MathText text="$s$" />; outlier samples pull both <MathText text="$\bar x$" /> and{" "}
+              <MathText text="$s$" /> up.
+            </>,
+            <>
+              The dangerous samples are the typical ones: centered too low{" "}
+              <em>and</em> too short, so they often miss <MathText text="$\mu$" /> from below →{" "}
+              <strong>under-coverage</strong>. (With known <MathText text="$\sigma$" />, the width
+              cannot shrink with the sample, so that trap does not appear.)
+            </>,
+          ]}
+        />
+      </Block>
       {!print ? (
         <div className={styles.tools}>
           <button type="button" className={normal ? styles.toolBtnActive : styles.toolBtn} onClick={() => setNormal(true)}>
