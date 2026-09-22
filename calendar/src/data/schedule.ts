@@ -27,7 +27,12 @@ export const COURSE_EVENTS: CourseEvent[] = [
     kind: "lecture",
     attendanceFile: "2026-09-17.json",
   },
-  { date: "2026-09-22", title: "Confidence intervals for means", kind: "lecture" },
+  {
+    date: "2026-09-22",
+    title: "Confidence intervals for means",
+    kind: "lecture",
+    attendanceFile: "2026-09-22.json",
+  },
   {
     date: "2026-09-24",
     title: "CIs for difference of two means, CIs for proportions",
