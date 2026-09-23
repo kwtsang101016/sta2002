@@ -33,6 +33,7 @@ export function OutlineScene() {
           "Definition of a confidence interval",
           "CI for a mean μ (four cases: normal / CLT, σ known / unknown)",
           "One-sided intervals",
+          "Practice with AI — CIs for one mean (earthquakes & tropical cyclones)",
           "CI for a difference of means (pooled, Welch, paired)",
           "CI for proportions and differences of proportions",
           "Sample size determination for a target margin of error",
@@ -56,6 +57,7 @@ export function ReadingScene() {
               "z-intervals when σ is known",
               "t-intervals when σ is unknown",
               "One-sided bounds",
+              "Practice: CI for one mean on real counts",
             ]}
           />
         </Block>

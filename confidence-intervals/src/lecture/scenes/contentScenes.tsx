@@ -3,6 +3,23 @@ import styles from "../Lecture.module.css";
 import { usePrintMode } from "../printContext";
 import { Block, BulletList, Formula, MathText, OrderedList, SceneFrame } from "./shared";
 
+function AiPracticeNote() {
+  return (
+    <p className={styles.note}>
+      <strong>You may try:</strong> paste the prompt into{" "}
+      <a href="https://copilot.microsoft.com/" target="_blank" rel="noopener noreferrer">
+        Microsoft Copilot
+      </a>{" "}
+      (copilot.microsoft.com), then run the Python in{" "}
+      <a href="https://colab.research.google.com/" target="_blank" rel="noopener noreferrer">
+        Google Colab
+      </a>{" "}
+      (colab.research.google.com). Download any files, and <strong>read the code</strong> so you know what the assistant
+      did — do not simply accept the output.
+    </p>
+  );
+}
+
 export function CiDefinitionScene() {
   return (
     <SceneFrame kicker="Foundations" title="Confidence interval">
@@ -441,7 +458,70 @@ export function Part2IntroScene() {
         ]}
       />
       <p className={styles.muted} style={{ marginTop: 12 }}>
-        Reading: Chapters 7.2–7.4.
+        Reading: Chapters 7.2–7.4. Stock-price prompts for a difference of two means appear later in Part&nbsp;II.
+      </p>
+    </SceneFrame>
+  );
+}
+
+export function AiPracticeEarthquakeScene() {
+  return (
+    <SceneFrame kicker="Practice with AI" title="CI for one mean — daily earthquakes." tone="white">
+      <p className={styles.lead}>
+        End of Part&nbsp;I: use an AI coding assistant to fetch <strong>real counts</strong>, build a 95% CI for a mean,
+        and judge the assumptions yourself — not just “the chatbot said so.”
+      </p>
+      <AiPracticeNote />
+      <p className={styles.kicker} style={{ marginTop: 18 }}>
+        EXAMPLE PROMPT · COPY AND ADAPT
+      </p>
+      <pre className={styles.promptCard}>{`Use Python to download the number of earthquakes each day in calendar year 2025
+from the USGS Earthquake Hazards Program (https://earthquake.usgs.gov).
+Save the series as a CSV file (for example earthquakes_2025_daily.csv) with clear
+column names (date and daily count).
+
+Estimate a 95% confidence interval for the mean daily number of earthquakes.
+State which CI formula you used and the assumptions you made.
+Comment briefly on how accurate you think that interval is
+(e.g. skewness, day-to-day dependence, whether σ is known).`}</pre>
+      <p className={styles.note}>
+        <strong>Check before you continue:</strong> open the CSV — you should see one row per day and nonnegative
+        counts. Decide which of the four cases for <MathText text="$\mu$" /> fits, and whether a two-sided{" "}
+        <MathText text="$t$" /> or <MathText text="$z$" /> interval is honest here.
+      </p>
+    </SceneFrame>
+  );
+}
+
+export function AiPracticeCycloneScene() {
+  return (
+    <SceneFrame kicker="Practice with AI" title="CI for one mean — tropical cyclones." tone="white">
+      <p className={styles.lead}>
+        Same skills, different data: parse a public HTML table yourself, then form a 95% CI for an annual mean.
+      </p>
+      <AiPracticeNote />
+      <p className={styles.kicker} style={{ marginTop: 18 }}>
+        EXAMPLE PROMPT · COPY AND ADAPT
+      </p>
+      <pre className={styles.promptCard}>{`Use Python to download
+  https://www.hko.gov.hk/en/publica/tc/tc2023/table45.html
+and parse the HTML table yourself. Do not ask me to copy the numbers by hand.
+
+The table has three columns: Year, the annual number of tropical cyclones in
+Hong Kong's area of responsibility, and the annual number necessitating the
+issuance of warning signals.
+Keep only Year and the area-of-responsibility count; drop the third column
+before any renaming. Skip the mean / summary row at the bottom.
+Save the annual counts for 1956–2023 as a CSV file.
+
+Estimate a 95% confidence interval for the mean annual number of tropical
+cyclones in Hong Kong's area of responsibility.
+State which CI formula you used and the assumptions you made.
+Comment briefly on how accurate you think that interval is.`}</pre>
+      <p className={styles.note}>
+        <strong>Questions to ask yourself:</strong> Is an i.i.d. annual-count model reasonable across decades? How
+        skewed are the counts? Would Case&nbsp;3 or Case&nbsp;4 be more honest than pretending{" "}
+        <MathText text="$\sigma$" /> is known?
       </p>
     </SceneFrame>
   );
