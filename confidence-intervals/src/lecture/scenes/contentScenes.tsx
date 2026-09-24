@@ -475,19 +475,28 @@ export function AiPracticeEarthquakeScene() {
       <p className={styles.kicker} style={{ marginTop: 18 }}>
         EXAMPLE PROMPT · COPY AND ADAPT
       </p>
-      <pre className={styles.promptCard}>{`Use Python to download the number of earthquakes each day in calendar year 2025
-from the USGS Earthquake Hazards Program (https://earthquake.usgs.gov).
-Save the series as a CSV file (for example earthquakes_2025_daily.csv) with clear
-column names (date and daily count).
+      <pre className={styles.promptCard}>{`Use Python to download daily earthquake counts for calendar year 2025 from the
+USGS Earthquake Hazards Program (https://earthquake.usgs.gov), e.g. via the
+FDSN / ComCat event API.
 
-Estimate a 95% confidence interval for the mean daily number of earthquakes.
+Important API limit: USGS returns HTTP 400 if a single query would exceed
+20,000 events. A full year of all magnitudes is too large, so you MUST restrict
+the query. Prefer minmagnitude = 4.5 worldwide for 2025. If a query still fails,
+raise the magnitude floor or download month-by-month and concatenate.
+
+Count events by UTC calendar day (include days with zero events). Save the
+series as a CSV (for example earthquakes_2025_daily_m45.csv) with clear column
+names (date and daily count). State the magnitude cutoff you used.
+
+Estimate a 95% confidence interval for the mean daily count under that cutoff.
 State which CI formula you used and the assumptions you made.
 Comment briefly on how accurate you think that interval is
-(e.g. skewness, day-to-day dependence, whether σ is known).`}</pre>
+(e.g. skewness, day-to-day dependence, whether σ is known, effect of the cutoff).`}</pre>
       <p className={styles.note}>
-        <strong>Check before you continue:</strong> open the CSV — you should see one row per day and nonnegative
-        counts. Decide which of the four cases for <MathText text="$\mu$" /> fits, and whether a two-sided{" "}
-        <MathText text="$t$" /> or <MathText text="$z$" /> interval is honest here.
+        <strong>Check before you continue:</strong> the download must succeed without a 400; the CSV should have one
+        row per day of 2025 and nonnegative counts. Decide which of the four cases for{" "}
+        <MathText text="$\mu$" /> fits, and whether a two-sided <MathText text="$t$" /> or{" "}
+        <MathText text="$z$" /> interval is honest here.
       </p>
     </SceneFrame>
   );
