@@ -34,21 +34,29 @@ jobs:
             calendar/package-lock.json
 
       - name: Install and build introduction
+        env:
+          VITE_USAGE_LOG_URL: ${{ secrets.VITE_USAGE_LOG_URL }}
         run: |
           npm ci --prefix introduction
           npm run build --prefix introduction
 
       - name: Install and build parameter-estimation
+        env:
+          VITE_USAGE_LOG_URL: ${{ secrets.VITE_USAGE_LOG_URL }}
         run: |
           npm ci --prefix parameter-estimation
           npm run build --prefix parameter-estimation
 
       - name: Install and build confidence-intervals
+        env:
+          VITE_USAGE_LOG_URL: ${{ secrets.VITE_USAGE_LOG_URL }}
         run: |
           npm ci --prefix confidence-intervals
           npm run build --prefix confidence-intervals
 
       - name: Install and build hypothesis-testing
+        env:
+          VITE_USAGE_LOG_URL: ${{ secrets.VITE_USAGE_LOG_URL }}
         run: |
           npm ci --prefix hypothesis-testing
           npm run build --prefix hypothesis-testing

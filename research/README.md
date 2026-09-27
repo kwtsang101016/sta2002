@@ -20,16 +20,21 @@ From interactive lecture sites only (when `VITE_USAGE_LOG_URL` is set at build t
    - Execute as: Me
    - Who has access: **Anyone** (anonymous beacons cannot use campus SSO)
 4. Copy the web app URL.
-5. In each lecture app (or monorepo root before build), set:
+6. Add the URL as a **GitHub Actions secret** (recommended for Pages deploys):
+   - Repo → Settings → Secrets and variables → Actions → New repository secret
+   - Name: `VITE_USAGE_LOG_URL`
+   - Value: the web app URL
+   - The deploy workflow injects it at build time (do **not** commit `.env.production`; it is gitignored).
+
+7. Rebuild and deploy (push to `main`, or Actions → Deploy GitHub Pages → Run workflow).
+
+Optional local production build:
 
 ```bash
-# example: sta2002/confidence-intervals/.env.production
-VITE_USAGE_LOG_URL=https://script.google.com/macros/s/XXXX/exec
+# in each lecture app folder, or export once for the shell session
+set VITE_USAGE_LOG_URL=https://script.google.com/macros/s/XXXX/exec
+npm run build
 ```
-
-Use the **same URL** for STA2002 and DOTE2011 builds; the `course` field separates rows.
-
-6. Rebuild and deploy lecture sites so production bundles include the URL.
 
 ## Tutor question themes (manual, free)
 
