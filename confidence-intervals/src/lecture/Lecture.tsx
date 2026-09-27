@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useLectureUsageLog } from "../lib/useLectureUsageLog";
 import styles from "./Lecture.module.css";
 import { SCENES } from "./scenes";
 import { HandoutDocument } from "./HandoutDocument";
@@ -26,10 +27,19 @@ export function Lecture() {
   const [index, setIndex] = useState(0);
   const [downloading, setDownloading] = useState(false);
   const [textScaleIndex, setTextScaleIndex] = useState(readStoredScaleIndex);
+  const [stageElement, setStageElement] = useState<HTMLElement | null>(null);
   const handoutRef = useRef<HTMLDivElement>(null);
   const scene = SCENES[index];
   const progress = useMemo(() => ((index + 1) / SCENES.length) * 100, [index]);
   const textScale = TEXT_SCALES[textScaleIndex];
+
+  useLectureUsageLog({
+    course: "STA2002",
+    lecture: "confidence-intervals",
+    index,
+    scene: { id: scene.id, chapter: scene.chapter, label: scene.label },
+    stageElement,
+  });
 
   const cycleTextScale = () => {
     setTextScaleIndex((current) => {
@@ -137,7 +147,7 @@ export function Lecture() {
       <div className={styles.track} aria-hidden="true">
         <i style={{ width: `${progress}%` }} />
       </div>
-      <div className={styles.stage}>
+      <div className={styles.stage} ref={setStageElement}>
         <Scene />
       </div>
       <div className={styles.handoutMount} aria-hidden="true">
