@@ -458,7 +458,7 @@ export function Part2IntroScene() {
         ]}
       />
       <p className={styles.muted} style={{ marginTop: 12 }}>
-        Reading: Chapters 7.2–7.4. Stock-price prompts for a difference of two means appear later in Part&nbsp;II.
+        Reading: Chapters 7.2–7.4.
       </p>
     </SceneFrame>
   );
