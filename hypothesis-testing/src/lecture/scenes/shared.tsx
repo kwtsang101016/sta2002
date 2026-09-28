@@ -1,8 +1,13 @@
 import type { ReactNode } from "react";
-import { DisplayMath } from "../Math";
+import { DisplayMath, MathText } from "../Math";
 import styles from "../Lecture.module.css";
 
 export { InlineMath, MathText } from "../Math";
+
+/** Plain strings may contain `$...$` inline math; other nodes pass through unchanged. */
+function withMath(node: ReactNode): ReactNode {
+  return typeof node === "string" ? <MathText text={node} /> : node;
+}
 
 export function SceneFrame({
   kicker,
@@ -20,7 +25,7 @@ export function SceneFrame({
   return (
     <section className={`${styles.scene} ${toneClass}`}>
       <p className={styles.kicker}>{kicker}</p>
-      <h1>{title}</h1>
+      <h1>{withMath(title)}</h1>
       {children}
     </section>
   );
@@ -33,7 +38,7 @@ export function KeepCase({ children }: { children: ReactNode }) {
 export function Block({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className={styles.card}>
-      <p className={styles.kicker}>{title}</p>
+      <p className={styles.kicker}>{withMath(title)}</p>
       {children}
     </div>
   );
@@ -67,7 +72,7 @@ export function BulletList({ items }: { items: ReactNode[] }) {
   return (
     <ul className={styles.bulletList}>
       {items.map((item, index) => (
-        <li key={index}>{item}</li>
+        <li key={index}>{withMath(item)}</li>
       ))}
     </ul>
   );
@@ -77,7 +82,7 @@ export function OrderedList({ items }: { items: ReactNode[] }) {
   return (
     <ol className={styles.orderedList}>
       {items.map((item, index) => (
-        <li key={index}>{item}</li>
+        <li key={index}>{withMath(item)}</li>
       ))}
     </ol>
   );
@@ -98,12 +103,12 @@ export function DataTable({
 }) {
   return (
     <div className={styles.tableWrap}>
-      {caption ? <p className={styles.kicker}>{caption}</p> : null}
+      {caption ? <p className={styles.kicker}>{withMath(caption)}</p> : null}
       <table className={styles.mathTable}>
         <thead>
           <tr>
             {headers.map((header, index) => (
-              <th key={index}>{header}</th>
+              <th key={index}>{withMath(header)}</th>
             ))}
           </tr>
         </thead>
@@ -111,7 +116,7 @@ export function DataTable({
           {rows.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((cell, cellIndex) => (
-                <td key={cellIndex}>{cell}</td>
+                <td key={cellIndex}>{withMath(cell)}</td>
               ))}
             </tr>
           ))}

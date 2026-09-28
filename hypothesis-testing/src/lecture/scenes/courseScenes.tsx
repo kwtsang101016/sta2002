@@ -51,7 +51,7 @@ export function Part1Scene() {
       items={[
         "Null and alternative hypotheses, critical regions, and decision rules",
         "Type I and Type II errors, significance level, and p-values",
-        "Tests for a normal mean when σ² is known or unknown",
+        String.raw`Tests for a normal mean when $\sigma^2$ is known or unknown`,
       ]}
     />
   );
@@ -85,7 +85,7 @@ export function Part4Scene() {
     <PartTitleScene
       part="Part IV"
       subtitle="Hypothesis Testing IV"
-      items={["Power functions", "Sample size to control α and β"]}
+      items={["Power functions", String.raw`Sample size to control $\alpha$ and $\beta$`]}
     />
   );
 }

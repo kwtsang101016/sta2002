@@ -272,6 +272,11 @@
   font-size: 1em;
 }
 
+.mathInline,
+.mathDisplay {
+  text-transform: none;
+}
+
 .note :global(.katex),
 .card :global(.katex),
 .lead :global(.katex),

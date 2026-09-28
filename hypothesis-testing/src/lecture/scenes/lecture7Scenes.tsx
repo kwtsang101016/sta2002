@@ -36,7 +36,7 @@ export function RecapFrameworkScene() {
               items={[
                 <MathText key="p" text="$p$-value: reject $H_0$ if $p$-value $\leq\alpha$" />,
                 <MathText key="c" text="Critical region: reject $H_0$ if $t\in C$" />,
-                "Confidence interval: reject H0 if the CI excludes the null parameter value",
+                "Confidence interval: reject $H_0$ if the CI excludes the null parameter value",
               ]}
             />
           </>,
@@ -92,7 +92,7 @@ S_p^2=\frac{(n-1)S_X^2+(m-1)S_Y^2}{n+m-2}.`} />
 
 export function PooledUpperScene() {
   return (
-    <SceneFrame kicker="Pooled t" title="H1: μX > μY">
+    <SceneFrame kicker="Pooled t" title="$H_1:\mu_X>\mu_Y$">
       <Formula tex={String.raw`p=\Pr(T>t;T\sim t(n+m-2)).`} />
       <Formula
         tex={String.raw`p\leq\alpha
@@ -105,7 +105,7 @@ export function PooledUpperScene() {
 
 export function PooledLowerScene() {
   return (
-    <SceneFrame kicker="Pooled t" title="H1: μX < μY">
+    <SceneFrame kicker="Pooled t" title="$H_1:\mu_X<\mu_Y$">
       <Formula tex={String.raw`p=\Pr(T<t;T\sim t(n+m-2)).`} />
       <Formula
         tex={String.raw`p\leq\alpha
@@ -118,7 +118,7 @@ export function PooledLowerScene() {
 
 export function PooledTwoScene() {
   return (
-    <SceneFrame kicker="Pooled t" title="H1: μX ≠ μY">
+    <SceneFrame kicker="Pooled t" title="$H_1:\mu_X\neq\mu_Y$">
       <Formula tex={String.raw`p=2\Pr(T>|t|;T\sim t(n+m-2)).`} />
       <Formula
         tex={String.raw`p\leq\alpha
@@ -146,7 +146,7 @@ export function PooledExampleScene() {
       <p>
         <MathText text="$|t|=2.05>t_{0.05}(22)=1.717$, and $p=2\Pr(T>2.05;T\sim t(22))=0.0525<0.1$." />
       </p>
-      <p className={styles.note}>Reject H0 at the 10% significance level.</p>
+      <p className={styles.note}>Reject <InlineMath tex="H_0" /> at the 10% significance level.</p>
     </SceneFrame>
   );
 }
@@ -173,7 +173,7 @@ export function WelchStatScene() {
 
 export function WelchTwoScene() {
   return (
-    <SceneFrame kicker="Welch t" title="H1: μX ≠ μY">
+    <SceneFrame kicker="Welch t" title="$H_1:\mu_X\neq\mu_Y$">
       <Formula tex={String.raw`p=2\Pr(T>|t|;T\sim t(r)).`} />
       <Formula
         tex={String.raw`p\leq\alpha
@@ -336,8 +336,8 @@ export function TwoSampleSummaryScene() {
   return (
     <SceneFrame kicker="Hypothesis Testing II" title="Summary">
       <DataTable
-        caption="Pooled t · T ~ t(n+m−2)"
-        headers={["H0", "H1", "p-value", "Critical region"]}
+        caption="Pooled $t$ · $T\sim t(n+m-2)$"
+        headers={["$H_0$", "$H_1$", "$p$-value", "Critical region"]}
         rows={[
           [<InlineMath key="a" tex={String.raw`\mu_X=\mu_Y`} />, <InlineMath key="b" tex={String.raw`\mu_X>\mu_Y`} />, <InlineMath key="c" tex={String.raw`\Pr(T>t)`} />, <InlineMath key="d" tex={String.raw`t\geq t_\alpha(n+m-2)`} />],
           [<InlineMath key="a" tex={String.raw`\mu_X=\mu_Y`} />, <InlineMath key="b" tex={String.raw`\mu_X<\mu_Y`} />, <InlineMath key="c" tex={String.raw`\Pr(T<t)`} />, <InlineMath key="d" tex={String.raw`t\leq -t_\alpha(n+m-2)`} />],
@@ -345,8 +345,8 @@ export function TwoSampleSummaryScene() {
         ]}
       />
       <DataTable
-        caption="Welch t · T ≈ t(r) · Paired t · T ~ t(n−1), t = d̄/(sD/√n)"
-        headers={["Test", "H1", "p-value", "Critical region"]}
+        caption="Welch $t$ · $T\overset{\text{approx}}{\sim} t(r)$ · Paired $t$ · $T\sim t(n-1)$, $t=\bar{d}/(s_D/\sqrt{n})$"
+        headers={["Test", "$H_1$", "$p$-value", "Critical region"]}
         rows={[
           ["Welch >", <InlineMath key="b" tex={String.raw`\mu_X>\mu_Y`} />, <InlineMath key="c" tex={String.raw`\Pr(T>t)`} />, <InlineMath key="d" tex={String.raw`t\geq t_\alpha(r)`} />],
           ["Welch <", <InlineMath key="b" tex={String.raw`\mu_X<\mu_Y`} />, <InlineMath key="c" tex={String.raw`\Pr(T<t)`} />, <InlineMath key="d" tex={String.raw`t\leq -t_\alpha(r)`} />],

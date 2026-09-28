@@ -14,7 +14,7 @@ export function L6IntroScene() {
                 <MathText key="h" text="Null hypothesis $H_0$ and alternative hypothesis $H_1$" />,
                 <MathText key="c" text="Test statistic $T$ and critical region $C$" />,
                 "Type I and Type II error",
-                <MathText key="a" text="Significance level $\\alpha$" />,
+                <MathText key="a" text="Significance level $\alpha$" />,
                 <MathText key="p" text="$p$-value" />,
               ]}
             />
@@ -50,7 +50,7 @@ export function SteelExampleScene() {
 
 export function HypothesesScene() {
   return (
-    <SceneFrame kicker="Hypothesis Testing I" title="Formulate H0 and H1">
+    <SceneFrame kicker="Hypothesis Testing I" title="Formulate $H_0$ and $H_1$">
       <p>
         Suppose we have <MathText text="$X_1,X_2,\cdots,X_n\overset{\text{i.i.d.}}{\sim} N(\mu, 36)$" />
       </p>
@@ -96,7 +96,7 @@ export function HypothesisTypesScene() {
 
 export function CriticalRegionScene() {
   return (
-    <SceneFrame kicker="Hypothesis Testing I" title="Critical region C and test statistic T">
+    <SceneFrame kicker="Hypothesis Testing I" title="Critical region $C$ and test statistic $T$">
       <BulletList
         items={[
           <>
@@ -176,10 +176,10 @@ export function ErrorTableScene() {
     <SceneFrame kicker="Hypothesis Testing I" title="Errors in hypothesis testing">
       <p>We may draw an incorrect conclusion in two ways:</p>
       <DataTable
-        headers={["", "H0 true", "H1 true"]}
+        headers={["", "$H_0$ true", "$H_1$ true"]}
         rows={[
-          ["Reject H0", "Type I error", "Correct"],
-          ["Fail to reject H0", "Correct", "Type II error"],
+          ["Reject $H_0$", "Type I error", "Correct"],
+          ["Fail to reject $H_0$", "Correct", "Type II error"],
         ]}
       />
       <BulletList
@@ -212,7 +212,7 @@ export function AlphaBetaScene() {
 
 export function AlphaBetaSolutionScene() {
   return (
-    <SceneFrame kicker="Hypothesis Testing I" title="Computing α and β">
+    <SceneFrame kicker="Hypothesis Testing I" title="Computing $\alpha$ and $\beta$">
       <p>
         <strong>Solution.</strong> <MathText text="$T=\bar{X}\sim N(\mu,36/n)$." /> Under <InlineMath tex="H_0" />,{" "}
         <MathText text="$\bar{X}\sim N(50,36/16)$" />; under <InlineMath tex="H_1" />,{" "}
@@ -262,7 +262,7 @@ export function SignificanceScene() {
 
 export function PValueScene() {
   return (
-    <SceneFrame kicker="Hypothesis Testing I" title="p-value: observed significance level">
+    <SceneFrame kicker="Hypothesis Testing I" title="$p$-value: observed significance level">
       <BulletList
         items={[
           <MathText key="a" text="The $p$-value is the probability of a test statistic at least as extreme (in the direction that favours $H_1$) as the one observed, given $H_0$ is true." />,
@@ -271,7 +271,7 @@ export function PValueScene() {
           <MathText key="d" text="The $p$-value is also called the observed significance level." />,
         ]}
       />
-      <Block title="Example · observed x̄ = 56">
+      <Block title="Example · observed $\bar{x}=56$">
         <BulletList
           items={[
             <MathText key="1" text="$\bar{X}\geq 56$ for $H_0:\mu=50$ versus $H_1:\mu=55$" />,
@@ -320,8 +320,8 @@ export function ThreeApproachesScene() {
             Critical region approach
             <BulletList
               items={[
-                "Define the rejection region under H0 and calculate the test statistic",
-                "Reject H0 if the statistic falls in the critical region",
+                "Define the rejection region under $H_0$ and calculate the test statistic",
+                "Reject $H_0$ if the statistic falls in the critical region",
               ]}
             />
           </>,
@@ -330,7 +330,7 @@ export function ThreeApproachesScene() {
             <BulletList
               items={[
                 <MathText key="a" text="Construct a $(1-\alpha)$ confidence interval and check whether the null value is inside" />,
-                "Reject H0 if the null value is not included in the CI",
+                "Reject $H_0$ if the null value is not included in the CI",
               ]}
             />
           </>,
@@ -343,7 +343,7 @@ export function ThreeApproachesScene() {
 
 export function Case1StatScene() {
   return (
-    <SceneFrame kicker={<>Case 1 · <KeepCase>σ²</KeepCase> known</>} title="z statistic">
+    <SceneFrame kicker={<>Case 1 · <KeepCase>σ²</KeepCase> known</>} title="$z$ statistic">
       <BulletList
         items={[
           <>
@@ -363,7 +363,7 @@ export function Case1StatScene() {
 
 export function Case1UpperScene() {
   return (
-    <SceneFrame kicker={<>Case 1 · <KeepCase>σ²</KeepCase> known</>} title="One-sided test, H1: μ > μ0">
+    <SceneFrame kicker={<>Case 1 · <KeepCase>σ²</KeepCase> known</>} title="One-sided test, $H_1:\mu>\mu_0$">
       <p>
         <MathText text="$p$-value $p=\Pr(T>z;H_0)=\Pr(Z>z)$." />
       </p>
@@ -379,7 +379,7 @@ export function Case1UpperScene() {
 
 export function Case1LowerScene() {
   return (
-    <SceneFrame kicker={<>Case 1 · <KeepCase>σ²</KeepCase> known</>} title="One-sided test, H1: μ < μ0">
+    <SceneFrame kicker={<>Case 1 · <KeepCase>σ²</KeepCase> known</>} title="One-sided test, $H_1:\mu<\mu_0$">
       <p>
         <MathText text="$p$-value $p=\Pr(T<z;H_0)=\Pr(Z<z)$." />
       </p>
@@ -395,7 +395,7 @@ export function Case1LowerScene() {
 
 export function Case1TwoScene() {
   return (
-    <SceneFrame kicker={<>Case 1 · <KeepCase>σ²</KeepCase> known</>} title="Two-sided test, H1: μ ≠ μ0">
+    <SceneFrame kicker={<>Case 1 · <KeepCase>σ²</KeepCase> known</>} title="Two-sided test, $H_1:\mu\neq\mu_0$">
       <Formula tex={String.raw`p=\Pr(|T|>|z|;H_0)=2\Pr(Z>|z|).`} />
       <p>Reject <InlineMath tex="H_0" /> at level <InlineMath tex="\alpha" /> when</p>
       <Formula
@@ -421,7 +421,7 @@ export function Case1FigureScene() {
 
 export function Case2StatScene() {
   return (
-    <SceneFrame kicker={<>Case 2 · <KeepCase>σ²</KeepCase> unknown</>} title="t statistic">
+    <SceneFrame kicker={<>Case 2 · <KeepCase>σ²</KeepCase> unknown</>} title="$t$ statistic">
       <BulletList
         items={[
           <MathText key="a" text="Replace the standard normal by $t(n-1)$ and $\sigma^2$ by $S^2$." />,
@@ -442,7 +442,7 @@ export function Case2StatScene() {
 
 export function Case2UpperScene() {
   return (
-    <SceneFrame kicker={<>Case 2 · <KeepCase>σ²</KeepCase> unknown</>} title="One-sided test, H1: μ > μ0">
+    <SceneFrame kicker={<>Case 2 · <KeepCase>σ²</KeepCase> unknown</>} title="One-sided test, $H_1:\mu>\mu_0$">
       <Formula tex={String.raw`p=\Pr(T>t;T\sim t(n-1)).`} />
       <Formula
         tex={String.raw`p\leq\alpha
@@ -455,7 +455,7 @@ export function Case2UpperScene() {
 
 export function Case2LowerScene() {
   return (
-    <SceneFrame kicker={<>Case 2 · <KeepCase>σ²</KeepCase> unknown</>} title="One-sided test, H1: μ < μ0">
+    <SceneFrame kicker={<>Case 2 · <KeepCase>σ²</KeepCase> unknown</>} title="One-sided test, $H_1:\mu<\mu_0$">
       <Formula tex={String.raw`p=\Pr(T<t;T\sim t(n-1)).`} />
       <Formula
         tex={String.raw`p\leq\alpha
@@ -468,7 +468,7 @@ export function Case2LowerScene() {
 
 export function Case2TwoScene() {
   return (
-    <SceneFrame kicker={<>Case 2 · <KeepCase>σ²</KeepCase> unknown</>} title="Two-sided test, H1: μ ≠ μ0">
+    <SceneFrame kicker={<>Case 2 · <KeepCase>σ²</KeepCase> unknown</>} title="Two-sided test, $H_1:\mu\neq\mu_0$">
       <Formula tex={String.raw`p=2\Pr(T>|t|;T\sim t(n-1)).`} />
       <Formula
         tex={String.raw`p\leq\alpha
@@ -541,10 +541,8 @@ export function OneMeanSummaryScene() {
   return (
     <SceneFrame kicker="Hypothesis Testing I" title="Tests for one mean">
       <DataTable
-        caption={<>
-          <KeepCase>σ²</KeepCase> known · Z ~ N(0,1) · z = (x̄ − μ0)/(<KeepCase>σ</KeepCase>/√n)
-        </>}
-        headers={["H0", "H1", "p-value", "Critical region"]}
+        caption={String.raw`$\sigma^2$ known · $Z\sim N(0,1)$ · $z=(\bar{x}-\mu_0)/(\sigma/\sqrt{n})$`}
+        headers={["$H_0$", "$H_1$", "$p$-value", "Critical region"]}
         rows={[
           [<InlineMath key="a" tex={String.raw`\mu=\mu_0`} />, <InlineMath key="b" tex={String.raw`\mu>\mu_0`} />, <InlineMath key="c" tex={String.raw`\Pr(Z>z)`} />, <InlineMath key="d" tex={String.raw`z\geq z_\alpha`} />],
           [<InlineMath key="a" tex={String.raw`\mu=\mu_0`} />, <InlineMath key="b" tex={String.raw`\mu<\mu_0`} />, <InlineMath key="c" tex={String.raw`\Pr(Z<z)`} />, <InlineMath key="d" tex={String.raw`z\leq -z_\alpha`} />],
@@ -552,10 +550,8 @@ export function OneMeanSummaryScene() {
         ]}
       />
       <DataTable
-        caption={<>
-          <KeepCase>σ²</KeepCase> unknown · T ~ t(n−1) · t = (x̄ − μ0)/(s/√n)
-        </>}
-        headers={["H0", "H1", "p-value", "Critical region"]}
+        caption={String.raw`$\sigma^2$ unknown · $T\sim t(n-1)$ · $t=(\bar{x}-\mu_0)/(s/\sqrt{n})$`}
+        headers={["$H_0$", "$H_1$", "$p$-value", "Critical region"]}
         rows={[
           [<InlineMath key="a" tex={String.raw`\mu=\mu_0`} />, <InlineMath key="b" tex={String.raw`\mu>\mu_0`} />, <InlineMath key="c" tex={String.raw`\Pr(T>t)`} />, <InlineMath key="d" tex={String.raw`t\geq t_\alpha(n-1)`} />],
           [<InlineMath key="a" tex={String.raw`\mu=\mu_0`} />, <InlineMath key="b" tex={String.raw`\mu<\mu_0`} />, <InlineMath key="c" tex={String.raw`\Pr(T<t)`} />, <InlineMath key="d" tex={String.raw`t\leq -t_\alpha(n-1)`} />],
@@ -565,7 +561,7 @@ export function OneMeanSummaryScene() {
       <BulletList
         items={[
           <MathText key="p" text="$p$-value: reject $H_0$ if $p$-value $\leq\alpha$" />,
-          "Critical region: reject H0 if z or t belongs to the critical region",
+          "Critical region: reject $H_0$ if $z$ or $t$ belongs to the critical region",
           <MathText key="c" text="Confidence interval: reject $H_0$ if the CI excludes $\mu_0$" />,
         ]}
       />

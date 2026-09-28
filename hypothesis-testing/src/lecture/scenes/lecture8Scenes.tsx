@@ -62,7 +62,7 @@ export function PropStatScene() {
 
 export function PropUpperScene() {
   return (
-    <SceneFrame kicker="One proportion" title="H1: p > p0">
+    <SceneFrame kicker="One proportion" title="$H_1:p>p_0$">
       <p>
         <MathText text="$p$-value $\Pr(T>t;H_0)=\Pr(Z>t)$." />
       </p>
@@ -77,7 +77,7 @@ export function PropUpperScene() {
 
 export function PropLowerScene() {
   return (
-    <SceneFrame kicker="One proportion" title="H1: p < p0">
+    <SceneFrame kicker="One proportion" title="$H_1:p<p_0$">
       <p>
         <MathText text="$p$-value $\Pr(T<t;H_0)=\Pr(Z<t)$." />
       </p>
@@ -92,7 +92,7 @@ export function PropLowerScene() {
 
 export function PropTwoScene() {
   return (
-    <SceneFrame kicker="One proportion" title="H1: p ≠ p0">
+    <SceneFrame kicker="One proportion" title="$H_1:p\neq p_0$">
       <p>
         <MathText text="$p$-value $\Pr(|T|>|t|;H_0)=2\Pr(Z>|t|)$." />
       </p>
@@ -143,7 +143,7 @@ export function TwoPropSetupScene() {
     <SceneFrame kicker="Two proportions" title="Equality of two proportions">
       <BulletList
         items={[
-          "Two populations, with proportions p1 and p2 who have a certain characteristic.",
+          "Two populations, with proportions $p_1$ and $p_2$ who have a certain characteristic.",
           <MathText key="h" text="Test $H_0:p_1=p_2$ against a possible alternative $H_1$." />,
         ]}
       />
@@ -171,7 +171,7 @@ N\left(p_1-p_2,\frac{p_1(1-p_1)}{n}+\frac{p_2(1-p_2)}{m}\right).`}
 
 export function TwoPropNullScene() {
   return (
-    <SceneFrame kicker="Two proportions" title="Under H0: p1 = p2">
+    <SceneFrame kicker="Two proportions" title="Under $H_0:p_1=p_2$">
       <p>Only the two-sided test is derived; the one-sided test is the same pattern.</p>
       <Formula
         tex={String.raw`\hat{p}_1-\hat{p}_2\overset{\text{approx}}{\sim}
@@ -180,7 +180,9 @@ N\left(0,\ p_1(1-p_1)\left(\frac{1}{n}+\frac{1}{m}\right)\right).`}
       <p>
         We know <MathText text="$p_1=p_2$" />, but not the common value.
       </p>
-      <p className={styles.note}>Question: what is the distribution of Y1 + Y2 under H0?</p>
+      <p className={styles.note}>
+        Question: what is the distribution of <InlineMath tex="Y_1+Y_2" /> under <InlineMath tex="H_0" />?
+      </p>
     </SceneFrame>
   );
 }
@@ -204,7 +206,7 @@ export function TwoPropStatScene() {
 
 export function TwoPropDecisionScene() {
   return (
-    <SceneFrame kicker="Two proportions" title="H1: p1 ≠ p2">
+    <SceneFrame kicker="Two proportions" title="$H_1:p_1\neq p_2$">
       <p>
         <MathText text="$p$-value $\Pr(|T|>|t|;H_0)=2\Pr(Z>|t|)$." />
       </p>
@@ -234,7 +236,7 @@ export function BirthExampleScene() {
         items={[
           <MathText key="c" text="Critical region: $|t|=1.23<z_{0.025}=1.96$." />,
           <MathText key="p" text="$p$-value: $2\Pr(Z>1.23)=0.219>0.05$." />,
-          "Fail to reject H0 at the 5% significance level.",
+          "Fail to reject $H_0$ at the 5% significance level.",
         ]}
       />
     </SceneFrame>
@@ -245,8 +247,8 @@ export function PropSummaryScene() {
   return (
     <SceneFrame kicker="Hypothesis Testing III" title="Summary of proportion tests">
       <DataTable
-        caption="One-sample · T ≈ N(0,1) · t = (p̂ − p0)/√(p0(1−p0)/n)"
-        headers={["H0", "H1", "p-value", "Critical region"]}
+        caption="One-sample · $T\overset{\text{approx}}{\sim} N(0,1)$ · $t=(\hat{p}-p_0)/\sqrt{p_0(1-p_0)/n}$"
+        headers={["$H_0$", "$H_1$", "$p$-value", "Critical region"]}
         rows={[
           [<InlineMath key="a" tex="p=p_0" />, <InlineMath key="b" tex="p>p_0" />, <InlineMath key="c" tex={String.raw`\Pr(T>t)`} />, <InlineMath key="d" tex={String.raw`t\geq z_\alpha`} />],
           [<InlineMath key="a" tex="p=p_0" />, <InlineMath key="b" tex="p<p_0" />, <InlineMath key="c" tex={String.raw`\Pr(T<t)`} />, <InlineMath key="d" tex={String.raw`t\leq -z_\alpha`} />],
@@ -254,8 +256,8 @@ export function PropSummaryScene() {
         ]}
       />
       <DataTable
-        caption="Two-sample · t = (p̂1 − p̂2)/√(p̂(1−p̂)(1/n+1/m)), p̂=(y1+y2)/(n+m)"
-        headers={["H0", "H1", "p-value", "Critical region"]}
+        caption="Two-sample · $t=(\hat{p}_1-\hat{p}_2)/\sqrt{\hat{p}(1-\hat{p})(1/n+1/m)}$, $\hat{p}=(y_1+y_2)/(n+m)$"
+        headers={["$H_0$", "$H_1$", "$p$-value", "Critical region"]}
         rows={[
           [<InlineMath key="a" tex="p_1=p_2" />, <InlineMath key="b" tex="p_1>p_2" />, <InlineMath key="c" tex={String.raw`\Pr(T>t)`} />, <InlineMath key="d" tex={String.raw`t\geq z_\alpha`} />],
           [<InlineMath key="a" tex="p_1=p_2" />, <InlineMath key="b" tex="p_1<p_2" />, <InlineMath key="c" tex={String.raw`\Pr(T<t)`} />, <InlineMath key="d" tex={String.raw`t\leq -z_\alpha`} />],

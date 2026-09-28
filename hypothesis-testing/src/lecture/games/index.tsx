@@ -21,12 +21,12 @@ export function SteelCutoffGame() {
       {!print ? (
         <div className={styles.tools}>
           <label className={styles.small}>
-            n
+            <InlineMath tex="n" />
             <input type="range" min={4} max={64} value={n} onChange={(e) => setN(Number(e.target.value))} />
             <span>{n}</span>
           </label>
           <label className={styles.small}>
-            c
+            <InlineMath tex="c" />
             <input
               type="range"
               min={50}
@@ -64,7 +64,7 @@ export function PowerExplorerGame() {
   }, [n, z]);
 
   return (
-    <SceneFrame kicker="Game" title="Power of an upper-tailed z test" tone="gold">
+    <SceneFrame kicker="Game" title="Power of an upper-tailed $z$ test" tone="gold">
       <p>
         <MathText text="$H_0:\mu\leq 60$ vs $H_1:\mu>60$, $\sigma=10$." />{" "}
         <MathText text="$K(\mu_1)=\Phi((\mu_1-60)/(\sigma/\sqrt{n})-z_\alpha)$." />
@@ -72,12 +72,12 @@ export function PowerExplorerGame() {
       {!print ? (
         <div className={styles.tools}>
           <label className={styles.small}>
-            n
+            <InlineMath tex="n" />
             <input type="range" min={5} max={120} value={n} onChange={(e) => setN(Number(e.target.value))} />
             <span>{n}</span>
           </label>
           <label className={styles.small}>
-            μ₁ − 60
+            <InlineMath tex="\mu_1-60" />
             <input
               type="range"
               min={0}
@@ -89,7 +89,7 @@ export function PowerExplorerGame() {
             <span>{delta}</span>
           </label>
           <label className={styles.small}>
-            α
+            <InlineMath tex="\alpha" />
             <select value={alpha} onChange={(e) => setAlpha(Number(e.target.value))}>
               <option value={0.1}>0.10</option>
               <option value={0.05}>0.05</option>
@@ -126,24 +126,24 @@ export function ProportionTestGame() {
   const pTwo = 2 * (1 - normCdf(Math.abs(t)));
 
   return (
-    <SceneFrame kicker="Game" title="One-proportion z test" tone="gold">
+    <SceneFrame kicker="Game" title="One-proportion $z$ test" tone="gold">
       <p>
         <MathText text="$t=(\hat{p}-p_0)/\sqrt{p_0(1-p_0)/n}$." /> The dice example is the default.
       </p>
       {!print ? (
         <div className={styles.tools}>
           <label className={styles.small}>
-            n
+            <InlineMath tex="n" />
             <input type="range" min={50} max={8000} step={50} value={n} onChange={(e) => setN(Number(e.target.value))} />
             <span>{n}</span>
           </label>
           <label className={styles.small}>
-            y
+            <InlineMath tex="y" />
             <input type="range" min={0} max={n} value={Math.min(y, n)} onChange={(e) => setY(Number(e.target.value))} />
             <span>{Math.min(y, n)}</span>
           </label>
           <label className={styles.small}>
-            p₀
+            <InlineMath tex="p_0" />
             <input
               type="range"
               min={0.05}

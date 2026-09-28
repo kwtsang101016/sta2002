@@ -1,5 +1,5 @@
 import styles from "../Lecture.module.css";
-import { Block, BulletList, Caption, DataTable, Figure, Formula, InlineMath, KeepCase, MathText, OrderedList, SceneFrame } from "./shared";
+import { Block, BulletList, Caption, DataTable, Figure, Formula, InlineMath, MathText, OrderedList, SceneFrame } from "./shared";
 
 export function L9IntroScene() {
   return (
@@ -17,10 +17,10 @@ export function PowerRecallScene() {
   return (
     <SceneFrame kicker="Power" title="Type II error and power">
       <DataTable
-        headers={["", "H0 true", "H1 true"]}
+        headers={["", "$H_0$ true", "$H_1$ true"]}
         rows={[
-          ["Reject H0", "Type I error", "Correct"],
-          ["Fail to reject H0", "Correct", "Type II error"],
+          ["Reject $H_0$", "Type I error", "Correct"],
+          ["Fail to reject $H_0$", "Correct", "Type II error"],
         ]}
       />
       <p>
@@ -33,7 +33,7 @@ export function PowerRecallScene() {
 
 export function PowerDefScene() {
   return (
-    <SceneFrame kicker="Power" title="Power function K(μ)">
+    <SceneFrame kicker="Power" title="Power function $K(\mu)$">
       <BulletList
         items={[
           <MathText key="a" text="The power function $K(\mu)$ is a function of $\mu\in\Omega$, the parameter space." />,
@@ -51,7 +51,7 @@ export function PowerDefScene() {
 
 export function PowerAlphaBetaScene() {
   return (
-    <SceneFrame kicker="Power" title="Connection with α and β">
+    <SceneFrame kicker="Power" title="Connection with $\alpha$ and $\beta$">
       <p>
         With <MathText text="$H_0:\mu=\mu_0$" />:
       </p>
@@ -104,7 +104,7 @@ export function TeachingSolutionScene() {
 
 export function TeachingCurveScene() {
   return (
-    <SceneFrame kicker="Example" title="Curve of K(μ)">
+    <SceneFrame kicker="Example" title="Curve of $K(\mu)$">
       <Figure src="/figures/power_curve_normal.png" alt="Power curve K(mu) = 1 - Phi((62-mu)/2)" width="78%" />
       <Caption>
         <MathText text="Power function $K(\mu)=1-\Phi((62-\mu)/2)$." /> Points mark <InlineMath tex="\mu=60" /> and{" "}
@@ -116,7 +116,7 @@ export function TeachingCurveScene() {
 
 export function At60Scene() {
   return (
-    <SceneFrame kicker="Example" title="At μ = 60">
+    <SceneFrame kicker="Example" title="At $\mu=60$">
       <Formula tex={String.raw`K(60)=1-\Phi\left(\frac{62-60}{2}\right)=1-\Phi(1)=0.1587=\alpha.`} />
       <p>The significance level of this test is 15.87%.</p>
       <p>
@@ -155,7 +155,7 @@ export function CompositeNullScene() {
 
 export function At65Scene() {
   return (
-    <SceneFrame kicker="Example" title="At μ = 65">
+    <SceneFrame kicker="Example" title="At $\mu=65$">
       <Formula tex={String.raw`K(65)=1-\Phi\left(\frac{62-65}{2}\right)=0.9332.`} />
       <p>
         If the true mean is 65, the probability of rejecting <InlineMath tex="H_0" /> is 93.32%. Then{" "}
@@ -167,7 +167,7 @@ export function At65Scene() {
 
 export function AlphaFixedScene() {
   return (
-    <SceneFrame kicker="Example" title="Power when α is fixed at 0.05">
+    <SceneFrame kicker="Example" title="Power when $\alpha$ is fixed at 0.05">
       <p>
         Pre-assign <MathText text="$\alpha=0.05$" />. Solve
       </p>
@@ -182,7 +182,7 @@ export function AlphaFixedScene() {
 
 export function AlphaFixedPowerScene() {
   return (
-    <SceneFrame kicker="Example" title="Power at 65 after fixing α">
+    <SceneFrame kicker="Example" title="Power at 65 after fixing $\alpha$">
       <Formula tex={String.raw`K(65)=\Pr(\bar{X}\geq 63.29;\mu=65)=1-\Phi\left(\frac{63.29-65}{2}\right)=0.804.`} />
       <p>
         <MathText text="$\beta(65)=1-0.804=0.196$" />. If <MathText text="$\mu=65$" />, there is about a 19.6% chance of
@@ -194,7 +194,7 @@ export function AlphaFixedPowerScene() {
 
 export function UpperPowerDeriveScene() {
   return (
-    <SceneFrame kicker="One-sided power" title="Power when α is given">
+    <SceneFrame kicker="One-sided power" title="Power when $\alpha$ is given">
       <Block title="Example">
         <p>
           <MathText text="$X_i\stackrel{\text{i.i.d.}}{\sim} N(\mu,\sigma^2)$ with known $\sigma^2$." /> Derive{" "}
@@ -358,7 +358,7 @@ export function ToothpasteSolutionScene() {
 
 export function WhyKnownSigmaScene() {
   return (
-    <SceneFrame kicker="Power" title="Why we assume known σ">
+    <SceneFrame kicker="Power" title="Why we assume known $\sigma$">
       <p>
         For <MathText text="$H_0:\mu=\mu_0$ vs $H_1:\mu=\mu_1$ with $\mu_0<\mu_1$" />, the critical region uses{" "}
         <MathText text="$t_\alpha(n-1)$" /> and <InlineMath tex="S" />. Then
@@ -403,7 +403,7 @@ export function SampleSizeMotivationScene() {
 
 export function SampleSizeSolveScene() {
   return (
-    <SceneFrame kicker="Sample size" title="Solving for c and n">
+    <SceneFrame kicker="Sample size" title="Solving for $c$ and $n$">
       <Formula tex={String.raw`\frac{c-60}{10/\sqrt{n}}=z_{0.025}=1.96,\qquad
 \frac{c-65}{10/\sqrt{n}}=-z_{0.05}=-1.645.`} />
       <p>
@@ -516,7 +516,7 @@ export function PowerSummaryScene() {
   return (
     <SceneFrame kicker="Hypothesis Testing IV" title="Power and sample size">
       <DataTable
-        caption={<>One-sample, <KeepCase>σ²</KeepCase> known, Δ = μ1 − μ0</>}
+        caption={String.raw`One-sample, $\sigma^2$ known, $\Delta=\mu_1-\mu_0$`}
         headers={["Test", "Power (approx.)", "Sample size"]}
         rows={[
           [
@@ -537,7 +537,7 @@ export function PowerSummaryScene() {
         ]}
       />
       <DataTable
-        caption={<>Two-sample, equal known <KeepCase>σ²</KeepCase>, equal n, Δ = μX − μY</>}
+        caption={String.raw`Two-sample, equal known $\sigma^2$, equal $n$, $\Delta=\mu_X-\mu_Y$`}
         headers={["Test", "Power (approx.)", "Sample size"]}
         rows={[
           [
@@ -584,17 +584,19 @@ export function BinomialSetupScene() {
 
 export function BinomialPowerScene() {
   return (
-    <SceneFrame kicker="Proportion power" title="Power function K(p)">
+    <SceneFrame kicker="Proportion power" title="Power function $K(p)$">
       <Formula tex={String.raw`K(p)=\Pr(Y\leq 6;Y\sim\mathrm{Bin}(20,p))=\sum_{y=0}^{6}\binom{20}{y}p^y(1-p)^{20-y}.`} />
       <Figure src="/figures/power_curve_binomial.png" alt="Power curve of the binomial test Y less than or equal to 6" width="62%" />
-      <Caption>Power curve of the test that rejects when Y ≤ 6, n = 20.</Caption>
+      <Caption>
+        <MathText text="Power curve of the test that rejects when $Y\leq 6$, $n=20$." />
+      </Caption>
     </SceneFrame>
   );
 }
 
 export function BinomialAlphaScene() {
   return (
-    <SceneFrame kicker="Proportion power" title="α and β(1/4)">
+    <SceneFrame kicker="Proportion power" title="$\alpha$ and $\beta(1/4)$">
       <Formula tex={String.raw`K(1/2)=\sum_{y=0}^{6}\binom{20}{y}(1/2)^{20}=0.0577=\alpha.`} />
       <p>The significance level is 5.77%.</p>
       <Formula tex={String.raw`K(1/4)=0.7858,\qquad \beta(1/4)=1-K(1/4)=0.2142.`} />
@@ -605,7 +607,7 @@ export function BinomialAlphaScene() {
 
 export function BinomialNSetupScene() {
   return (
-    <SceneFrame kicker="Proportion sample size" title="Target α = 0.05 and β = 0.1">
+    <SceneFrame kicker="Proportion sample size" title="Target $\alpha=0.05$ and $\beta=0.1$">
       <p>
         Want <MathText text="$K(1/4)=0.9$" /> as well. Let <MathText text="$Y=\sum_{i=1}^n X_i$" /> and{" "}
         <MathText text="$C=\{Y\leq c\}$" />. The exact binomial equations are hard to solve, so use the CLT:
@@ -645,7 +647,7 @@ export function BinomialEq2Scene() {
 
 export function BinomialCheck1Scene() {
   return (
-    <SceneFrame kicker="Proportion sample size" title="Check nearby (n, c)">
+    <SceneFrame kicker="Proportion sample size" title="Check nearby $(n,c)$">
       <p>
         For <MathText text="$(n,c)=(31,10.5)$" />: <MathText text="$\alpha=0.0354$" /> and{" "}
         <MathText text="$K(1/4)=0.872$" />.
@@ -683,8 +685,8 @@ export function ProportionTakeawaysScene() {
       <BulletList
         items={[
           "Derive the power function with the binomial CDF.",
-          "To choose n for given α and β, approximate the binomial by a normal.",
-          "Because of that approximation, the n you get may not control α and β exactly.",
+          String.raw`To choose $n$ for given $\alpha$ and $\beta$, approximate the binomial by a normal.`,
+          String.raw`Because of that approximation, the $n$ you get may not control $\alpha$ and $\beta$ exactly.`,
           "In practice, check Type I and Type II errors with the exact distribution.",
         ]}
       />
