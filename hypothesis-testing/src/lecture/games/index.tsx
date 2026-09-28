@@ -3,6 +3,25 @@ import { formatNum, normCdf, zOneSided } from "../../utils";
 import styles from "../Lecture.module.css";
 import { usePrintMode } from "../printContext";
 import { Formula, InlineMath, MathText, SceneFrame } from "../scenes/shared";
+import { ConceptQuiz } from "./ConceptQuiz";
+import { ERRORS_QUIZ, ERRORS_QUIZ_INTRO, PVALUE_QUIZ, PVALUE_QUIZ_INTRO } from "./quizBanks";
+
+export function ErrorsConceptQuiz() {
+  return (
+    <ConceptQuiz
+      quizId="errors"
+      title="Concept check: hypotheses and errors"
+      intro={ERRORS_QUIZ_INTRO}
+      questions={ERRORS_QUIZ}
+    />
+  );
+}
+
+export function PValueConceptQuiz() {
+  return (
+    <ConceptQuiz quizId="pvalue" title="Concept check: p-values" intro={PVALUE_QUIZ_INTRO} questions={PVALUE_QUIZ} />
+  );
+}
 
 export function SteelCutoffGame() {
   const print = usePrintMode();

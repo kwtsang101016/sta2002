@@ -462,6 +462,89 @@ th { font: 800 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spa
   transform: translate(-1px, -1px);
 }
 
+.quizCounter {
+  margin: 18px 0 4px;
+  color: var(--red);
+  font: 800 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.quizPrompt {
+  margin: 0;
+  font-size: clamp(17px, 1.6vw, 21px);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.quizChoice {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  min-height: 64px;
+  padding: 12px 14px;
+  font: 500 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  text-transform: none;
+}
+
+.quizChoice:disabled { cursor: default; }
+.quizChoice:disabled:hover { transform: none; box-shadow: 4px 4px 0 var(--ink); }
+.quizChoiceDim { opacity: 0.55; }
+
+.quizLetter {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  color: var(--white);
+  background: var(--ink);
+  font: 800 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.quizVerdict {
+  margin: 0 0 8px;
+  font-weight: 800;
+}
+
+.answer p:last-child { margin-bottom: 0; }
+
+.quizChips { margin-top: 16px; }
+
+.quizNav button:disabled,
+.quizNav button:disabled:hover {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.quizChip { cursor: pointer; min-width: 34px; }
+.quizChip:disabled { cursor: not-allowed; opacity: 0.45; }
+.chipCorrect { background: #d9edf1; }
+.chipWrong { background: #ffdfd3; }
+.chipActive.chipCorrect,
+.chipActive.chipWrong { color: var(--white); background: var(--red); }
+
+.quizScore {
+  align-self: center;
+  margin-left: auto;
+  padding: 6px 10px;
+  color: var(--white);
+  background: var(--blue);
+  border: 2px solid var(--ink);
+  font: 800 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.quizPrintList {
+  margin: 12px 0 0;
+  padding-left: 22px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.quizPrintList li { margin-bottom: 8px; }
+
 .ethicsDemo {
   margin-top: 20px;
   padding: 16px 18px;

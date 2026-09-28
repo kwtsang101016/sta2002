@@ -1,5 +1,11 @@
 import type { ComponentType } from "react";
-import { PowerExplorerGame, ProportionTestGame, SteelCutoffGame } from "../games";
+import {
+  ErrorsConceptQuiz,
+  PValueConceptQuiz,
+  PowerExplorerGame,
+  ProportionTestGame,
+  SteelCutoffGame,
+} from "../games";
 import { CoverScene, OutlineScene, Part1Scene, Part2Scene, Part3Scene, Part4Scene } from "./courseScenes";
 import {
   AlphaBetaScene,
@@ -139,8 +145,10 @@ export const SCENES: SceneDef[] = [
   { id: "alpha-beta-sol", chapter: "Part I", label: "Compute α and β", Scene: AlphaBetaSolutionScene },
   { id: "type-plot", chapter: "Part I", label: "Error regions", Scene: TypeErrorPlotScene },
   { id: "game-cutoff", chapter: "Game", label: "Cutoff explorer", Scene: SteelCutoffGame },
+  { id: "quiz-errors", chapter: "Game", label: "Concept check: errors", Scene: ErrorsConceptQuiz },
   { id: "alpha", chapter: "Part I", label: "Significance level", Scene: SignificanceScene },
   { id: "pvalue", chapter: "Part I", label: "p-value", Scene: PValueScene },
+  { id: "quiz-pvalue", chapter: "Game", label: "Concept check: p-values", Scene: PValueConceptQuiz },
   { id: "mean-setup", chapter: "One mean", label: "Two cases", Scene: MeanSetupScene },
   { id: "three", chapter: "One mean", label: "Three approaches", Scene: ThreeApproachesScene },
   { id: "z-stat", chapter: "Case 1", label: "z statistic", Scene: Case1StatScene },
