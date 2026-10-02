@@ -149,6 +149,7 @@ export function Lecture() {
         </div>
         <select
           className={styles.jump}
+          aria-label="Jump to slide"
           value={scene.id}
           onChange={(event) => setIndex(SCENES.findIndex((item) => item.id === event.target.value))}
         >
@@ -166,7 +167,7 @@ export function Lecture() {
         <Scene />
       </div>
       {handoutMessage ? <p className={styles.handoutToast}>{handoutMessage}</p> : null}
-      <div className={styles.handoutMount} data-handout-mount aria-hidden="true">
+      <div className={styles.handoutMount} aria-hidden="true">
         <div ref={handoutRef}>
           <HandoutDocument />
         </div>
