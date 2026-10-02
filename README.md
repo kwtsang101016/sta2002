@@ -52,4 +52,4 @@ npm run build:all
 
 - [Vite](https://vite.dev/) + [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
 - Math via [KaTeX](https://katex.org/)
-- PDF handout export via `html2pdf.js`
+- PDF handout export via `html2canvas` + `jspdf` (one slide per page, scaled to fit A4)

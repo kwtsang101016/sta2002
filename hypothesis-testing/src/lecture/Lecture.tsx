@@ -26,6 +26,7 @@ function readStoredScaleIndex(): number {
 export function Lecture() {
   const [index, setIndex] = useState(0);
   const [downloading, setDownloading] = useState(false);
+  const [handoutMessage, setHandoutMessage] = useState("");
   const [textScaleIndex, setTextScaleIndex] = useState(readStoredScaleIndex);
   const [stageElement, setStageElement] = useState<HTMLElement | null>(null);
   const handoutRef = useRef<HTMLDivElement>(null);
@@ -56,19 +57,22 @@ export function Lecture() {
   const handleDownloadPdf = async () => {
     const source = handoutRef.current;
     if (!source) {
-      window.alert("Handout is not ready yet. Refresh and try again.");
+      setHandoutMessage("Handout is not ready yet. Refresh and try again.");
       return;
     }
     setDownloading(true);
+    setHandoutMessage("");
     try {
       await downloadHandoutPdf(source);
+      setHandoutMessage("PDF saved. Check your Downloads folder.");
     } catch (error) {
       const message = error instanceof Error ? error.message : "PDF export failed.";
+      setHandoutMessage(message);
       try {
         await printHandout(source);
-        window.alert("PDF export failed — opened the print dialog instead. Choose Save as PDF.");
+        setHandoutMessage("PDF export failed — opened the print dialog instead. Choose Save as PDF.");
       } catch {
-        window.alert(`${message} Allow pop-ups to use the print fallback.`);
+        setHandoutMessage(`${message} Allow pop-ups to use the print fallback.`);
       }
     } finally {
       setDownloading(false);
@@ -161,6 +165,7 @@ export function Lecture() {
       <div className={styles.stage} ref={setStageElement}>
         <Scene />
       </div>
+      {handoutMessage ? <p className={styles.handoutToast}>{handoutMessage}</p> : null}
       <div className={styles.handoutMount} data-handout-mount aria-hidden="true">
         <div ref={handoutRef}>
           <HandoutDocument />
