@@ -1,33 +1,20 @@
-const FILENAME = "STA2002-Confidence-Intervals.pdf";
+/**
+ * PDF handout export for large STA2002 decks.
+ *
+ * Capture one slide at a time into a temporary host, and tell html2canvas to
+ * ignore the off-screen handout mount so the document clone stays small
+ * (important for long KaTeX-heavy decks).
+ */
 
-type MountStyleSnapshot = {
-  left: string;
-  top: string;
-  position: string;
-  zIndex: string;
-  opacity: string;
-  pointerEvents: string;
-  width: string;
-  maxWidth: string;
-  height: string;
-  overflow: string;
-  clipPath: string;
-};
+const FILENAME = "STA2002-Confidence-Intervals.pdf";
 
 const PAGE_MARGIN_MM = 8;
 const HANDOUT_DESIGN_WIDTH = 1120;
+const CAPTURE_SCALE = 1.5;
 
-function findHandoutMount(source: HTMLElement): HTMLElement | null {
-  let node: HTMLElement | null = source;
-  while (node) {
-    const className = typeof node.className === "string" ? node.className : "";
-    if (className.includes("handoutMount")) {
-      return node;
-    }
-    node = node.parentElement;
-  }
-  return null;
-}
+export type DownloadHandoutOptions = {
+  onProgress?: (done: number, total: number) => void;
+};
 
 function collectInlineCssText(): string {
   const chunks: string[] = [];
@@ -62,27 +49,6 @@ function collectCrossOriginStyleLinks(): string {
     .join("\n");
 }
 
-function revealHandoutInClone(element: HTMLElement): void {
-  let node: HTMLElement | null = element;
-  while (node) {
-    node.style.setProperty("visibility", "visible", "important");
-    node.style.setProperty("opacity", "1", "important");
-    node.style.pointerEvents = "auto";
-    const className = typeof node.className === "string" ? node.className : "";
-    if (className.includes("handoutMount") || node.getAttribute("aria-hidden") === "true") {
-      node.style.position = "static";
-      node.style.left = "auto";
-      node.style.top = "auto";
-      node.style.zIndex = "auto";
-      node.style.width = "100%";
-      node.style.maxWidth = "none";
-      node.style.transform = "none";
-      node.removeAttribute("aria-hidden");
-    }
-    node = node.parentElement;
-  }
-}
-
 function unclipOverflowInClone(element: HTMLElement): void {
   element.style.setProperty("overflow", "visible", "important");
   element.style.setProperty("overflow-x", "visible", "important");
@@ -104,7 +70,6 @@ function unclipOverflowInClone(element: HTMLElement): void {
     svg.style.setProperty("height", "auto", "important");
   }
 
-  // Display formulas only — avoid nowrap on every inline KaTeX span.
   for (const node of element.querySelectorAll<HTMLElement>(
     ".mathDisplay, .formula .katex, .formula .katex-display, .mathDisplay .katex",
   )) {
@@ -118,68 +83,49 @@ async function nextFrame(): Promise<void> {
   });
 }
 
-function captureMountWidth(): number {
-  // Shrink to the viewport so html2canvas does not crop content past the
-  // right edge of the browser window (common with tree / Venn SVGs).
+async function yieldToUi(): Promise<void> {
+  await new Promise<void>((resolve) => {
+    window.setTimeout(() => resolve(), 0);
+  });
+}
+
+function captureWidth(): number {
   return Math.min(HANDOUT_DESIGN_WIDTH, Math.max(720, window.innerWidth - 16));
-}
-
-function prepareMountForCapture(mount: HTMLElement): MountStyleSnapshot {
-  const previous: MountStyleSnapshot = {
-    left: mount.style.left,
-    top: mount.style.top,
-    position: mount.style.position,
-    zIndex: mount.style.zIndex,
-    opacity: mount.style.opacity,
-    pointerEvents: mount.style.pointerEvents,
-    width: mount.style.width,
-    maxWidth: mount.style.maxWidth,
-    height: mount.style.height,
-    overflow: mount.style.overflow,
-    clipPath: mount.style.clipPath,
-  };
-  const width = captureMountWidth();
-  mount.style.position = "fixed";
-  mount.style.left = "0";
-  mount.style.top = "0";
-  mount.style.zIndex = "-1";
-  mount.style.opacity = "1";
-  mount.style.pointerEvents = "none";
-  mount.style.visibility = "visible";
-  mount.style.width = `${width}px`;
-  mount.style.maxWidth = "none";
-  mount.style.height = "auto";
-  mount.style.overflow = "visible";
-  mount.style.clipPath = "none";
-  mount.removeAttribute("aria-hidden");
-  return previous;
-}
-
-function restoreMount(mount: HTMLElement, previous: MountStyleSnapshot): void {
-  mount.style.left = previous.left;
-  mount.style.top = previous.top;
-  mount.style.position = previous.position;
-  mount.style.zIndex = previous.zIndex;
-  mount.style.opacity = previous.opacity;
-  mount.style.pointerEvents = previous.pointerEvents;
-  mount.style.width = previous.width;
-  mount.style.maxWidth = previous.maxWidth;
-  mount.style.height = previous.height;
-  mount.style.overflow = previous.overflow;
-  mount.style.clipPath = previous.clipPath;
-  mount.setAttribute("aria-hidden", "true");
 }
 
 function handoutPages(source: HTMLElement): HTMLElement[] {
   return [...source.querySelectorAll<HTMLElement>("[data-handout-page]")];
 }
 
+function createCaptureHost(width: number): HTMLElement {
+  const host = document.createElement("div");
+  host.setAttribute("data-pdf-export-host", "true");
+  Object.assign(host.style, {
+    position: "fixed",
+    left: "0",
+    top: "0",
+    width: `${width}px`,
+    margin: "0",
+    padding: "0",
+    background: "#fff4d2",
+    visibility: "visible",
+    opacity: "1",
+    pointerEvents: "none",
+    zIndex: "-1",
+    overflow: "visible",
+  } as Partial<CSSStyleDeclaration>);
+  document.body.appendChild(host);
+  return host;
+}
+
 /**
  * One slide → one PDF page. Each slide is captured as a single image and scaled
- * to fit inside the A4 printable area, so content is never clipped mid-equation
- * and tall slides shrink as a whole instead of overflowing.
+ * to fit inside the A4 printable area.
  */
-export async function downloadHandoutPdf(source: HTMLElement): Promise<void> {
+export async function downloadHandoutPdf(
+  source: HTMLElement,
+  options: DownloadHandoutOptions = {},
+): Promise<void> {
   const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
     import("html2canvas"),
     import("jspdf"),
@@ -190,9 +136,12 @@ export async function downloadHandoutPdf(source: HTMLElement): Promise<void> {
     throw new Error("No handout pages found to export.");
   }
 
-  const mount = findHandoutMount(source);
-  const previous = mount ? prepareMountForCapture(mount) : null;
-  const mountWidth = mount ? captureMountWidth() : HANDOUT_DESIGN_WIDTH;
+  if (document.fonts?.ready) {
+    await document.fonts.ready.catch(() => undefined);
+  }
+
+  const width = captureWidth();
+  const host = createCaptureHost(width);
   await nextFrame();
 
   try {
@@ -203,24 +152,43 @@ export async function downloadHandoutPdf(source: HTMLElement): Promise<void> {
     const usableHeight = pageHeight - 2 * PAGE_MARGIN_MM;
 
     for (let index = 0; index < pages.length; index += 1) {
-      const page = pages[index];
-      const canvas = await html2canvas(page, {
-        scale: 2,
+      options.onProgress?.(index + 1, pages.length);
+
+      host.replaceChildren();
+      const clone = pages[index].cloneNode(true) as HTMLElement;
+      clone.style.width = `${width}px`;
+      clone.style.background = "#fff4d2";
+      clone.style.boxSizing = "border-box";
+      clone.style.overflow = "visible";
+      host.appendChild(clone);
+
+      await nextFrame();
+
+      const canvas = await html2canvas(clone, {
+        scale: CAPTURE_SCALE,
         useCORS: true,
         logging: false,
         scrollX: 0,
-        scrollY: -window.scrollY,
+        scrollY: 0,
         backgroundColor: "#fff4d2",
-        width: Math.max(page.scrollWidth, mountWidth),
-        windowWidth: Math.max(page.scrollWidth, mountWidth),
-        windowHeight: Math.max(page.scrollHeight, page.clientHeight),
+        width: Math.max(clone.scrollWidth, width),
+        windowWidth: Math.max(clone.scrollWidth, width),
+        windowHeight: Math.max(clone.scrollHeight, clone.clientHeight, 1),
+        ignoreElements: (element) => {
+          if (!(element instanceof HTMLElement)) return false;
+          if (element === host || host.contains(element)) return false;
+          // Skip the off-screen handout (100+ slides) and the live stage clone cost.
+          if (element.hasAttribute("data-handout-mount")) return true;
+          if (element.hasAttribute("data-lecture-stage")) return true;
+          if (element.hasAttribute("data-handout-page")) return true;
+          return false;
+        },
         onclone: (_document: Document, element: HTMLElement) => {
-          revealHandoutInClone(element);
           unclipOverflowInClone(element);
         },
       });
 
-      const imgData = canvas.toDataURL("image/jpeg", 0.93);
+      const imgData = canvas.toDataURL("image/jpeg", 0.9);
       const unscaledHeight = (canvas.height * usableWidth) / canvas.width;
       const fit = Math.min(1, usableHeight / unscaledHeight);
       const drawWidth = usableWidth * fit;
@@ -232,13 +200,17 @@ export async function downloadHandoutPdf(source: HTMLElement): Promise<void> {
         pdf.addPage();
       }
       pdf.addImage(imgData, "JPEG", offsetX, offsetY, drawWidth, drawHeight, undefined, "FAST");
+
+      // Drop the canvas reference and let the UI breathe between heavy captures.
+      canvas.width = 0;
+      canvas.height = 0;
+      await yieldToUi();
     }
 
+    options.onProgress?.(pages.length, pages.length);
     pdf.save(FILENAME);
   } finally {
-    if (mount && previous) {
-      restoreMount(mount, previous);
-    }
+    host.remove();
   }
 }
 

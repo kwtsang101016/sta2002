@@ -61,9 +61,13 @@ export function Lecture() {
       return;
     }
     setDownloading(true);
-    setHandoutMessage("");
+    setHandoutMessage("Preparing PDF…");
     try {
-      await downloadHandoutPdf(source);
+      await downloadHandoutPdf(source, {
+        onProgress: (done, total) => {
+          setHandoutMessage(`Generating PDF… ${done} / ${total}`);
+        },
+      });
       setHandoutMessage("PDF saved. Check your Downloads folder.");
     } catch (error) {
       const message = error instanceof Error ? error.message : "PDF export failed.";
@@ -163,11 +167,11 @@ export function Lecture() {
       <div className={styles.track} aria-hidden="true">
         <i style={{ width: `${progress}%` }} />
       </div>
-      <div className={styles.stage} ref={setStageElement}>
+      <div className={styles.stage} data-lecture-stage ref={setStageElement}>
         <Scene />
       </div>
       {handoutMessage ? <p className={styles.handoutToast}>{handoutMessage}</p> : null}
-      <div className={styles.handoutMount} aria-hidden="true">
+      <div className={styles.handoutMount} data-handout-mount aria-hidden="true">
         <div ref={handoutRef}>
           <HandoutDocument />
         </div>
