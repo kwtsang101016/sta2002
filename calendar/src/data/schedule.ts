@@ -51,7 +51,12 @@ export const COURSE_EVENTS: CourseEvent[] = [
     kind: "assignment",
     special: true,
   },
-  { date: "2026-10-08", title: "Critical region, p-values", kind: "lecture" },
+  {
+    date: "2026-10-08",
+    title: "Critical region, p-values",
+    kind: "lecture",
+    attendanceFile: "2026-10-08.json",
+  },
   { date: "2026-10-13", title: "Student's t-tests", kind: "lecture" },
   { date: "2026-10-15", title: "Tests about proportions", kind: "lecture" },
   { date: "2026-10-20", title: "Review session", kind: "review" },
