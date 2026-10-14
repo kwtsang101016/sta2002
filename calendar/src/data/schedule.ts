@@ -78,6 +78,12 @@ export const COURSE_EVENTS: CourseEvent[] = [
     special: true,
   },
   { date: "2026-10-27", title: "Power of a statistical test", kind: "lecture" },
+  {
+    date: "2026-10-28",
+    title: "HW3 due 23:59",
+    kind: "assignment",
+    special: true,
+  },
   { date: "2026-10-29", title: "Power of a statistical test", kind: "lecture" },
   { date: "2026-11-03", title: "Order statistics", kind: "lecture" },
   { date: "2026-11-05", title: "Nonparametric CIs and tests", kind: "lecture" },
