@@ -70,7 +70,12 @@ export const COURSE_EVENTS: CourseEvent[] = [
     attendanceFile: "2026-10-15.json",
   },
 
-  { date: "2026-10-20", title: "Review session", kind: "review" },
+  {
+    date: "2026-10-20",
+    title: "Review session",
+    kind: "review",
+    attendanceFile: "2026-10-20.json",
+  },
   {
     date: "2026-10-21",
     title: "HW2 due 23:59",
