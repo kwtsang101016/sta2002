@@ -24,9 +24,12 @@ export function PowerRecallScene() {
         ]}
       />
       <p>
-        For <MathText text="$H_0:\mu=\mu_0$ versus $H_1:\mu=\mu_1$" />,
+        For <MathText text="$H_0:\mu=\mu_0$ versus $H_1:\mu>\mu_0$" />, suppose the true mean is{" "}
+        <MathText text="$\mu_1>\mu_0$" />. Then
       </p>
-      <Formula tex={String.raw`\beta(\mu_1):=\Pr(T\notin C;\mu=\mu_1).`} />
+      <Formula
+        tex={String.raw`\beta(\mu_1):=\Pr(\text{Type II error})=\Pr(T\notin C;\mu=\mu_1).`}
+      />
     </SceneFrame>
   );
 }
@@ -53,15 +56,21 @@ export function PowerAlphaBetaScene() {
   return (
     <SceneFrame kicker="Power" title="Connection with $\alpha$ and $\beta$">
       <p>
-        With <MathText text="$H_0:\mu=\mu_0$" />:
+        <MathText text="$K(\mu)$" /> is a function of <MathText text="$\mu\in\Omega$" />. With{" "}
+        <MathText text="$H_0:\mu=\mu_0$" />:
       </p>
       <BulletList
         items={[
-          <MathText key="a" text="At $\mu=\mu_0$, $K(\mu_0)=\alpha$. The power at the null value is the significance level." />,
-          <MathText key="b" text="At a value $\mu_1$ in $H_1$, $K(\mu_1)=1-\beta(\mu_1)$." />,
+          <MathText key="a" text="At $\mu=\mu_0$, $K(\mu_0)=\alpha$ (the significance level / Type I error probability)." />,
+          <MathText
+            key="b"
+            text="At $\mu=\mu_1>\mu_0$ in $H_1$, $K(\mu_1)=1-\beta(\mu_1)$."
+          />,
         ]}
       />
-      <Formula tex={String.raw`K(\mu_1)=\Pr(T\in C;\mu=\mu_1)=1-\Pr(T\notin C;\mu=\mu_1)=1-\beta(\mu_1).`} />
+      <Formula
+        tex={String.raw`K(\mu_1)=\Pr(T\in C;\mu=\mu_1)=1-\Pr(T\notin C;\mu=\mu_1)=1-\beta(\mu_1).`}
+      />
     </SceneFrame>
   );
 }
@@ -117,38 +126,12 @@ export function TeachingCurveScene() {
 export function At60Scene() {
   return (
     <SceneFrame kicker="Example" title="At $\mu=60$">
+      <p>
+        At <MathText text="$\mu=60$" />, <MathText text="$K(60)=\alpha$" />, the significance level (Type I error
+        probability) of this test:
+      </p>
       <Formula tex={String.raw`K(60)=1-\Phi\left(\frac{62-60}{2}\right)=1-\Phi(1)=0.1587=\alpha.`} />
-      <p>The significance level of this test is 15.87%.</p>
-      <p>
-        <strong>Question.</strong> If instead <MathText text="$H_0:\mu\leq 60$, $H_1:\mu>60$" />, how is{" "}
-        <InlineMath tex="\alpha" /> calculated?
-      </p>
-      <p>
-        <strong>Solution.</strong> Set <InlineMath tex="\alpha" /> to the highest Type I error probability for{" "}
-        <MathText text="$\mu\leq 60$" />:
-      </p>
-      <Formula tex={String.raw`\alpha:=\max_{\mu\leq 60}K(\mu)=K(60).`} />
-    </SceneFrame>
-  );
-}
-
-export function CompositeNullScene() {
-  return (
-    <SceneFrame kicker="Example" title="Composite null, same critical region">
-      <p>
-        For <MathText text="$H_0:\mu\leq 60$ and $H_1:\mu>60$" />, build the critical region from{" "}
-        <MathText text="$\mu=60$" />:
-      </p>
-      <Formula tex={String.raw`C=\left\{\bar{x}\geq 60+z_\alpha\frac{\sigma}{\sqrt{n}}\right\}.`} />
-      <p>
-        Then for any <MathText text="$\mu'<60$" />, <MathText text="$K(\mu')<K(60)=\alpha$" />. Type I error stays below{" "}
-        <InlineMath tex="\alpha" /> throughout the null.
-      </p>
-      <p className={styles.note}>
-        For a given <InlineMath tex="\alpha" />, the critical region of{" "}
-        <MathText text="$H_0:\mu\leq\mu_0$ vs $H_1:\mu>\mu_0$" /> is the same as that of{" "}
-        <MathText text="$H_0:\mu=\mu_0$ vs $H_1:\mu>\mu_0$" />.
-      </p>
+      <p>Thus the significance level of the test is 15.87%.</p>
     </SceneFrame>
   );
 }
@@ -197,9 +180,12 @@ export function UpperPowerDeriveScene() {
     <SceneFrame kicker="One-sided power" title="Power when $\alpha$ is given">
       <Block title="Example">
         <p>
-          <MathText text="$X_i\stackrel{\text{i.i.d.}}{\sim} N(\mu,\sigma^2)$ with known $\sigma^2$." /> Derive{" "}
-          <MathText text="$K(\mu)$" /> for <MathText text="$H_0:\mu\leq\mu_0$ versus $H_1:\mu>\mu_0$" /> at{" "}
-          <MathText text="$\alpha=0.05$" />.
+          <MathText text="$X_i\stackrel{\text{i.i.d.}}{\sim} N(\mu,\sigma^2)$ with known $\sigma^2$." /> Derive the
+          power function for the one-sample test
+        </p>
+        <Formula tex={String.raw`H_0:\mu=\mu_0\quad\text{versus}\quad H_1:\mu>\mu_0`} />
+        <p>
+          at significance level <MathText text="$\alpha=0.05$" />.
         </p>
       </Block>
       <p>
@@ -230,15 +216,36 @@ export function UpperPowerPhiScene() {
 export function PowerFactorsScene() {
   return (
     <SceneFrame kicker="One-sided power" title="Factors affecting the power">
+      <p>How is the power of a test influenced?</p>
       <BulletList
         items={[
-          <MathText key="a" text="If $\alpha$ gets smaller, $z_\alpha$ increases and the power decreases." />,
-          <MathText key="b" text="If $\mu_1-\mu_0$ gets larger, the power increases." />,
+          <MathText key="a" text="If $\alpha$ gets smaller, $z_\alpha$ increases and hence the power decreases." />,
+          <MathText key="b" text="If $\mu_1$ is farther from $\mu_0$ (larger $\mu_1-\mu_0$), the power increases." />,
           <MathText key="c" text="If $\sigma$ increases, the power decreases." />,
           <MathText key="d" text="If $n$ increases, the power increases." />,
         ]}
       />
+      <p>
+        The first point is the trade-off between <InlineMath tex="\alpha" /> and <InlineMath tex="\beta" />. With other
+        factors fixed,
+      </p>
       <Formula tex={String.raw`\alpha\downarrow \Rightarrow z_\alpha\uparrow \Rightarrow K(\mu_1)\downarrow \Rightarrow \beta(\mu_1)\uparrow.`} />
+    </SceneFrame>
+  );
+}
+
+export function CompositeSameCrScene() {
+  return (
+    <SceneFrame kicker="One-sided power" title="Composite null, same critical region">
+      <p>
+        We derived the power for <MathText text="$H_0:\mu=\mu_0$ versus $H_1:\mu>\mu_0$" />. What about
+      </p>
+      <Formula tex={String.raw`H_0:\mu\leq\mu_0\quad\text{versus}\quad H_1:\mu>\mu_0\,?`} />
+      <p className={styles.note}>
+        For a given significance level <InlineMath tex="\alpha" />, the critical region of{" "}
+        <MathText text="$H_0:\mu\leq\mu_0$ vs $H_1:\mu>\mu_0$" /> is the <strong>same</strong> as that of{" "}
+        <MathText text="$H_0:\mu=\mu_0$ vs $H_1:\mu>\mu_0$" />.
+      </p>
     </SceneFrame>
   );
 }
@@ -247,9 +254,11 @@ export function LowerPowerScene() {
   return (
     <SceneFrame kicker="One-sided power" title="Lower-tailed alternative">
       <p>
-        For <MathText text="$H_0:\mu\geq\mu_0$ versus $H_1:\mu<\mu_0$" />, the critical region is{" "}
-        <MathText text="$\{(\bar{X}-\mu_0)/(\sigma/\sqrt{n})<-z_\alpha\}$" />, and
+        Similarly, for <MathText text="$H_0:\mu\geq\mu_0$ versus $H_1:\mu<\mu_0$" />, given{" "}
+        <InlineMath tex="\alpha" /> the critical region is
       </p>
+      <Formula tex={String.raw`\left\{\frac{\bar{X}-\mu_0}{\sigma/\sqrt{n}}<-z_\alpha\right\},`} />
+      <p>and the power function is</p>
       <Formula tex={String.raw`K(\mu_1)=\Phi\left(\frac{\mu_0-\mu_1}{\sigma/\sqrt{n}}-z_\alpha\right).`} />
     </SceneFrame>
   );
@@ -360,10 +369,17 @@ export function WhyKnownSigmaScene() {
   return (
     <SceneFrame kicker="Power" title="Why we assume known $\sigma$">
       <p>
-        For <MathText text="$H_0:\mu=\mu_0$ vs $H_1:\mu=\mu_1$ with $\mu_0<\mu_1$" />, the critical region uses{" "}
-        <MathText text="$t_\alpha(n-1)$" /> and <InlineMath tex="S" />. Then
+        Otherwise, for the one-sided test <MathText text="$H_0:\mu=\mu_0$ vs $H_1:\mu>\mu_0$" />, the critical region
+        is
       </p>
-      <Formula tex={String.raw`\Pr\left(T^*>z_\alpha+\frac{\mu_0-\mu_1}{S/\sqrt{n}}\right)`} />
+      <Formula tex={String.raw`\left\{\frac{\bar{x}-\mu_0}{s/\sqrt{n}}>t_\alpha(n-1)\right\}.`} />
+      <p>
+        At <MathText text="$\mu=\mu_1>\mu_0$" />, the power
+      </p>
+      <Formula
+        tex={String.raw`\Pr\left(\frac{\bar{X}-\mu_1}{S/\sqrt{n}}>z_\alpha+\frac{\mu_0-\mu_1}{S/\sqrt{n}}\right)
+=\Pr\left(T^*>z_\alpha+\frac{\mu_0-\mu_1}{S/\sqrt{n}}\right)`}
+      />
       <p>
         still depends on the random <InlineMath tex="S" />. Even with <InlineMath tex="\mu_1" /> fixed, the power varies
         with <InlineMath tex="S" />.
@@ -516,42 +532,48 @@ export function PowerSummaryScene() {
   return (
     <SceneFrame kicker="Hypothesis Testing IV" title="Power and sample size">
       <DataTable
-        caption={String.raw`One-sample, $\sigma^2$ known, $\Delta=\mu_1-\mu_0$`}
-        headers={["Test", "Power (approx.)", "Sample size"]}
+        caption={String.raw`One-sample: $\sigma^2$ known, $\Delta=\mu_1-\mu_0$`}
+        headers={["Test", "Hypotheses", "Power (approx.)", "Sample size"]}
         rows={[
           [
             "Two-sided",
+            <MathText key="h" text="$H_0:\mu=\mu_0$, $H_1:\mu\neq\mu_0$" />,
             <InlineMath key="k" tex={String.raw`\Phi(-z_{\alpha/2}+|\Delta|/(\sigma/\sqrt{n}))+\Phi(-z_{\alpha/2}-|\Delta|/(\sigma/\sqrt{n}))`} />,
-            <InlineMath key="n" tex={String.raw`\sigma^2(z_{\alpha/2}+z_\beta)^2/\Delta^2`} />,
+            <InlineMath key="n" tex={String.raw`(z_{\alpha/2}+z_\beta)^2\sigma^2/\Delta^2`} />,
           ],
           [
             "One-sided >",
+            <MathText key="h" text="$H_0:\mu=\mu_0$, $H_1:\mu>\mu_0$" />,
             <InlineMath key="k" tex={String.raw`\Phi(-z_\alpha+\Delta/(\sigma/\sqrt{n}))`} />,
-            <InlineMath key="n" tex={String.raw`\sigma^2(z_\alpha+z_\beta)^2/\Delta^2`} />,
+            <InlineMath key="n" tex={String.raw`(z_\alpha+z_\beta)^2\sigma^2/\Delta^2`} />,
           ],
           [
             "One-sided <",
+            <MathText key="h" text="$H_0:\mu=\mu_0$, $H_1:\mu<\mu_0$" />,
             <InlineMath key="k" tex={String.raw`\Phi(-z_\alpha-\Delta/(\sigma/\sqrt{n}))`} />,
-            <InlineMath key="n" tex={String.raw`\sigma^2(z_\alpha+z_\beta)^2/\Delta^2`} />,
+            <InlineMath key="n" tex={String.raw`(z_\alpha+z_\beta)^2\sigma^2/\Delta^2`} />,
           ],
         ]}
       />
       <DataTable
-        caption={String.raw`Two-sample, equal known $\sigma^2$, equal $n$, $\Delta=\mu_X-\mu_Y$`}
-        headers={["Test", "Power (approx.)", "Sample size"]}
+        caption={String.raw`Two-sample: $\sigma_X^2=\sigma_Y^2=\sigma^2$ known, equal $n$, $\Delta=\mu_X-\mu_Y$`}
+        headers={["Test", "Hypotheses", "Power (approx.)", "Sample size"]}
         rows={[
           [
             "Two-sided",
+            <MathText key="h" text="$H_0:\mu_X=\mu_Y$, $H_1:\mu_X\neq\mu_Y$" />,
             <InlineMath key="k" tex={String.raw`\Phi(-z_{\alpha/2}+|\Delta|/\sqrt{2\sigma^2/n})+\Phi(-z_{\alpha/2}-|\Delta|/\sqrt{2\sigma^2/n})`} />,
             <InlineMath key="n" tex={String.raw`2(z_{\alpha/2}+z_\beta)^2\sigma^2/\Delta^2`} />,
           ],
           [
             "One-sided >",
+            <MathText key="h" text="$H_0:\mu_X=\mu_Y$, $H_1:\mu_X>\mu_Y$" />,
             <InlineMath key="k" tex={String.raw`\Phi(-z_\alpha+\Delta/\sqrt{2\sigma^2/n})`} />,
             <InlineMath key="n" tex={String.raw`2(z_\alpha+z_\beta)^2\sigma^2/\Delta^2`} />,
           ],
           [
             "One-sided <",
+            <MathText key="h" text="$H_0:\mu_X=\mu_Y$, $H_1:\mu_X<\mu_Y$" />,
             <InlineMath key="k" tex={String.raw`\Phi(-z_\alpha-\Delta/\sqrt{2\sigma^2/n})`} />,
             <InlineMath key="n" tex={String.raw`2(z_\alpha+z_\beta)^2\sigma^2/\Delta^2`} />,
           ],
