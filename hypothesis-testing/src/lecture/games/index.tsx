@@ -4,7 +4,14 @@ import styles from "../Lecture.module.css";
 import { usePrintMode } from "../printContext";
 import { Formula, InlineMath, MathText, SceneFrame } from "../scenes/shared";
 import { ConceptQuiz } from "./ConceptQuiz";
-import { ERRORS_QUIZ, ERRORS_QUIZ_INTRO, PVALUE_QUIZ, PVALUE_QUIZ_INTRO } from "./quizBanks";
+import {
+  ERRORS_QUIZ,
+  ERRORS_QUIZ_INTRO,
+  POWER_QUIZ,
+  POWER_QUIZ_INTRO,
+  PVALUE_QUIZ,
+  PVALUE_QUIZ_INTRO,
+} from "./quizBanks";
 
 export function ErrorsConceptQuiz() {
   return (
@@ -20,6 +27,17 @@ export function ErrorsConceptQuiz() {
 export function PValueConceptQuiz() {
   return (
     <ConceptQuiz quizId="pvalue" title="Concept check: p-values" intro={PVALUE_QUIZ_INTRO} questions={PVALUE_QUIZ} />
+  );
+}
+
+export function PowerConceptQuiz() {
+  return (
+    <ConceptQuiz
+      quizId="power"
+      title="Concept check: power functions"
+      intro={POWER_QUIZ_INTRO}
+      questions={POWER_QUIZ}
+    />
   );
 }
 
@@ -73,20 +91,41 @@ export function PowerExplorerGame() {
   const sigma = 10;
   const z = zOneSided(alpha);
   const power = normCdf(delta / (sigma / Math.sqrt(n)) - z);
+  const mu1 = 60 + delta;
+
+  const muMin = 60;
+  const muMax = 76;
+  const padL = 58;
+  const padR = 28;
+  const padT = 22;
+  const padB = 46;
+  const width = 640;
+  const height = 250;
+  const plotW = width - padL - padR;
+  const plotH = height - padT - padB;
+  const xOf = (mu: number) => padL + ((mu - muMin) / (muMax - muMin)) * plotW;
+  const yOf = (k: number) => padT + (1 - Math.min(1, Math.max(0, k))) * plotH;
 
   const curve = useMemo(() => {
-    return Array.from({ length: 41 }, (_, i) => {
-      const mu = 60 + i * 0.4;
+    return Array.from({ length: 81 }, (_, i) => {
+      const mu = muMin + (i / 80) * (muMax - muMin);
       const k = normCdf((mu - 60) / (sigma / Math.sqrt(n)) - z);
       return { mu, k };
     });
   }, [n, z]);
 
+  const xTicks = [60, 64, 68, 72, 76];
+  const yTicks = [0, 0.25, 0.5, 0.75, 1];
+  const pointX = xOf(mu1);
+  const pointY = yOf(power);
+  const alphaY = yOf(alpha);
+
   return (
     <SceneFrame kicker="Game" title="Power of an upper-tailed $z$ test" tone="gold">
       <p>
         <MathText text="$H_0:\mu\leq 60$ vs $H_1:\mu>60$, $\sigma=10$." />{" "}
-        <MathText text="$K(\mu_1)=\Phi((\mu_1-60)/(\sigma/\sqrt{n})-z_\alpha)$." />
+        <MathText text="$K(\mu_1)=\Phi((\mu_1-60)/(\sigma/\sqrt{n})-z_\alpha)$." /> The orange curve is{" "}
+        <InlineMath tex="K(\mu)" />; the dot marks your chosen <InlineMath tex="\mu_1" />.
       </p>
       {!print ? (
         <div className={styles.tools}>
@@ -120,14 +159,111 @@ export function PowerExplorerGame() {
       ) : null}
       <Formula tex={String.raw`K(60+\Delta)=\Phi\left(\frac{${delta}}{10/\sqrt{${n}}}-${formatNum(z, 3)}\right)=${formatNum(power, 3)}.`} />
       <figure className={styles.chartCard}>
-        <svg viewBox="0 0 640 220" role="img" aria-label="Power curve">
-          <line x1="40" y1="180" x2="600" y2="180" stroke="#111" />
+        <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Power curve with axes">
+          {/* Grid */}
+          {yTicks.map((tick) => (
+            <line
+              key={`yg-${tick}`}
+              x1={padL}
+              y1={yOf(tick)}
+              x2={padL + plotW}
+              y2={yOf(tick)}
+              stroke="#e5e7eb"
+              strokeWidth="1"
+            />
+          ))}
+          {xTicks.map((tick) => (
+            <line
+              key={`xg-${tick}`}
+              x1={xOf(tick)}
+              y1={padT}
+              x2={xOf(tick)}
+              y2={padT + plotH}
+              stroke="#e5e7eb"
+              strokeWidth="1"
+            />
+          ))}
+          {/* Axes */}
+          <line x1={padL} y1={padT + plotH} x2={padL + plotW} y2={padT + plotH} stroke="#111" strokeWidth="2" />
+          <line x1={padL} y1={padT} x2={padL} y2={padT + plotH} stroke="#111" strokeWidth="2" />
+          <polygon
+            points={`${padL + plotW},${padT + plotH} ${padL + plotW - 8},${padT + plotH - 4} ${padL + plotW - 8},${padT + plotH + 4}`}
+            fill="#111"
+          />
+          <polygon points={`${padL},${padT} ${padL - 4},${padT + 8} ${padL + 4},${padT + 8}`} fill="#111" />
+          {/* Reference: K(μ)=α at μ=60 */}
+          <line
+            x1={padL}
+            y1={alphaY}
+            x2={padL + plotW}
+            y2={alphaY}
+            stroke="#6366f1"
+            strokeWidth="1.5"
+            strokeDasharray="5 4"
+          />
+          <line
+            x1={xOf(60)}
+            y1={padT}
+            x2={xOf(60)}
+            y2={padT + plotH}
+            stroke="#6366f1"
+            strokeWidth="1.5"
+            strokeDasharray="5 4"
+          />
+          {/* Power curve */}
           <polyline
             fill="none"
             stroke="#c45c26"
             strokeWidth="3"
-            points={curve.map((row, i) => `${40 + i * 14},${180 - row.k * 150}`).join(" ")}
+            points={curve.map((row) => `${xOf(row.mu)},${yOf(row.k)}`).join(" ")}
           />
+          {/* Current μ₁ marker */}
+          <line
+            x1={pointX}
+            y1={padT + plotH}
+            x2={pointX}
+            y2={pointY}
+            stroke="#111"
+            strokeWidth="1.25"
+            strokeDasharray="3 3"
+          />
+          <circle cx={pointX} cy={pointY} r="6" fill="#c45c26" stroke="#111" strokeWidth="1.5" />
+          {/* Tick labels */}
+          {xTicks.map((tick) => (
+            <g key={`xt-${tick}`}>
+              <line x1={xOf(tick)} y1={padT + plotH} x2={xOf(tick)} y2={padT + plotH + 6} stroke="#111" />
+              <text x={xOf(tick)} y={padT + plotH + 20} textAnchor="middle" fontSize="12" fill="#374151">
+                {tick}
+              </text>
+            </g>
+          ))}
+          {yTicks.map((tick) => (
+            <g key={`yt-${tick}`}>
+              <line x1={padL - 6} y1={yOf(tick)} x2={padL} y2={yOf(tick)} stroke="#111" />
+              <text x={padL - 10} y={yOf(tick) + 4} textAnchor="end" fontSize="12" fill="#374151">
+                {tick === 0 || tick === 1 ? String(tick) : tick.toFixed(2)}
+              </text>
+            </g>
+          ))}
+          <text x={padL + plotW / 2} y={height - 4} textAnchor="middle" fontSize="13" fill="#111">
+            μ
+          </text>
+          <text
+            x={14}
+            y={padT + plotH / 2}
+            textAnchor="middle"
+            fontSize="13"
+            fill="#111"
+            transform={`rotate(-90 14 ${padT + plotH / 2})`}
+          >
+            K(μ)
+          </text>
+          <text x={padL + plotW - 4} y={alphaY - 6} textAnchor="end" fontSize="11" fill="#6366f1">
+            {`α = ${formatNum(alpha, 3)}`}
+          </text>
+          <text x={pointX + 10} y={pointY - 10} fontSize="12" fill="#111">
+            {`(μ₁, K) = (${formatNum(mu1, 1)}, ${formatNum(power, 3)})`}
+          </text>
         </svg>
       </figure>
     </SceneFrame>

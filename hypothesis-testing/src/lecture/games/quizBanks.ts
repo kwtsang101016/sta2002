@@ -346,3 +346,134 @@ export const PVALUE_QUIZ: QuizQuestion[] = [
     explain: r`$p=0.40$: data like ours would be common if $H_0$ were true, so there is no real evidence against $H_0$. The honest statement is "fail to reject", not "$H_0$ is true".`,
   },
 ];
+
+export const POWER_QUIZ_INTRO = r`Upper-tailed $z$ test of $H_0:\mu\leq\mu_0$ vs $H_1:\mu>\mu_0$ with known $\sigma$, as in the Power explorer. Answer each question, read the explanation, then move on.`;
+
+export const POWER_QUIZ: QuizQuestion[] = [
+  {
+    id: "k-def",
+    prompt: r`What is the power function $K(\mu)$?`,
+    choices: [
+      {
+        text: r`The probability of a Type II error when the true mean is $\mu$.`,
+        why: r`That is $\beta(\mu)$. Power is the probability of rejecting $H_0$, so $K(\mu)=1-\beta(\mu)$ for $\mu$ in $H_1$.`,
+      },
+      {
+        text: r`The probability that $H_0$ is false when the true mean is $\mu$.`,
+        why: r`Whether $H_0$ is false is a fact about the parameter, not a probability computed from the test.`,
+      },
+      { text: r`The probability of rejecting $H_0$ when the true mean equals $\mu$.` },
+      {
+        text: r`The smallest significance level at which we reject $H_0$ for the observed data.`,
+        why: r`That describes the $p$-value (observed significance level), which depends on the sample, not on a hypothesized true $\mu$.`,
+      },
+    ],
+    answer: 2,
+    explain: r`$K(\mu)=\Pr(T\in C;\mu)=\Pr(\text{reject }H_0\mid\text{true mean}=\mu)$. It is a function of the true parameter, for a fixed critical region.`,
+  },
+  {
+    id: "at-null",
+    prompt: r`For a level-$\alpha$ test of $H_0:\mu=\mu_0$, what is $K(\mu_0)$?`,
+    choices: [
+      {
+        text: r`$1-\alpha$`,
+        why: r`$1-\alpha$ is the probability of correctly retaining $H_0$ when $\mu=\mu_0$, not the power at $\mu_0$.`,
+      },
+      { text: r`$\alpha$` },
+      {
+        text: r`$0$`,
+        why: r`At the null value the rejection probability is exactly the Type I error rate $\alpha$, not zero.`,
+      },
+      {
+        text: r`$1$`,
+        why: r`Power near $1$ only happens far into the alternative, not at $\mu=\mu_0$.`,
+      },
+    ],
+    answer: 1,
+    explain: r`By definition, $\alpha=\Pr(\text{reject }H_0\mid\mu=\mu_0)=K(\mu_0)$. On the Power explorer curve, that is the height at $\mu=60$.`,
+  },
+  {
+    id: "link-beta",
+    prompt: r`If $\mu_1$ lies in $H_1$, how are power and Type II error related?`,
+    choices: [
+      {
+        text: r`$K(\mu_1)=\beta(\mu_1)$`,
+        why: r`Power and Type II error are complementary: one rejects, the other fails to reject.`,
+      },
+      {
+        text: r`$K(\mu_1)=\alpha+\beta(\mu_1)$`,
+        why: r`$\alpha$ is computed under $H_0$; $\beta(\mu_1)$ under $\mu_1$. They do not add to the power.`,
+      },
+      {
+        text: r`$K(\mu_1)=\alpha/\beta(\mu_1)$`,
+        why: r`There is no such ratio formula. Power is simply $1-\beta(\mu_1)$.`,
+      },
+      { text: r`$K(\mu_1)=1-\beta(\mu_1)$` },
+    ],
+    answer: 3,
+    explain: r`$\beta(\mu_1)=\Pr(\text{fail to reject }H_0\mid\mu=\mu_1)$, so the chance of correctly rejecting is $K(\mu_1)=1-\beta(\mu_1)$.`,
+  },
+  {
+    id: "larger-delta",
+    prompt: r`In the explorer, you increase $\mu_1-60$ while holding $n$ and $\alpha$ fixed. What happens?`,
+    choices: [
+      { text: r`Power $K(\mu_1)$ increases (the dot moves up the curve).` },
+      {
+        text: r`Power $K(\mu_1)$ decreases.`,
+        why: r`A larger gap $\mu_1-\mu_0$ makes the alternative easier to detect, so power rises.`,
+      },
+      {
+        text: r`$\alpha$ increases.`,
+        why: r`$\alpha$ is fixed by the critical region under $H_0$. Changing $\mu_1$ does not change $\alpha$.`,
+      },
+      {
+        text: r`The whole power curve $K(\mu)$ shifts upward.`,
+        why: r`Changing $\mu_1$ only picks a different point on the same curve. The curve itself changes when $n$ or $\alpha$ changes.`,
+      },
+    ],
+    answer: 0,
+    explain: r`$K(\mu_1)=\Phi\big((\mu_1-\mu_0)/(\sigma/\sqrt{n})-z_\alpha\big)$. Larger $\mu_1-\mu_0$ raises the argument of $\Phi$, so power increases. Watch the labeled point $(\mu_1,K)$ on the axes.`,
+  },
+  {
+    id: "smaller-alpha",
+    prompt: r`You keep $n$ and $\mu_1$ fixed but decrease $\alpha$ (stricter Type I control). What happens to power at $\mu_1$?`,
+    choices: [
+      {
+        text: r`Power increases, because a smaller $\alpha$ is always better.`,
+        why: r`Smaller $\alpha$ means a harder-to-reach critical region, so it is also harder to reject when $H_1$ is true.`,
+      },
+      {
+        text: r`Power stays the same, because $\mu_1$ did not change.`,
+        why: r`The formula still involves $z_\alpha$. Changing $\alpha$ changes the cutoff and therefore the power.`,
+      },
+      { text: r`Power decreases (and $\beta(\mu_1)$ increases).` },
+      {
+        text: r`Power becomes equal to the new $\alpha$.`,
+        why: r`$K(\mu)=\alpha$ only at the null value $\mu_0$, not at a fixed alternative $\mu_1$.`,
+      },
+    ],
+    answer: 2,
+    explain: r`Smaller $\alpha$ $\Rightarrow$ larger $z_\alpha$ $\Rightarrow$ smaller $\Phi\big((\mu_1-\mu_0)/(\sigma/\sqrt{n})-z_\alpha\big)$. There is a trade-off: fewer false alarms, but more misses at the same alternative.`,
+  },
+  {
+    id: "larger-n",
+    prompt: r`You increase the sample size $n$, with $\alpha$ and $\mu_1$ fixed. Which statement is correct?`,
+    choices: [
+      {
+        text: r`Power at $\mu_1$ decreases because the standard error gets smaller.`,
+        why: r`A smaller standard error makes $\mu_1$ stand out more clearly from $\mu_0$, so power increases.`,
+      },
+      { text: r`Power at $\mu_1$ increases; the curve rises more steeply away from $\mu_0$.` },
+      {
+        text: r`$\alpha$ automatically decreases.`,
+        why: r`For a $z$ test with known $\sigma$, the critical value is set to keep $\alpha$ fixed when $n$ changes.`,
+      },
+      {
+        text: r`Power at every $\mu$, including $\mu_0$, becomes $1$.`,
+        why: r`At $\mu_0$ we still have $K(\mu_0)=\alpha$. Only alternatives get power approaching $1$ as $n\to\infty$.`,
+      },
+    ],
+    answer: 1,
+    explain: r`Larger $n$ shrinks $\sigma/\sqrt{n}$, so $(\mu_1-\mu_0)/(\sigma/\sqrt{n})$ grows and $K(\mu_1)$ rises. On the plot, the curve stays at height $\alpha$ at $\mu=60$ but climbs faster for $\mu>60$.`,
+  },
+];

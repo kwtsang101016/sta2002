@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import {
   ErrorsConceptQuiz,
+  PowerConceptQuiz,
   PValueConceptQuiz,
   PowerExplorerGame,
   ProportionTestGame,
@@ -221,6 +222,7 @@ export const SCENES: SceneDef[] = [
   { id: "factors", chapter: "Power", label: "What changes power", Scene: PowerFactorsScene },
   { id: "composite-cr", chapter: "Power", label: "Same CR for ≤", Scene: CompositeSameCrScene },
   { id: "game-power", chapter: "Game", label: "Power explorer", Scene: PowerExplorerGame },
+  { id: "quiz-power", chapter: "Game", label: "Concept check: power", Scene: PowerConceptQuiz },
   { id: "k-lower", chapter: "Power", label: "Lower tail", Scene: LowerPowerScene },
   { id: "ems", chapter: "Power", label: "Emergency times", Scene: EmsSetupScene },
   { id: "ems-sol", chapter: "Power", label: "Emergency solution", Scene: EmsSolutionScene },
