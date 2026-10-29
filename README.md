@@ -11,6 +11,7 @@ Interactive HTML lecture apps for **STA2002 Probability and Statistics II**. Eac
 | Confidence Intervals | [`confidence-intervals/`](confidence-intervals/) | [Open lecture](https://kwtsang101016.github.io/sta2002/confidence-intervals/) | `npm run dev` → http://127.0.0.1:5177 |
 | Hypothesis Testing | [`hypothesis-testing/`](hypothesis-testing/) | [Open lecture](https://kwtsang101016.github.io/sta2002/hypothesis-testing/) | `npm run dev` → http://127.0.0.1:5178 |
 | Order Statistics | [`order-statistics/`](order-statistics/) | [Open lecture](https://kwtsang101016.github.io/sta2002/order-statistics/) | `npm run dev` → http://127.0.0.1:5180 |
+| Quantiles and Q-Q Plots | [`quantiles/`](quantiles/) | [Open lecture](https://kwtsang101016.github.io/sta2002/quantiles/) | `npm run dev` → http://127.0.0.1:5181 |
 | Course Calendar | [`calendar/`](calendar/) | [Open calendar](https://kwtsang101016.github.io/sta2002/calendar/) | `npm run dev` → http://127.0.0.1:5179 |
 
 **Course hub:** https://kwtsang101016.github.io/sta2002/
@@ -39,6 +40,7 @@ npm run dev:pe
 npm run dev:ci
 npm run dev:ht
 npm run dev:os
+npm run dev:qq
 npm run dev:cal
 npm run build:all
 ```
