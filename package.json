@@ -9,6 +9,7 @@
     "dev:ht": "npm run dev --prefix hypothesis-testing",
     "dev:os": "npm run dev --prefix order-statistics",
     "dev:qq": "npm run dev --prefix quantiles",
+    "dev:dfci": "npm run dev --prefix distribution-free-cis",
     "dev:cal": "npm run dev --prefix calendar",
     "build:intro": "npm run build --prefix introduction",
     "build:pe": "npm run build --prefix parameter-estimation",
@@ -16,7 +17,8 @@
     "build:ht": "npm run build --prefix hypothesis-testing",
     "build:os": "npm run build --prefix order-statistics",
     "build:qq": "npm run build --prefix quantiles",
+    "build:dfci": "npm run build --prefix distribution-free-cis",
     "build:cal": "npm run build --prefix calendar",
-    "build:all": "npm run build:intro && npm run build:pe && npm run build:ci && npm run build:ht && npm run build:os && npm run build:qq && npm run build:cal"
+    "build:all": "npm run build:intro && npm run build:pe && npm run build:ci && npm run build:ht && npm run build:os && npm run build:qq && npm run build:dfci && npm run build:cal"
   }
 }
