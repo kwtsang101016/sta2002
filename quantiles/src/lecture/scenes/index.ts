@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import { QqExplorerGame } from "../games/QqExplorerGame";
+import { QqExplorerGame, QuantilesConceptQuiz } from "../games";
 import {
   BiasIntroScene,
   BiasPdfScene,
@@ -49,5 +49,6 @@ export const SCENES: SceneDef[] = [
   { id: "qq-right", chapter: "Reading Q-Q", label: "Heavy right tail", Scene: QqPoorRightTailScene },
   { id: "qq-heavy", chapter: "Reading Q-Q", label: "Heavy tails", Scene: QqPoorHeavyTailsScene },
   { id: "game-qq", chapter: "Game", label: "Q-Q explorer", Scene: QqExplorerGame },
+  { id: "quiz-quantiles", chapter: "Game", label: "Concept check", Scene: QuantilesConceptQuiz },
   { id: "takeaways", chapter: "Summary", label: "Takeaways", Scene: TakeawaysScene },
 ];
