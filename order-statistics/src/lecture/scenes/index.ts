@@ -1,4 +1,5 @@
 import type { ComponentType } from "react";
+import { OrderStatsConceptQuiz } from "../games";
 import {
   BetaDefScene,
   DefinitionScene,
@@ -45,5 +46,6 @@ export const SCENES: SceneDef[] = [
   { id: "unif-beta", chapter: "Uniform", label: "U_{(k)} ~ Beta", Scene: UniformBetaScene },
   { id: "pit", chapter: "PIT", label: "F(X_i) ~ U(0,1)", Scene: PitSingleScene },
   { id: "pit-os", chapter: "PIT", label: "F(X_{(k)}) ~ Beta", Scene: PitOrderScene },
+  { id: "quiz-os", chapter: "Game", label: "Concept check", Scene: OrderStatsConceptQuiz },
   { id: "takeaways", chapter: "Summary", label: "Takeaways", Scene: TakeawaysScene },
 ];
