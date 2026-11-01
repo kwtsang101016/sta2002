@@ -95,7 +95,7 @@ export const OS_QUIZ: QuizQuestion[] = [
       },
     ],
     answer: 0,
-    explain: r`The Uniform order-statistic PDF matches the Beta$(k,n-k+1)$ density, so $\E[U_{(k)}]=k/(n+1)$.`,
+    explain: r`The Uniform order-statistic PDF matches the Beta$(k,n-k+1)$ density, so $\mathbb{E}(U_{(k)})=k/(n+1)$.`,
   },
   {
     id: "pit",
