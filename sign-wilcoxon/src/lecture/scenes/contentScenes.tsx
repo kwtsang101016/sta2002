@@ -14,7 +14,10 @@ export function SignSetupScene() {
             key="b"
             text="We test $H_0: m=m_0$ against $H_1: m>m_0$, or $H_1: m<m_0$, or $H_1: m\neq m_0$."
           />,
-          "The sign test counts how many observations fall on the side of $m_0$ that favors $H_1$.",
+          <MathText
+            key="c"
+            text="The sign test counts how many observations fall on the side of $m_0$ that favors $H_1$."
+          />,
         ]}
       />
     </SceneFrame>
@@ -109,7 +112,7 @@ export function WilcoxonMotivationScene() {
             key="a"
             text="The sign statistic $W=\sum_{i=1}^n\mathbf{1}(X_i<m_0)$ uses only whether each $X_i$ is below $m_0$."
           />,
-          "Limitation: magnitudes $|X_i-m_0|$ are ignored.",
+          <MathText key="b" text="Limitation: magnitudes $|X_i-m_0|$ are ignored." />,
           "The Wilcoxon signed-rank test uses both the sign and the magnitude of each difference.",
         ]}
       />
@@ -287,7 +290,7 @@ k,&\text{with probability }1/2,\\
             key="a"
             text="Under $H_0$, $W$ has the same distribution as $V$: it is a sum of $\{1,\ldots,n\}$ each with an independent $\pm$ sign."
           />,
-          "Independence of signs follows from independence of the $X_k$.",
+          <MathText key="b" text="Independence of signs follows from independence of the $X_k$." />,
           <MathText key="c" text="Under $H_0$, each sign is $+1$ or $-1$ with equal probability $1/2$." />,
         ]}
       />
@@ -357,7 +360,9 @@ export function WilcoxonContinuityScene() {
 \frac{k+1}{\sqrt{\dfrac{n(n+1)(2n+1)}{6}}}
 \right).`}
       />
-      <p>Use this form when computing approximate significance levels and $p$-values.</p>
+      <p>
+        <MathText text="Use this form when computing approximate significance levels and $p$-values." />
+      </p>
     </SceneFrame>
   );
 }
@@ -528,7 +533,10 @@ export function TakeawaysScene() {
             <MathText text="$W\overset{\mathrm{approx}}{\sim} N\!\bigl(0,\tfrac{n(n+1)(2n+1)}{6}\bigr)$" /> under{" "}
             <MathText text="$H_0$" />.
           </span>,
-          "Use whole-unit continuity correction when approximating tail probabilities for $W$.",
+          <MathText
+            key="c"
+            text="Use whole-unit continuity correction when approximating tail probabilities for $W$."
+          />,
           <MathText
             key="d"
             text="Ties: drop $x_k=m_0$; average ranks for tied $|x_k-m_0|$."
