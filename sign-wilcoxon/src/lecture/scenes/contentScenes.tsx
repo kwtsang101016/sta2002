@@ -304,7 +304,8 @@ export function LyapunovNoteScene() {
       <Block title="Theorem (Lyapunov)">
         <p>
           For independent <MathText text="$X_k$" /> with means <MathText text="$\mu_k$" />, variances{" "}
-          <MathText text="$\sigma_k^2$" />, and finite <MathText text="$(2+\delta)$" />-th moments,
+          <MathText text="$\sigma_k^2$" />, and finite <MathText text="$(2+\delta)$" />-th moments for some{" "}
+          <MathText text="$\delta>0$" />,
         </p>
         <Formula
           tex={String.raw`\frac{\sum_{k=1}^n(X_k-\mu_k)}{\sqrt{\sum_{k=1}^n\sigma_k^2}}\xrightarrow{d} N(0,1).`}
