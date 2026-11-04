@@ -324,14 +324,21 @@ export function WilcoxonNormalApproxScene() {
     <SceneFrame kicker="Wilcoxon" title="Normal approximation under $H_0$">
       <BulletList
         items={[
-          <MathText key="a" text="For each $V_k$: $\mathbb{E}(V_k)=0$, $\mathrm{Var}(V_k)=k^2$." />,
+          <MathText
+            key="a"
+            text="For each $V_k$: $\mathbb{E}(V_k)=0$, $\mathrm{Var}(V_k)=k^2$, and $\mathbb{E}(V_k^3)=0$."
+          />,
           <MathText
             key="b"
-            text="Hence $\mathrm{Var}(V)=\sum_{k=1}^n k^2=\dfrac{n(n+1)(2n+1)}{6}$."
+            text="Thus the three conditions of Lyapunov’s CLT hold for $V$ (take $\delta=1$)."
+          />,
+          <MathText
+            key="c"
+            text="Hence $T_n=V$ and $s_n^2=\mathrm{Var}(V)=\sum_{k=1}^n k^2=\dfrac{n(n+1)(2n+1)}{6}$."
           />,
         ]}
       />
-      <p>Applying a CLT for independent non-identical summands,</p>
+      <p>Apply Lyapunov’s CLT:</p>
       <Formula
         tex={String.raw`\boxed{\displaystyle
 \frac{W}{\sqrt{\dfrac{n(n+1)(2n+1)}{6}}}\overset{\mathrm{approx}}{\sim} N(0,1)
