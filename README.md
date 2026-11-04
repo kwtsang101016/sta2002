@@ -13,6 +13,7 @@ Interactive HTML lecture apps for **STA2002 Probability and Statistics II**. Eac
 | Order Statistics | [`order-statistics/`](order-statistics/) | [Open lecture](https://kwtsang101016.github.io/sta2002/order-statistics/) | `npm run dev` → http://127.0.0.1:5180 |
 | Quantiles and Q-Q Plots | [`quantiles/`](quantiles/) | [Open lecture](https://kwtsang101016.github.io/sta2002/quantiles/) | `npm run dev` → http://127.0.0.1:5181 |
 | Distribution-free CIs | [`distribution-free-cis/`](distribution-free-cis/) | [Open lecture](https://kwtsang101016.github.io/sta2002/distribution-free-cis/) | `npm run dev` → http://127.0.0.1:5182 |
+| Sign & Wilcoxon Tests | [`sign-wilcoxon/`](sign-wilcoxon/) | [Open lecture](https://kwtsang101016.github.io/sta2002/sign-wilcoxon/) | `npm run dev` → http://127.0.0.1:5183 |
 | Course Calendar | [`calendar/`](calendar/) | [Open calendar](https://kwtsang101016.github.io/sta2002/calendar/) | `npm run dev` → http://127.0.0.1:5179 |
 
 **Course hub:** https://kwtsang101016.github.io/sta2002/
