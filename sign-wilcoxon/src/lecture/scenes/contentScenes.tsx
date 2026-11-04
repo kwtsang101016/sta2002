@@ -449,52 +449,121 @@ export function TiesExampleRanksScene() {
     <SceneFrame kicker="Ties" title="Reduced sample and average ranks">
       <p>
         Delete the two <InlineMath tex="160.0" /> values → <InlineMath tex="n=14" />. Average ranks for the tied
-        absolute differences of <InlineMath tex="1.2" />: <InlineMath tex="(2+3)/2=2.5" />.
+        absolute differences of <InlineMath tex="1.2" />: <InlineMath tex="(2+3)/2=2.5" />. Underlined absolute
+        differences correspond to <MathText text="$x_k-160<0$" />.
       </p>
       <div className={styles.tableWrap}>
         <table>
-          <thead>
+          <tbody>
+            <tr>
+              <th>
+                <InlineMath tex="x_k" />
+              </th>
+              <td>159.7</td>
+              <td>158.8</td>
+              <td>161.2</td>
+              <td>158.3</td>
+              <td>156.6</td>
+              <td>165.2</td>
+              <td>169.8</td>
+            </tr>
             <tr>
               <th>
                 <InlineMath tex="|x_k-160|" />
               </th>
-              <th>0.3</th>
-              <th>1.2</th>
-              <th>1.2</th>
-              <th>1.7</th>
-              <th>3.4</th>
-              <th>5.2</th>
-              <th>7.9</th>
-              <th>…</th>
+              <td>
+                <u>0.3</u>
+              </td>
+              <td>
+                <u>1.2</u>
+              </td>
+              <td>1.2</td>
+              <td>
+                <u>1.7</u>
+              </td>
+              <td>
+                <u>3.4</u>
+              </td>
+              <td>5.2</td>
+              <td>9.8</td>
             </tr>
-          </thead>
-          <tbody>
             <tr>
-              <td>Rank</td>
+              <th>Rank</th>
               <td>1</td>
               <td>2.5</td>
               <td>2.5</td>
               <td>4</td>
               <td>5</td>
               <td>6</td>
-              <td>13</td>
-              <td>…</td>
+              <td>7</td>
             </tr>
             <tr>
-              <td>Signed</td>
+              <th>Signed rank</th>
               <td>−1</td>
               <td>−2.5</td>
               <td>+2.5</td>
               <td>−4</td>
               <td>−5</td>
               <td>+6</td>
-              <td>−13</td>
-              <td>…</td>
+              <td>+7</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <p className={styles.muted}>Full table of 14 signed ranks is in the handout / lecture notes.</p>
+      <div className={styles.tableWrap} style={{ marginTop: 12 }}>
+        <table>
+          <tbody>
+            <tr>
+              <th>
+                <InlineMath tex="x_k" />
+              </th>
+              <td>172.4</td>
+              <td>174.5</td>
+              <td>176.9</td>
+              <td>177.8</td>
+              <td>184.4</td>
+              <td>152.1</td>
+              <td>147.8</td>
+            </tr>
+            <tr>
+              <th>
+                <InlineMath tex="|x_k-160|" />
+              </th>
+              <td>12.4</td>
+              <td>14.5</td>
+              <td>16.9</td>
+              <td>17.8</td>
+              <td>24.4</td>
+              <td>
+                <u>7.9</u>
+              </td>
+              <td>
+                <u>12.2</u>
+              </td>
+            </tr>
+            <tr>
+              <th>Rank</th>
+              <td>8</td>
+              <td>9</td>
+              <td>10</td>
+              <td>11</td>
+              <td>12</td>
+              <td>13</td>
+              <td>14</td>
+            </tr>
+            <tr>
+              <th>Signed rank</th>
+              <td>+8</td>
+              <td>+9</td>
+              <td>+10</td>
+              <td>+11</td>
+              <td>+12</td>
+              <td>−13</td>
+              <td>−14</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </SceneFrame>
   );
 }
