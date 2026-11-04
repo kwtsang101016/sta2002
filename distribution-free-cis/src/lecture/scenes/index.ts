@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import { CiLevelExplorerGame } from "../games/CiLevelExplorerGame";
+import { CiLevelExplorerGame, DfCisConceptQuiz } from "../games";
 import {
   CltApproxScene,
   CltSetupScene,
@@ -47,5 +47,6 @@ export const SCENES: SceneDef[] = [
   { id: "commute-pt", chapter: "Example", label: "π̂₀.₃", Scene: CommutePointScene },
   { id: "commute-ci", chapter: "Example", label: "CI level", Scene: CommuteCiScene },
   { id: "game-level", chapter: "Game", label: "CI level explorer", Scene: CiLevelExplorerGame },
+  { id: "quiz-df-cis", chapter: "Game", label: "Concept check", Scene: DfCisConceptQuiz },
   { id: "takeaways", chapter: "Summary", label: "Takeaways", Scene: TakeawaysScene },
 ];
