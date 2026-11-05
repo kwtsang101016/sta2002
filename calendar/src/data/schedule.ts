@@ -107,12 +107,7 @@ export const COURSE_EVENTS: CourseEvent[] = [
     attendanceFile: "2026-10-29.json",
   },
   { date: "2026-11-03", title: "Order statistics", kind: "lecture" },
-  {
-    date: "2026-11-05",
-    title: "Nonparametric CIs and tests",
-    kind: "lecture",
-    attendanceFile: "2026-11-05.json",
-  },
+  { date: "2026-11-05", title: "Nonparametric CIs and tests", kind: "lecture" },
   { date: "2026-11-10", title: "Chi-square goodness-of-fit tests", kind: "lecture" },
   {
     date: "2026-11-18",
