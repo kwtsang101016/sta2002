@@ -35,6 +35,7 @@ jobs:
             quantiles/package-lock.json
             distribution-free-cis/package-lock.json
             sign-wilcoxon/package-lock.json
+            goodness-of-fit/package-lock.json
             calendar/package-lock.json
 
       - name: Install and build introduction
@@ -93,6 +94,13 @@ jobs:
           npm ci --prefix sign-wilcoxon
           npm run build --prefix sign-wilcoxon
 
+      - name: Install and build goodness-of-fit
+        env:
+          VITE_USAGE_LOG_URL: ${{ secrets.VITE_USAGE_LOG_URL }}
+        run: |
+          npm ci --prefix goodness-of-fit
+          npm run build --prefix goodness-of-fit
+
       - name: Install and build calendar
         run: |
           npm ci --prefix calendar
@@ -100,7 +108,7 @@ jobs:
 
       - name: Assemble site
         run: |
-          mkdir -p _site/introduction _site/parameter-estimation _site/confidence-intervals _site/hypothesis-testing _site/order-statistics _site/quantiles _site/distribution-free-cis _site/sign-wilcoxon _site/calendar
+          mkdir -p _site/introduction _site/parameter-estimation _site/confidence-intervals _site/hypothesis-testing _site/order-statistics _site/quantiles _site/distribution-free-cis _site/sign-wilcoxon _site/goodness-of-fit _site/calendar
           cp -r introduction/dist/* _site/introduction/
           cp -r parameter-estimation/dist/* _site/parameter-estimation/
           cp -r confidence-intervals/dist/* _site/confidence-intervals/
@@ -109,6 +117,7 @@ jobs:
           cp -r quantiles/dist/* _site/quantiles/
           cp -r distribution-free-cis/dist/* _site/distribution-free-cis/
           cp -r sign-wilcoxon/dist/* _site/sign-wilcoxon/
+          cp -r goodness-of-fit/dist/* _site/goodness-of-fit/
           cp -r calendar/dist/* _site/calendar/
           cp site/index.html _site/index.html
           touch _site/.nojekyll
