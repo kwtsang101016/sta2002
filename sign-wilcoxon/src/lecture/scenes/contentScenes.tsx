@@ -1,3 +1,4 @@
+import { SignedRankStepGame } from "../games/SignedRankStepGame";
 import styles from "../Lecture.module.css";
 import { Block, BulletList, Formula, InlineMath, MathText, OrderedList, SceneFrame } from "./shared";
 
@@ -371,6 +372,7 @@ export function WilcoxonContinuityScene() {
       <p>
         <MathText text="Use this form when computing approximate significance levels and $p$-values." />
       </p>
+      <SignedRankStepGame />
     </SceneFrame>
   );
 }
