@@ -1,6 +1,6 @@
 /** Course schedule for STA2002 Fall 2026–27 (from Schedule_KaWai / course-admin). */
 
-export type EventKind = "lecture" | "midterm" | "assignment" | "review" | "break";
+export type EventKind = "lecture" | "midterm" | "final" | "assignment" | "review" | "break";
 
 export interface CourseEvent {
   /** ISO date YYYY-MM-DD */
@@ -135,6 +135,12 @@ export const COURSE_EVENTS: CourseEvent[] = [
   { date: "2026-12-10", title: "Review session", kind: "review" },
   { date: "2026-12-15", title: "Study break", kind: "break" },
   { date: "2026-12-17", title: "Study break", kind: "break" },
+  {
+    date: "2026-12-21",
+    title: "Final 13:30–16:00",
+    kind: "final",
+    special: true,
+  },
 ];
 
 export function eventsByDate(events: CourseEvent[]): Map<string, CourseEvent[]> {
@@ -148,5 +154,10 @@ export function eventsByDate(events: CourseEvent[]): Map<string, CourseEvent[]> 
 }
 
 export function isSpecialEvent(event: CourseEvent): boolean {
-  return Boolean(event.special) || event.kind === "midterm" || event.kind === "assignment";
+  return (
+    Boolean(event.special) ||
+    event.kind === "midterm" ||
+    event.kind === "final" ||
+    event.kind === "assignment"
+  );
 }

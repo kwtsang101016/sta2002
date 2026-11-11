@@ -160,7 +160,7 @@ export function TentativePlanScene() {
         <ScheduleTable rows={SCHEDULE_RIGHT} />
       </div>
       <p className={styles.lead} style={{ marginTop: 16 }}>
-        Final exam will be arranged by the school.
+        Final exam: Monday 21 Dec 2026, 13:30–16:00.
       </p>
     </SceneFrame>
   );
