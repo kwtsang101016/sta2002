@@ -295,6 +295,10 @@ export function BrandsDecisionScene() {
   return (
     <SceneFrame kicker="Homogeneity example" title={r`Three brands: reject $H_0$`}>
       <Note text={r`$H_0$: the three brands share the same distribution across intervals.`} />
+      <P text={r`Expected counts use $E_{ij}=n_{i\cdot}n_{\cdot j}/n$ on the Page 12 table (same formula as Page 09). Each brand has row total $20$, so`} />
+      <Formula
+        tex={r`E_{i1}=\frac{20\cdot 20}{60}\approx 6.67,\quad E_{i2}=\frac{20\cdot 24}{60}=8,\quad E_{i3}=\frac{20\cdot 16}{60}\approx 5.33.`}
+      />
       <Table
         compact
         headers={["", r`$A_1$`, r`$A_2$`, r`$A_3$`]}
@@ -304,11 +308,13 @@ export function BrandsDecisionScene() {
           ["Brand W", "6.67", "8.00", "5.33"],
         ]}
       />
+      <Formula
+        tex={r`q=\sum_{i,j}\frac{(O_{ij}-E_{ij})^2}{E_{ij}}=\frac{(4-6.67)^2}{6.67}+\frac{(6-8)^2}{8}+\frac{(10-5.33)^2}{5.33}+\cdots=12.55.`}
+      />
       <BulletList
         items={[
-          <MathText key="a" text={r`Realized $q=12.55$, with $\mathrm{df}=(3-1)(3-1)=4$.`} />,
-          <MathText key="b" text={r`$\chi^2_{0.05}(4)=9.48<12.55$, so reject $H_0$.`} />,
-          "Brand U looks most durable; Brand V least durable in this accelerated test.",
+          <MathText key="a" text={r`Degrees of freedom: $(3-1)(3-1)=4$. Critical value $\chi^2_{0.05}(4)=9.48$.`} />,
+          <MathText key="b" text={r`Since $12.55>9.48$, reject $H_0$. Brand U looks most durable; Brand V least durable.`} />,
         ]}
       />
     </SceneFrame>
