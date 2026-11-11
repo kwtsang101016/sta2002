@@ -12,6 +12,7 @@
     "dev:dfci": "npm run dev --prefix distribution-free-cis",
     "dev:sw": "npm run dev --prefix sign-wilcoxon",
     "dev:gof": "npm run dev --prefix goodness-of-fit",
+    "dev:ct": "npm run dev --prefix contingency-table",
     "dev:cal": "npm run dev --prefix calendar",
     "build:intro": "npm run build --prefix introduction",
     "build:pe": "npm run build --prefix parameter-estimation",
@@ -22,7 +23,8 @@
     "build:dfci": "npm run build --prefix distribution-free-cis",
     "build:sw": "npm run build --prefix sign-wilcoxon",
     "build:gof": "npm run build --prefix goodness-of-fit",
+    "build:ct": "npm run build --prefix contingency-table",
     "build:cal": "npm run build --prefix calendar",
-    "build:all": "npm run build:intro && npm run build:pe && npm run build:ci && npm run build:ht && npm run build:os && npm run build:qq && npm run build:dfci && npm run build:sw && npm run build:gof && npm run build:cal"
+    "build:all": "npm run build:intro && npm run build:pe && npm run build:ci && npm run build:ht && npm run build:os && npm run build:qq && npm run build:dfci && npm run build:sw && npm run build:gof && npm run build:ct && npm run build:cal"
   }
 }

@@ -15,6 +15,7 @@ Interactive HTML lecture apps for **STA2002 Probability and Statistics II**. Eac
 | Distribution-free CIs | [`distribution-free-cis/`](distribution-free-cis/) | [Open lecture](https://kwtsang101016.github.io/sta2002/distribution-free-cis/) | `npm run dev` → http://127.0.0.1:5182 |
 | Sign & Wilcoxon Tests | [`sign-wilcoxon/`](sign-wilcoxon/) | [Open lecture](https://kwtsang101016.github.io/sta2002/sign-wilcoxon/) | `npm run dev` → http://127.0.0.1:5183 |
 | Goodness-of-fit Test | [`goodness-of-fit/`](goodness-of-fit/) | [Open lecture](https://kwtsang101016.github.io/sta2002/goodness-of-fit/) | `npm run dev` → http://127.0.0.1:5184 |
+| Contingency Tables | [`contingency-table/`](contingency-table/) | [Open lecture](https://kwtsang101016.github.io/sta2002/contingency-table/) | `npm run dev` → http://127.0.0.1:5185 |
 | Course Calendar | [`calendar/`](calendar/) | [Open calendar](https://kwtsang101016.github.io/sta2002/calendar/) | `npm run dev` → http://127.0.0.1:5179 |
 
 **Course hub:** https://kwtsang101016.github.io/sta2002/
