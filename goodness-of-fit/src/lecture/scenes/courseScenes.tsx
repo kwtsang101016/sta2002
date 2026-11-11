@@ -16,7 +16,7 @@ export function CoverScene() {
           Pearson’s chi-square statistic · multinomial counts · known and unknown parameters
         </p>
         <div className={styles.coverMeta}>
-          <p className={styles.coverAuthors}>Fangda Song and Ka Wai Tsang</p>
+          <p className={styles.coverAuthors}>Zhenxing Guo and Ka Wai Tsang</p>
           <p className={styles.coverAffiliation}>School of Data Science, CUHK(SZ)</p>
         </div>
         <p className={styles.hint}>{print ? COVER_HINT_PRINT : COVER_HINT_LIVE}</p>
