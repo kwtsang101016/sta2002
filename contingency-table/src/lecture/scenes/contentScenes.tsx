@@ -2,6 +2,9 @@ import type { ReactNode } from "react";
 import styles from "../Lecture.module.css";
 import { BulletList, Formula, MathText, SceneFrame } from "./shared";
 
+/** Prefer String.raw for KaTeX so escapes like \times are not eaten by JS/Vite. */
+const r = String.raw;
+
 const dense: React.CSSProperties = { fontSize: 12, lineHeight: 1.25 };
 const dataGrid: React.CSSProperties = {
   font: "700 12px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace",
@@ -77,17 +80,17 @@ export function MedicalDataScene() {
       <Table
         headers={["Gender", "Chinese", "Western", "Total"]}
         rows={[
-          ["Men", "51 ($n_{11}$)", "49 ($n_{12}$)", "100 ($n_{1\\cdot}$)"],
-          ["Women", "70 ($n_{21}$)", "30 ($n_{22}$)", "100 ($n_{2\\cdot}$)"],
-          ["Total", "121 ($n_{\\cdot 1}$)", "79 ($n_{\\cdot 2}$)", "200 ($n$)"],
+          ["Men", r`51 ($n_{11}$)`, r`49 ($n_{12}$)`, r`100 ($n_{1\cdot}$)`],
+          ["Women", r`70 ($n_{21}$)`, r`30 ($n_{22}$)`, r`100 ($n_{2\cdot}$)`],
+          ["Total", r`121 ($n_{\cdot 1}$)`, r`79 ($n_{\cdot 2}$)`, r`200 ($n$)`],
         ]}
       />
       <BulletList
         items={[
-          <MathText key="a" text="The data form a $2\\times 2$ contingency table." />,
+          <MathText key="a" text={r`The data form a $2\times 2$ contingency table.`} />,
           <MathText
             key="b"
-            text="For each gender $i$, $(n_{i1},n_{i2})$ is multinomial with size $n_{i\\cdot}$ and probabilities $(p_{i1},p_{i2})$."
+            text={r`For each gender $i$, $(n_{i1},n_{i2})$ is multinomial with size $n_{i\cdot}$ and probabilities $(p_{i1},p_{i2})$.`}
           />,
           "Do men and women have different preferences?",
         ]}
@@ -98,26 +101,26 @@ export function MedicalDataScene() {
 
 export function MedicalNullScene() {
   return (
-    <SceneFrame kicker="Motivating example" title="Same preferences under $H_0$">
-      <P text="If men and women had the same preference distribution, the table would look like the following under $H_0$." />
-      <Note text="$H_0: p_{11}=p_{21},\ p_{12}=p_{22}$. Write $p_1=p_{11}=p_{21}$." />
+    <SceneFrame kicker="Motivating example" title={r`Same preferences under $H_0$`}>
+      <P text={r`If men and women had the same preference distribution, the table would look like the following under $H_0$.`} />
+      <Note text={r`$H_0: p_{11}=p_{21},\ p_{12}=p_{22}$. Write $p_1=p_{11}=p_{21}$.`} />
       <BulletList
         items={[
-          <MathText key="a" text="Then $n_{\\cdot 1}=n_{11}+n_{21}\\sim\\mathrm{Bin}(n,p_1)$." />,
+          <MathText key="a" text={r`Then $n_{\cdot 1}=n_{11}+n_{21}\sim\mathrm{Bin}(n,p_1)$.`} />,
           <MathText
             key="b"
-            text="Row totals $n_{1\\cdot}$ and $n_{2\\cdot}$ are fixed by design; column totals $n_{\\cdot 1}$ and $n_{\\cdot 2}$ are random."
+            text={r`Row totals $n_{1\cdot}$ and $n_{2\cdot}$ are fixed by design; column totals $n_{\cdot 1}$ and $n_{\cdot 2}$ are random.`}
           />,
-          <MathText key="c" text="Expected cell frequencies: $E_{ij}=n_{i\\cdot}n_{\\cdot j}/n$." />,
+          <MathText key="c" text={r`Expected cell frequencies: $E_{ij}=n_{i\cdot}n_{\cdot j}/n$.`} />,
         ]}
       />
       <Table
         compact
         headers={["Gender", "Chinese", "Western", "Total"]}
         rows={[
-          ["Men", "$E_{11}=n_{1\\cdot}n_{\\cdot1}/n$", "$E_{12}=n_{1\\cdot}n_{\\cdot2}/n$", "$n_{1\\cdot}$"],
-          ["Women", "$E_{21}=n_{2\\cdot}n_{\\cdot1}/n$", "$E_{22}=n_{2\\cdot}n_{\\cdot2}/n$", "$n_{2\\cdot}$"],
-          ["Total", "$n_{\\cdot1}$", "$n_{\\cdot2}$", "$n$"],
+          ["Men", r`$E_{11}=n_{1\cdot}n_{\cdot1}/n$`, r`$E_{12}=n_{1\cdot}n_{\cdot2}/n$`, r`$n_{1\cdot}$`],
+          ["Women", r`$E_{21}=n_{2\cdot}n_{\cdot1}/n$`, r`$E_{22}=n_{2\cdot}n_{\cdot2}/n$`, r`$n_{2\cdot}$`],
+          ["Total", r`$n_{\cdot1}$`, r`$n_{\cdot2}$`, r`$n$`],
         ]}
       />
     </SceneFrame>
@@ -126,29 +129,24 @@ export function MedicalNullScene() {
 
 export function StatisticScene() {
   return (
-    <SceneFrame kicker="Test statistic" title="Pearson’s chi-square on a $k\\times h$ table">
+    <SceneFrame kicker="Test statistic" title={r`Pearson’s chi-square on a $k\times h$ table`}>
       <BulletList
         items={[
-          <MathText key="a" text="Observed frequency $O_{ij}=n_{ij}$ for $i=1,\\ldots,k$ and $j=1,\\ldots,h$." />,
-          <MathText key="b" text="Expected frequency $E_{ij}=n_{i\\cdot}n_{\\cdot j}/n$." />,
+          <MathText key="a" text={r`Observed frequency $O_{ij}=n_{ij}$ for $i=1,\ldots,k$ and $j=1,\ldots,h$.`} />,
+          <MathText key="b" text={r`Expected frequency $E_{ij}=n_{i\cdot}n_{\cdot j}/n$.`} />,
         ]}
       />
-      <Formula
-        tex={String.raw`Q=\sum_{i=1}^{k}\sum_{j=1}^{h}\frac{(O_{ij}-E_{ij})^2}{E_{ij}}.`}
-      />
+      <Formula tex={r`Q=\sum_{i=1}^{k}\sum_{j=1}^{h}\frac{(O_{ij}-E_{ij})^2}{E_{ij}}.`} />
       <BulletList
         items={[
           <MathText
             key="c"
-            text="Each row is multinomial with $h-1$ free cells. Under $H_0$ the shared category probabilities cost another $h-1$ degrees of freedom."
+            text={r`Each row is multinomial with $h-1$ free cells. Under $H_0$ the shared category probabilities cost another $h-1$ degrees of freedom.`}
           />,
-          <MathText
-            key="d"
-            text="Degrees of freedom: $k(h-1)-(h-1)=(k-1)(h-1)$."
-          />,
+          <MathText key="d" text={r`Degrees of freedom: $k(h-1)-(h-1)=(k-1)(h-1)$.`} />,
           <MathText
             key="e"
-            text="Under $H_0$, $Q\\overset{\\text{approx}}{\\sim}\\chi^2((k-1)(h-1))$ when $n$ is large and every $E_{ij}\\ge 5$."
+            text={r`Under $H_0$, $Q\overset{\text{approx}}{\sim}\chi^2((k-1)(h-1))$ when $n$ is large and every $E_{ij}\ge 5$.`}
           />,
         ]}
       />
@@ -158,7 +156,7 @@ export function StatisticScene() {
 
 export function MedicalDecisionScene() {
   return (
-    <SceneFrame kicker="Motivating example" title="Medical care: compute $q$">
+    <SceneFrame kicker="Motivating example" title={r`Medical care: compute $q$`}>
       <Table
         headers={["Cell", "Observed", "Expected"]}
         rows={[
@@ -169,12 +167,12 @@ export function MedicalDecisionScene() {
         ]}
       />
       <Formula
-        tex={String.raw`q=\frac{(49-39.5)^2}{39.5}+\frac{(51-60.5)^2}{60.5}+\frac{(30-39.5)^2}{39.5}+\frac{(70-60.5)^2}{60.5}=7.554.`}
+        tex={r`q=\frac{(49-39.5)^2}{39.5}+\frac{(51-60.5)^2}{60.5}+\frac{(30-39.5)^2}{39.5}+\frac{(70-60.5)^2}{60.5}=7.554.`}
       />
       <BulletList
         items={[
-          <MathText key="a" text="Critical value: $\\chi^2_{0.05}(1)=3.841$." />,
-          <MathText key="b" text="$q=7.554>3.841$, so reject $H_0$ at $\\alpha=0.05$." />,
+          <MathText key="a" text={r`Critical value: $\chi^2_{0.05}(1)=3.841$.`} />,
+          <MathText key="b" text={r`$q=7.554>3.841$, so reject $H_0$ at $\alpha=0.05$.`} />,
           "Men and women differ in preference; women lean more toward Chinese medicine in this sample.",
         ]}
       />
@@ -190,14 +188,14 @@ export function HomogeneityDefScene() {
         items={[
           <MathText
             key="a"
-            text="$k$ independent groups; each observation falls into one of $h$ mutually exclusive categories."
+            text={r`$k$ independent groups; each observation falls into one of $h$ mutually exclusive categories.`}
           />,
-          <MathText key="b" text="$p_{ij}=$ probability that an observation from group $i$ falls in category $j$." />,
+          <MathText key="b" text={r`$p_{ij}=$ probability that an observation from group $i$ falls in category $j$.`} />,
           <MathText
             key="c"
-            text="Homogeneity means $H_0: p_{1j}=p_{2j}=\\cdots=p_{kj}$ for every $j=1,\\ldots,h$."
+            text={r`Homogeneity means $H_0: p_{1j}=p_{2j}=\cdots=p_{kj}$ for every $j=1,\ldots,h$.`}
           />,
-          <MathText key="d" text="$H_1$: at least one inequality among those probabilities." />,
+          <MathText key="d" text={r`$H_1$: at least one inequality among those probabilities.`} />,
         ]}
       />
     </SceneFrame>
@@ -206,20 +204,20 @@ export function HomogeneityDefScene() {
 
 export function HomogeneityStatScene() {
   return (
-    <SceneFrame kicker="Homogeneity" title="Expected counts under $H_0$">
+    <SceneFrame kicker="Homogeneity" title={r`Expected counts under $H_0$`}>
       <BulletList
         items={[
-          <MathText key="a" text="Group sizes $n_{i\\cdot}$ are fixed by the design." />,
-          <MathText key="b" text="$\\mathbb{E}(n_{ij})=n_{i\\cdot}p_{ij}$." />,
+          <MathText key="a" text={r`Group sizes $n_{i\cdot}$ are fixed by the design.`} />,
+          <MathText key="b" text={r`$\mathbb{E}(n_{ij})=n_{i\cdot}p_{ij}$.`} />,
           <MathText
             key="c"
-            text="Under $H_0$, $p_{ij}=p_{\\cdot j}$ is estimated by $\\hat p_{\\cdot j}=n_{\\cdot j}/n$."
+            text={r`Under $H_0$, $p_{ij}=p_{\cdot j}$ is estimated by $\hat p_{\cdot j}=n_{\cdot j}/n$.`}
           />,
         ]}
       />
-      <Formula tex={String.raw`E_{ij}=n_{i\cdot}\hat p_{\cdot j}=\frac{n_{i\cdot}n_{\cdot j}}{n}.`} />
+      <Formula tex={r`E_{ij}=n_{i\cdot}\hat p_{\cdot j}=\frac{n_{i\cdot}n_{\cdot j}}{n}.`} />
       <Formula
-        tex={String.raw`Q=\sum_{i=1}^{k}\sum_{j=1}^{h}\frac{(O_{ij}-E_{ij})^2}{E_{ij}}\overset{\text{approx}}{\sim}\chi^2((k-1)(h-1)).`}
+        tex={r`Q=\sum_{i=1}^{k}\sum_{j=1}^{h}\frac{(O_{ij}-E_{ij})^2}{E_{ij}}\overset{\text{approx}}{\sim}\chi^2((k-1)(h-1)).`}
       />
     </SceneFrame>
   );
@@ -227,25 +225,25 @@ export function HomogeneityStatScene() {
 
 export function DecisionRuleScene() {
   return (
-    <SceneFrame kicker="Decision" title="Critical region and $p$-value">
-      <P text="After the data are observed, write $q$ for the realized value of $Q$." />
+    <SceneFrame kicker="Decision" title={r`Critical region and $p$-value`}>
+      <P text={r`After the data are observed, write $q$ for the realized value of $Q$.`} />
       <BulletList
         items={[
           <MathText
             key="a"
-            text="Reject $H_0$ at level $\\alpha$ if $q\\ge\\chi^2_{\\alpha}((k-1)(h-1))$."
+            text={r`Reject $H_0$ at level $\alpha$ if $q\ge\chi^2_{\alpha}((k-1)(h-1))$.`}
           />,
           <MathText
             key="b"
-            text="Critical region: $C=\\{q\\ge\\chi^2_{\\alpha}((k-1)(h-1))\\}$."
+            text={r`Critical region: $C=\{q\ge\chi^2_{\alpha}((k-1)(h-1))\}$.`}
           />,
           <MathText
             key="c"
-            text="$p$-value $\\approx\\Pr(Q\\ge q)$ under $\\chi^2((k-1)(h-1))$."
+            text={r`$p$-value $\approx\Pr(Q\ge q)$ under $\chi^2((k-1)(h-1))$.`}
           />,
         ]}
       />
-      <P text="Large $Q$ favors $H_1$, so the test is always upper-tailed." />
+      <P text={r`Large $Q$ favors $H_1$, so the test is always upper-tailed.`} />
     </SceneFrame>
   );
 }
@@ -272,16 +270,16 @@ export function BrandsTableScene() {
         items={[
           <MathText
             key="a"
-            text="The chi-square approximation needs $E_{ij}\\ge 5$, so choose two cutpoints that split the 60 cars fairly evenly."
+            text={r`The chi-square approximation needs $E_{ij}\ge 5$, so choose two cutpoints that split the 60 cars fairly evenly.`}
           />,
           <MathText
             key="b"
-            text="Cuts at $25.5$ and $32.5$ give $A_1=[0,25.5)$, $A_2=[25.5,32.5)$, $A_3=[32.5,\\infty)$."
+            text={r`Cuts at $25.5$ and $32.5$ give $A_1=[0,25.5)$, $A_2=[25.5,32.5)$, $A_3=[32.5,\infty)$.`}
           />,
         ]}
       />
       <Table
-        headers={["", "$A_1$", "$A_2$", "$A_3$", "Total"]}
+        headers={["", r`$A_1$`, r`$A_2$`, r`$A_3$`, "Total"]}
         rows={[
           ["Brand U", "4", "6", "10", "20"],
           ["Brand V", "11", "7", "2", "20"],
@@ -295,11 +293,11 @@ export function BrandsTableScene() {
 
 export function BrandsDecisionScene() {
   return (
-    <SceneFrame kicker="Homogeneity example" title="Three brands: reject $H_0$">
-      <Note text="$H_0$: the three brands share the same distribution across intervals." />
+    <SceneFrame kicker="Homogeneity example" title={r`Three brands: reject $H_0$`}>
+      <Note text={r`$H_0$: the three brands share the same distribution across intervals.`} />
       <Table
         compact
-        headers={["", "$A_1$", "$A_2$", "$A_3$"]}
+        headers={["", r`$A_1$`, r`$A_2$`, r`$A_3$`]}
         rows={[
           ["Brand U", "6.67", "8.00", "5.33"],
           ["Brand V", "6.67", "8.00", "5.33"],
@@ -308,8 +306,8 @@ export function BrandsDecisionScene() {
       />
       <BulletList
         items={[
-          <MathText key="a" text="Realized $q=12.55$, with $\\mathrm{df}=(3-1)(3-1)=4$." />,
-          <MathText key="b" text="$\\chi^2_{0.05}(4)=9.48<12.55$, so reject $H_0$." />,
+          <MathText key="a" text={r`Realized $q=12.55$, with $\mathrm{df}=(3-1)(3-1)=4$.`} />,
+          <MathText key="b" text={r`$\chi^2_{0.05}(4)=9.48<12.55$, so reject $H_0$.`} />,
           "Brand U looks most durable; Brand V least durable in this accelerated test.",
         ]}
       />
@@ -320,19 +318,19 @@ export function BrandsDecisionScene() {
 export function IndependenceSetupScene() {
   return (
     <SceneFrame kicker="Independence" title="Two attributes, one sample">
-      <P text="Each outcome is classified by two attributes: first into $A_1,\\ldots,A_k$, second into $B_1,\\ldots,B_h$." />
+      <P text={r`Each outcome is classified by two attributes: first into $A_1,\ldots,A_k$, second into $B_1,\ldots,B_h$.`} />
       <Table
         compact
-        headers={["Frequency", "$B_1$", "$B_2$", "$\\cdots$", "$B_h$", "Total"]}
+        headers={["Frequency", r`$B_1$`, r`$B_2$`, r`$\cdots$`, r`$B_h$`, "Total"]}
         rows={[
-          ["$A_1$", "$y_{11}$", "$y_{12}$", "$\\cdots$", "$y_{1h}$", "$y_{1\\cdot}$"],
-          ["$A_2$", "$y_{21}$", "$y_{22}$", "$\\cdots$", "$y_{2h}$", "$y_{2\\cdot}$"],
-          ["$\\vdots$", "$\\vdots$", "$\\vdots$", "$\\ddots$", "$\\vdots$", "$\\vdots$"],
-          ["$A_k$", "$y_{k1}$", "$y_{k2}$", "$\\cdots$", "$y_{kh}$", "$y_{k\\cdot}$"],
-          ["Total", "$y_{\\cdot1}$", "$y_{\\cdot2}$", "$\\cdots$", "$y_{\\cdot h}$", "$n$"],
+          [r`$A_1$`, r`$y_{11}$`, r`$y_{12}$`, r`$\cdots$`, r`$y_{1h}$`, r`$y_{1\cdot}$`],
+          [r`$A_2$`, r`$y_{21}$`, r`$y_{22}$`, r`$\cdots$`, r`$y_{2h}$`, r`$y_{2\cdot}$`],
+          [r`$\vdots$`, r`$\vdots$`, r`$\vdots$`, r`$\ddots$`, r`$\vdots$`, r`$\vdots$`],
+          [r`$A_k$`, r`$y_{k1}$`, r`$y_{k2}$`, r`$\cdots$`, r`$y_{kh}$`, r`$y_{k\cdot}$`],
+          ["Total", r`$y_{\cdot1}$`, r`$y_{\cdot2}$`, r`$\cdots$`, r`$y_{\cdot h}$`, r`$n$`],
         ]}
       />
-      <P text="Here $y_{ij}$ is the realized count in cell $(A_i,B_j)$." />
+      <P text={r`Here $y_{ij}$ is the realized count in cell $(A_i,B_j)$.`} />
     </SceneFrame>
   );
 }
@@ -342,16 +340,16 @@ export function IndependenceProbScene() {
     <SceneFrame kicker="Independence" title="Joint and marginal probabilities">
       <BulletList
         items={[
-          <MathText key="a" text="$p_{ij}=\\Pr(A_i\\cap B_j)$, with $\\sum_i\\sum_j p_{ij}=1$." />,
+          <MathText key="a" text={r`$p_{ij}=\Pr(A_i\cap B_j)$, with $\sum_i\sum_j p_{ij}=1$.`} />,
           <MathText
             key="b"
-            text="Independence means $\\Pr(A_i\\cap B_j)=\\Pr(A_i)\\Pr(B_j)$ for every $i,j$."
+            text={r`Independence means $\Pr(A_i\cap B_j)=\Pr(A_i)\Pr(B_j)$ for every $i,j$.`}
           />,
           <MathText
             key="c"
-            text="Write $p_{i\\cdot}=\\sum_j p_{ij}=\\Pr(A_i)$ and $p_{\\cdot j}=\\sum_i p_{ij}=\\Pr(B_j)$."
+            text={r`Write $p_{i\cdot}=\sum_j p_{ij}=\Pr(A_i)$ and $p_{\cdot j}=\sum_i p_{ij}=\Pr(B_j)$.`}
           />,
-          <MathText key="d" text="Then $\\sum_i p_{i\\cdot}=\\sum_j p_{\\cdot j}=1$." />,
+          <MathText key="d" text={r`Then $\sum_i p_{i\cdot}=\sum_j p_{\cdot j}=1$.`} />,
         ]}
       />
     </SceneFrame>
@@ -361,17 +359,17 @@ export function IndependenceProbScene() {
 export function IndependenceHypScene() {
   return (
     <SceneFrame kicker="Independence" title="Hypotheses and sampling model">
-      <Note text="$H_0: p_{ij}=p_{i\\cdot}p_{\\cdot j}$ for all $i,j$, versus $H_1$: some cell violates the product rule." />
+      <Note text={r`$H_0: p_{ij}=p_{i\cdot}p_{\cdot j}$ for all $i,j$, versus $H_1$: some cell violates the product rule.`} />
       <BulletList
         items={[
-          <MathText key="a" text="Repeat the experiment $n$ times independently (one population)." />,
+          <MathText key="a" text={r`Repeat the experiment $n$ times independently (one population).`} />,
           <MathText
             key="b"
-            text="$Y_{ij}=$ frequency of $(A_i,B_j)$, with $\\sum_i\\sum_j Y_{ij}=n$."
+            text={r`$Y_{ij}=$ frequency of $(A_i,B_j)$, with $\sum_i\sum_j Y_{ij}=n$.`}
           />,
           <MathText
             key="c"
-            text="The $kh$ cell counts are multinomial, and $\\mathbb{E}(Y_{ij})=np_{ij}$."
+            text={r`The $kh$ cell counts are multinomial, and $\mathbb{E}(Y_{ij})=np_{ij}$.`}
           />,
         ]}
       />
@@ -383,21 +381,21 @@ export function IndependenceStatScene() {
   return (
     <SceneFrame kicker="Independence" title="Plug in MLEs for the margins">
       <Formula
-        tex={String.raw`Q=\sum_{i=1}^{k}\sum_{j=1}^{h}\frac{(Y_{ij}-np_{i\cdot}p_{\cdot j})^2}{np_{i\cdot}p_{\cdot j}}.`}
+        tex={r`Q=\sum_{i=1}^{k}\sum_{j=1}^{h}\frac{(Y_{ij}-np_{i\cdot}p_{\cdot j})^2}{np_{i\cdot}p_{\cdot j}}.`}
       />
       <BulletList
         items={[
           <MathText
             key="a"
-            text="Under $H_0$, $\\hat p_{i\\cdot}=y_{i\\cdot}/n$ and $\\hat p_{\\cdot j}=y_{\\cdot j}/n$."
+            text={r`Under $H_0$, $\hat p_{i\cdot}=y_{i\cdot}/n$ and $\hat p_{\cdot j}=y_{\cdot j}/n$.`}
           />,
           <MathText
             key="b"
-            text="Fitted expectation $E_{ij}=n\\hat p_{i\\cdot}\\hat p_{\\cdot j}=y_{i\\cdot}y_{\\cdot j}/n$ — the same formula as in the homogeneity test."
+            text={r`Fitted expectation $E_{ij}=n\hat p_{i\cdot}\hat p_{\cdot j}=y_{i\cdot}y_{\cdot j}/n$ — the same formula as in the homogeneity test.`}
           />,
           <MathText
             key="c"
-            text="Free cells: $kh-1$. Estimate $k-1$ row margins and $h-1$ column margins, so lose $k+h-2$ degrees of freedom."
+            text={r`Free cells: $kh-1$. Estimate $k-1$ row margins and $h-1$ column margins, so lose $k+h-2$ degrees of freedom.`}
           />,
         ]}
       />
@@ -408,20 +406,20 @@ export function IndependenceStatScene() {
 export function IndependenceDfScene() {
   return (
     <SceneFrame kicker="Independence" title="Null distribution and decision">
-      <Formula tex={String.raw`kh-1-(k+h-2)=(k-1)(h-1).`} />
+      <Formula tex={r`kh-1-(k+h-2)=(k-1)(h-1).`} />
       <BulletList
         items={[
           <MathText
             key="a"
-            text="Under $H_0$, $Q\\overset{\\text{approx}}{\\sim}\\chi^2((k-1)(h-1))$."
+            text={r`Under $H_0$, $Q\overset{\text{approx}}{\sim}\chi^2((k-1)(h-1))$.`}
           />,
           <MathText
             key="b"
-            text="Reject at level $\\alpha$ if $q\\ge\\chi^2_{\\alpha}((k-1)(h-1))$."
+            text={r`Reject at level $\alpha$ if $q\ge\chi^2_{\alpha}((k-1)(h-1))$.`}
           />,
           <MathText
             key="c"
-            text="$p$-value $\\approx\\Pr(Q>q)$ under that chi-square law."
+            text={r`$p$-value $\approx\Pr(Q>q)$ under that chi-square law.`}
           />,
         ]}
       />
@@ -443,14 +441,14 @@ export function CollegeDataScene() {
           ["Total", "35", "20", "320", "15", "10", "400"],
         ]}
       />
-      <P text="At $\\alpha=0.01$, is college independent of gender?" />
+      <P text={r`At $\alpha=0.01$, is college independent of gender?`} />
     </SceneFrame>
   );
 }
 
 export function CollegeExpectedScene() {
   return (
-    <SceneFrame kicker="Independence example" title="Expected table and $q=18.93$">
+    <SceneFrame kicker="Independence example" title={r`Expected table and $q=18.93$`}>
       <Table
         compact
         headers={["Gender", "Science", "Eng.", "Business", "Medicine", "Art", "Total"]}
@@ -460,23 +458,23 @@ export function CollegeExpectedScene() {
           ["Total", "35", "20", "320", "15", "10", "400"],
         ]}
       />
-      <P text="Each $E_{ij}=(\\text{row total})(\\text{column total})/400$. Summing $(O-E)^2/E$ over the ten cells gives $q=18.93$." />
+      <P text={r`Each $E_{ij}=(\text{row total})(\text{column total})/400$. Summing $(O-E)^2/E$ over the ten cells gives $q=18.93$.`} />
     </SceneFrame>
   );
 }
 
 export function CollegeDecisionScene() {
   return (
-    <SceneFrame kicker="Independence example" title="Gender and college: reject $H_0$">
+    <SceneFrame kicker="Independence example" title={r`Gender and college: reject $H_0$`}>
       <BulletList
         items={[
-          <MathText key="a" text="Degrees of freedom: $(2-1)(5-1)=4$." />,
-          <MathText key="b" text="Critical value: $\\chi^2_{0.01}(4)=13.28$." />,
-          <MathText key="c" text="Since $q=18.93>13.28$, reject independence at $\\alpha=0.01$." />,
+          <MathText key="a" text={r`Degrees of freedom: $(2-1)(5-1)=4$.`} />,
+          <MathText key="b" text={r`Critical value: $\chi^2_{0.01}(4)=13.28$.`} />,
+          <MathText key="c" text={r`Since $q=18.93>13.28$, reject independence at $\alpha=0.01$.`} />,
           "Engineering and medicine contribute the most to $q$, so those colleges drive the association.",
           <MathText
             key="e"
-            text="One expected count is below 5, but that cell does not dominate $q$, so the approximation is still used with caution."
+            text={r`One expected count is below 5, but that cell does not dominate $q$, so the approximation is still used with caution.`}
           />,
         ]}
       />
@@ -491,13 +489,15 @@ export function CompareScene() {
         compact
         headers={["Aspect", "Homogeneity", "Independence"]}
         rows={[
-          ["Setting", "$k$ groups, $h$ shared categories", "$k$ levels × $h$ levels of two attributes"],
+          ["Setting", r`$k$ groups, $h$ shared categories`, r`$k$ levels $\times$ $h$ levels of two attributes`],
           ["Purpose", "Equal multinomial probabilities across groups", "Two attributes are independent"],
-          ["Sampling", "Independent samples; fixed row totals", "One sample of size $n$"],
-          ["Null model", "Separate multinomials, common $p_{\\cdot j}$", "Joint multinomial with $p_{ij}=p_{i\\cdot}p_{\\cdot j}$"],
+          ["Sampling", "Independent samples; fixed row totals", r`One sample of size $n$`],
+          ["Null model", r`Separate multinomials, common $p_{\cdot j}$`, r`Joint multinomial with $p_{ij}=p_{i\cdot}p_{\cdot j}$`],
         ]}
       />
-      <Note text="$Q=\\sum_i\\sum_j (Y_{ij}-E_{ij})^2/E_{ij}$ with $E_{ij}=n_{i\\cdot}n_{\\cdot j}/n$ (or $Y_{i\\cdot}Y_{\\cdot j}/n$), and $Q\\approx\\chi^2((k-1)(h-1))$." />
+      <Note
+        text={r`$Q=\sum_i\sum_j (Y_{ij}-E_{ij})^2/E_{ij}$ with $E_{ij}=n_{i\cdot}n_{\cdot j}/n$ (or $Y_{i\cdot}Y_{\cdot j}/n$), and $Q\approx\chi^2((k-1)(h-1))$.`}
+      />
     </SceneFrame>
   );
 }
@@ -510,19 +510,19 @@ export function TakeawaysScene() {
           "A contingency table records how often each combination of categories appears.",
           <MathText
             key="b"
-            text="Homogeneity: same category probabilities across $k$ independent groups."
+            text={r`Homogeneity: same category probabilities across $k$ independent groups.`}
           />,
           <MathText
             key="c"
-            text="Independence: $p_{ij}=p_{i\\cdot}p_{\\cdot j}$ for two attributes in one population."
+            text={r`Independence: $p_{ij}=p_{i\cdot}p_{\cdot j}$ for two attributes in one population.`}
           />,
           <MathText
             key="d"
-            text="Both use $Q=\\sum(O-E)^2/E$ with $E_{ij}=(\\text{row})(\\text{column})/n$ and $\\mathrm{df}=(k-1)(h-1)$."
+            text={r`Both use $Q=\sum(O-E)^2/E$ with $E_{ij}=(\text{row})(\text{column})/n$ and $\mathrm{df}=(k-1)(h-1)$.`}
           />,
           <MathText
             key="e"
-            text="Prefer every $E_{ij}\\ge 5$; reject for large $q$ against $\\chi^2_{\\alpha}((k-1)(h-1))$."
+            text={r`Prefer every $E_{ij}\ge 5$; reject for large $q$ against $\chi^2_{\alpha}((k-1)(h-1))$.`}
           />,
         ]}
       />
