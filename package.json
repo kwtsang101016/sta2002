@@ -13,6 +13,7 @@
     "dev:sw": "npm run dev --prefix sign-wilcoxon",
     "dev:gof": "npm run dev --prefix goodness-of-fit",
     "dev:ct": "npm run dev --prefix contingency-table",
+    "dev:anova": "npm run dev --prefix one-way-anova",
     "dev:cal": "npm run dev --prefix calendar",
     "build:intro": "npm run build --prefix introduction",
     "build:pe": "npm run build --prefix parameter-estimation",
@@ -24,7 +25,8 @@
     "build:sw": "npm run build --prefix sign-wilcoxon",
     "build:gof": "npm run build --prefix goodness-of-fit",
     "build:ct": "npm run build --prefix contingency-table",
+    "build:anova": "npm run build --prefix one-way-anova",
     "build:cal": "npm run build --prefix calendar",
-    "build:all": "npm run build:intro && npm run build:pe && npm run build:ci && npm run build:ht && npm run build:os && npm run build:qq && npm run build:dfci && npm run build:sw && npm run build:gof && npm run build:ct && npm run build:cal"
+    "build:all": "npm run build:intro && npm run build:pe && npm run build:ci && npm run build:ht && npm run build:os && npm run build:qq && npm run build:dfci && npm run build:sw && npm run build:gof && npm run build:ct && npm run build:anova && npm run build:cal"
   }
 }
