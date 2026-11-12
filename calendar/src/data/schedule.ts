@@ -124,6 +124,7 @@ export const COURSE_EVENTS: CourseEvent[] = [
     date: "2026-11-12",
     title: "Tests for homogeneity and independence",
     kind: "lecture",
+    attendanceFile: "2026-11-12.json",
   },
   { date: "2026-11-17", title: "One-way ANOVA", kind: "lecture" },
   { date: "2026-11-19", title: "F-tests", kind: "lecture" },
