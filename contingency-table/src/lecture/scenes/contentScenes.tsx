@@ -477,7 +477,10 @@ export function CollegeDecisionScene() {
           <MathText key="a" text={r`Degrees of freedom: $(2-1)(5-1)=4$.`} />,
           <MathText key="b" text={r`Critical value: $\chi^2_{0.01}(4)=13.28$.`} />,
           <MathText key="c" text={r`Since $q=18.93>13.28$, reject independence at $\alpha=0.01$.`} />,
-          "Engineering and medicine contribute the most to $q$, so those colleges drive the association.",
+          <MathText
+            key="d"
+            text={r`Engineering and medicine contribute the most to $q$, so those colleges drive the association.`}
+          />,
           <MathText
             key="e"
             text={r`One expected count is below 5, but that cell does not dominate $q$, so the approximation is still used with caution.`}
