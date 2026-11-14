@@ -201,7 +201,7 @@ export function TheoremScene() {
   return (
     <SceneFrame kicker="Null distribution" title="A useful theorem for quadratic forms">
       <P
-        text={r`Let $Q=Q_1+\cdots+Q_k$ be real quadratic forms in $n$ i.i.d.\ normals with common variance $\sigma^2$. If $Q/\sigma^2\sim\chi^2(r)$ and $Q_i/\sigma^2\sim\chi^2(r_i)$ for $i=1,\ldots,k-1$, and $Q_k\ge 0$, then:`}
+        text={r`Let $Q=Q_1+\cdots+Q_k$ be real quadratic forms in $n$ i.i.d. normals with common variance $\sigma^2$. If $Q/\sigma^2\sim\chi^2(r)$ and $Q_i/\sigma^2\sim\chi^2(r_i)$ for $i=1,\ldots,k-1$, and $Q_k\ge 0$, then:`}
       />
       <BulletList
         items={[
