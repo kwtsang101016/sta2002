@@ -17,6 +17,7 @@ Interactive HTML lecture apps for **STA2002 Probability and Statistics II**. Eac
 | Goodness-of-fit Test | [`goodness-of-fit/`](goodness-of-fit/) | [Open lecture](https://kwtsang101016.github.io/sta2002/goodness-of-fit/) | `npm run dev` → http://127.0.0.1:5184 |
 | Contingency Tables | [`contingency-table/`](contingency-table/) | [Open lecture](https://kwtsang101016.github.io/sta2002/contingency-table/) | `npm run dev` → http://127.0.0.1:5185 |
 | One-way ANOVA | [`one-way-anova/`](one-way-anova/) | [Open lecture](https://kwtsang101016.github.io/sta2002/one-way-anova/) | `npm run dev` → http://127.0.0.1:5186 |
+| Two-way ANOVA | [`two-way-anova/`](two-way-anova/) | [Open lecture](https://kwtsang101016.github.io/sta2002/two-way-anova/) | `npm run dev` → http://127.0.0.1:5187 |
 | Course Calendar | [`calendar/`](calendar/) | [Open calendar](https://kwtsang101016.github.io/sta2002/calendar/) | `npm run dev` → http://127.0.0.1:5179 |
 
 **Course hub:** https://kwtsang101016.github.io/sta2002/
