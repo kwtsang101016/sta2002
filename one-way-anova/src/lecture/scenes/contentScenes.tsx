@@ -1,5 +1,5 @@
 import styles from "../Lecture.module.css";
-import { BulletList, Figure, Formula, MathText, SceneFrame } from "./shared";
+import { Block, BulletList, Figure, Formula, MathText, SceneFrame } from "./shared";
 
 /** Prefer String.raw for KaTeX so escapes like \bar / \sum are not eaten by JS. */
 const r = String.raw;
@@ -200,18 +200,20 @@ export function MeanSquaresScene() {
 export function TheoremScene() {
   return (
     <SceneFrame kicker="Null distribution" title="A useful theorem for quadratic forms">
-      <P
-        text={r`Let $Q=Q_1+\cdots+Q_k$ be real quadratic forms in $n$ i.i.d. normals with common variance $\sigma^2$. If $Q/\sigma^2\sim\chi^2(r)$ and $Q_i/\sigma^2\sim\chi^2(r_i)$ for $i=1,\ldots,k-1$, and $Q_k\ge 0$, then:`}
-      />
-      <BulletList
-        items={[
-          <MathText key="a" text={r`$Q_1,\ldots,Q_k$ are mutually independent, and`} />,
-          <MathText
-            key="b"
-            text={r`$Q_k/\sigma^2\sim\chi^2\bigl(r-(r_1+\cdots+r_{k-1})\bigr)$.`}
-          />,
-        ]}
-      />
+      <Block title="Theorem">
+        <P
+          text={r`Let $Q=Q_1+\cdots+Q_k$ be real quadratic forms in $n$ i.i.d. normals with common variance $\sigma^2$. If $Q/\sigma^2\sim\chi^2(r)$ and $Q_i/\sigma^2\sim\chi^2(r_i)$ for $i=1,\ldots,k-1$, and $Q_k\ge 0$, then:`}
+        />
+        <BulletList
+          items={[
+            <MathText key="a" text={r`$Q_1,\ldots,Q_k$ are mutually independent, and`} />,
+            <MathText
+              key="b"
+              text={r`$Q_k/\sigma^2\sim\chi^2\bigl(r-(r_1+\cdots+r_{k-1})\bigr)$.`}
+            />,
+          ]}
+        />
+      </Block>
       <P
         text={r`Apply with $k=2$ under $H_0$: $SS(T)/\sigma^2\sim\chi^2(m-1)$, and $SS(T)$ is independent of $SS(E)$.`}
       />
