@@ -139,11 +139,10 @@ export function PartitionScene() {
             key="b"
             text={r`$SS(T)=\sum_i n_i(\bar X_{i\cdot}-\bar X_{\cdot\cdot})^2$: treatment / between-group sum of squares.`}
           />,
-          <MathText
-            key="c"
-            text={r`Each is a quadratic form in the observations $X_{ij}$.`}
-          />,
         ]}
+      />
+      <Note
+        text={r`Definition: a quadratic form in $X_1,\ldots,X_n$ is $Q=\sum_{i=1}^{n}\sum_{j=1}^{n}a_{ij}X_i X_j$ (equivalently $Q=\mathbf{X}^\top A\mathbf{X}$ for a symmetric matrix $A$). Both $SS(E)$ and $SS(T)$ are quadratic forms in the observations $X_{ij}$.`}
       />
     </SceneFrame>
   );
@@ -200,9 +199,12 @@ export function MeanSquaresScene() {
 export function TheoremScene() {
   return (
     <SceneFrame kicker="Null distribution" title="A useful theorem for quadratic forms">
+      <P
+        text={r`Recall: a quadratic form is $Q=\mathbf{X}^\top A\mathbf{X}=\sum_{i,j}a_{ij}X_i X_j$. Here $Q$, $Q_1,\ldots,Q_k$ are such forms in $n$ i.i.d. normals with common variance $\sigma^2$.`}
+      />
       <Block title="Theorem">
         <P
-          text={r`Let $Q=Q_1+\cdots+Q_k$ be real quadratic forms in $n$ i.i.d. normals with common variance $\sigma^2$. If $Q/\sigma^2\sim\chi^2(r)$ and $Q_i/\sigma^2\sim\chi^2(r_i)$ for $i=1,\ldots,k-1$, and $Q_k\ge 0$, then:`}
+          text={r`If $Q=Q_1+\cdots+Q_k$, with $Q/\sigma^2\sim\chi^2(r)$ and $Q_i/\sigma^2\sim\chi^2(r_i)$ for $i=1,\ldots,k-1$, and $Q_k\ge 0$, then:`}
         />
         <BulletList
           items={[
