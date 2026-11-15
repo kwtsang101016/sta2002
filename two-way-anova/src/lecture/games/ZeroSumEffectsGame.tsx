@@ -5,11 +5,12 @@ import { Formula, InlineMath, MathText, SceneFrame } from "../scenes/shared";
 
 const r = String.raw;
 
-/** Default 2×2 additive means (exact fit with zero-sum effects). */
-const DEFAULT_MU = [
-  [12, 15],
-  [8, 11],
-];
+/** Unconstrained defaults: sums of α and β are not zero. */
+const DEFAULT = {
+  mu: "10",
+  alpha: ["3", "-1"],
+  beta: ["2", "5"],
+};
 
 function parseNum(raw: string): number {
   const value = Number(raw);
@@ -25,163 +26,173 @@ function mean(values: number[]): number {
   return values.reduce((sum, value) => sum + value, 0) / values.length;
 }
 
-type Decomposition = {
-  mu: number;
-  alpha: number[];
-  beta: number[];
-  fitted: number[][];
-  residual: number[][];
-  maxAbsResidual: number;
-};
-
-function decompose(muTable: number[][]): Decomposition {
-  const b = muTable[0]?.length ?? 0;
-  const rowMeans = muTable.map((row) => mean(row));
-  const colMeans = Array.from({ length: b }, (_, j) => mean(muTable.map((row) => row[j] ?? 0)));
-  const mu = mean(rowMeans);
-  const alpha = rowMeans.map((value) => value - mu);
-  const beta = colMeans.map((value) => value - mu);
-  const fitted = muTable.map((row, i) => row.map((_, j) => mu + alpha[i] + beta[j]));
-  const residual = muTable.map((row, i) => row.map((value, j) => value - fitted[i][j]));
-  const maxAbsResidual = Math.max(0, ...residual.flat().map((value) => Math.abs(value)));
-  return { mu, alpha, beta, fitted, residual, maxAbsResidual };
+function meanTable(mu: number, alpha: number[], beta: number[]): number[][] {
+  return alpha.map((ai) => beta.map((bj) => mu + ai + bj));
 }
 
-/** Enter a 2×2 mean table; see the zero-sum additive decomposition. */
+function MuTable({
+  caption,
+  table,
+}: {
+  caption: string;
+  table: number[][];
+}) {
+  return (
+    <div className={styles.tableWrap} style={{ padding: 10 }}>
+      <table style={{ fontSize: 13 }}>
+        <thead>
+          <tr>
+            <th>
+              <MathText text={caption} />
+            </th>
+            <th>
+              <InlineMath tex={r`j=1`} />
+            </th>
+            <th>
+              <InlineMath tex={r`j=2`} />
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {table.map((row, i) => (
+            <tr key={i}>
+              <th>
+                <InlineMath tex={r`i=${i + 1}`} />
+              </th>
+              {row.map((value, j) => (
+                <td key={j}>{fmt(value)}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/**
+ * Adjust unconstrained μ, α_i, β_j; see that an equivalent zero-sum
+ * parameterization yields the same μ_ij table.
+ */
 export function ZeroSumEffectsGame() {
   const print = usePrintMode();
-  const [raw, setRaw] = useState(() => DEFAULT_MU.map((row) => row.map(String)));
+  const [muRaw, setMuRaw] = useState(DEFAULT.mu);
+  const [alphaRaw, setAlphaRaw] = useState(DEFAULT.alpha);
+  const [betaRaw, setBetaRaw] = useState(DEFAULT.beta);
 
-  const muTable = useMemo(() => raw.map((row) => row.map(parseNum)), [raw]);
-  const result = useMemo(() => decompose(muTable), [muTable]);
-  const additive = result.maxAbsResidual < 1e-9;
+  const mu = parseNum(muRaw);
+  const alpha = alphaRaw.map(parseNum);
+  const beta = betaRaw.map(parseNum);
 
-  const setCell = (i: number, j: number, value: string) => {
-    setRaw((current) =>
-      current.map((row, rowIndex) =>
-        row.map((cell, colIndex) => (rowIndex === i && colIndex === j ? value : cell)),
-      ),
-    );
-  };
+  const table = useMemo(() => meanTable(mu, alpha, beta), [mu, alpha, beta]);
+
+  const centered = useMemo(() => {
+    const alphaBar = mean(alpha);
+    const betaBar = mean(beta);
+    const muPrime = mu + alphaBar + betaBar;
+    const alphaPrime = alpha.map((value) => value - alphaBar);
+    const betaPrime = beta.map((value) => value - betaBar);
+    return {
+      muPrime,
+      alphaPrime,
+      betaPrime,
+      table: meanTable(muPrime, alphaPrime, betaPrime),
+      sumAlpha: alpha.reduce((sum, value) => sum + value, 0),
+      sumBeta: beta.reduce((sum, value) => sum + value, 0),
+      sumAlphaPrime: alphaPrime.reduce((sum, value) => sum + value, 0),
+      sumBetaPrime: betaPrime.reduce((sum, value) => sum + value, 0),
+    };
+  }, [mu, alpha, beta]);
 
   return (
     <SceneFrame kicker="Game" title={r`Why $\sum\alpha_i=\sum\beta_j=0$?`} tone="gold">
       <p>
-        Enter any <MathText text={r`$2\times 2$`} /> cell means <InlineMath tex={r`\mu_{ij}`} />. The additive
-        fit{" "}
-        <MathText text={r`$\hat\mu_{ij}=\mu+\alpha_i+\beta_j$`} /> with{" "}
-        <MathText text={r`$\sum_i\alpha_i=0$`} /> and <MathText text={r`$\sum_j\beta_j=0$`} /> is unique: take{" "}
-        <MathText text={r`$\mu$`} /> as the grand mean, <MathText text={r`$\alpha_i$`} /> as row mean minus{" "}
-        <MathText text={r`$\mu$`} />, and <MathText text={r`$\beta_j$`} /> as column mean minus{" "}
-        <MathText text={r`$\mu$`} />.
+        Pick any <InlineMath tex={r`\mu`} />, <InlineMath tex={r`\alpha_i`} />, and{" "}
+        <InlineMath tex={r`\beta_j`} /> (sums need not be zero). The cell means{" "}
+        <MathText text={r`$\mu_{ij}=\mu+\alpha_i+\beta_j$`} /> do not change if we recentre the effects:
       </p>
+      <Formula
+        tex={r`\mu'=\mu+\bar\alpha+\bar\beta,\quad
+\alpha_i'=\alpha_i-\bar\alpha,\quad
+\beta_j'=\beta_j-\bar\beta
+\quad\Rightarrow\quad
+\sum_i\alpha_i'=0,\;\sum_j\beta_j'=0.`}
+      />
 
       {!print ? (
-        <div className={styles.tableWrap} style={{ padding: 10 }}>
-          <table style={{ fontSize: 13 }}>
-            <thead>
-              <tr>
-                <th />
-                <th>
-                  <InlineMath tex={r`j=1`} />
-                </th>
-                <th>
-                  <InlineMath tex={r`j=2`} />
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {raw.map((row, i) => (
-                <tr key={i}>
-                  <th>
-                    <InlineMath tex={r`i=${i + 1}`} />
-                  </th>
-                  {row.map((cell, j) => (
-                    <td key={j}>
-                      <label className={styles.small} style={{ margin: 0, display: "block" }}>
-                        <InlineMath tex={r`\mu_{${i + 1}${j + 1}}`} />
-                        <input
-                          className={styles.numberInput}
-                          type="number"
-                          step="any"
-                          value={cell}
-                          onChange={(event) => setCell(i, j, event.target.value)}
-                          aria-label={`mu_${i + 1}${j + 1}`}
-                        />
-                      </label>
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className={styles.tools}>
+          <label className={styles.small}>
+            <InlineMath tex={r`\mu`} />
+            <input
+              className={styles.numberInput}
+              type="number"
+              step="any"
+              value={muRaw}
+              onChange={(event) => setMuRaw(event.target.value)}
+              aria-label="mu"
+            />
+          </label>
+          {alphaRaw.map((value, index) => (
+            <label key={`a${index}`} className={styles.small}>
+              <InlineMath tex={r`\alpha_{${index + 1}}`} />
+              <input
+                className={styles.numberInput}
+                type="number"
+                step="any"
+                value={value}
+                onChange={(event) => {
+                  const next = event.target.value;
+                  setAlphaRaw((current) => current.map((entry, i) => (i === index ? next : entry)));
+                }}
+                aria-label={`alpha_${index + 1}`}
+              />
+            </label>
+          ))}
+          {betaRaw.map((value, index) => (
+            <label key={`b${index}`} className={styles.small}>
+              <InlineMath tex={r`\beta_{${index + 1}}`} />
+              <input
+                className={styles.numberInput}
+                type="number"
+                step="any"
+                value={value}
+                onChange={(event) => {
+                  const next = event.target.value;
+                  setBetaRaw((current) => current.map((entry, i) => (i === index ? next : entry)));
+                }}
+                aria-label={`beta_${index + 1}`}
+              />
+            </label>
+          ))}
         </div>
       ) : (
         <p className={styles.muted}>
-          Print handout uses the default additive table{" "}
-          <MathText text={r`$(\mu_{ij})=((12,15),(8,11))$`} />.
+          Print handout uses <MathText text={r`$\mu=10$, $\alpha=(3,-1)$, $\beta=(2,5)$`} />.
         </p>
       )}
 
       <Formula
-        tex={r`\mu=${fmt(result.mu)},\quad
-\alpha=(${fmt(result.alpha[0])},\,${fmt(result.alpha[1])}),\quad
-\beta=(${fmt(result.beta[0])},\,${fmt(result.beta[1])}).`}
+        tex={r`\sum_i\alpha_i=${fmt(centered.sumAlpha)},\qquad
+\sum_j\beta_j=${fmt(centered.sumBeta)}
+\quad\text{(your choice; need not be zero)}.`}
+      />
+      <MuTable caption={r`$\mu_{ij}=\mu+\alpha_i+\beta_j$`} table={table} />
+
+      <Formula
+        tex={r`\mu'=${fmt(centered.muPrime)},\quad
+\alpha'=(${fmt(centered.alphaPrime[0])},\,${fmt(centered.alphaPrime[1])}),\quad
+\beta'=(${fmt(centered.betaPrime[0])},\,${fmt(centered.betaPrime[1])}).`}
       />
       <Formula
-        tex={r`\sum_i\alpha_i=${fmt(result.alpha[0] + result.alpha[1])},\qquad
-\sum_j\beta_j=${fmt(result.beta[0] + result.beta[1])}.`}
+        tex={r`\sum_i\alpha_i'=${fmt(centered.sumAlphaPrime)},\qquad
+\sum_j\beta_j'=${fmt(centered.sumBetaPrime)}.`}
       />
-
-      <div className={styles.tableWrap} style={{ padding: 10 }}>
-        <table style={{ fontSize: 13 }}>
-          <thead>
-            <tr>
-              <th>
-                <InlineMath tex={r`\hat\mu_{ij}=\mu+\alpha_i+\beta_j`} />
-              </th>
-              <th>
-                <InlineMath tex={r`j=1`} />
-              </th>
-              <th>
-                <InlineMath tex={r`j=2`} />
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {result.fitted.map((row, i) => (
-              <tr key={i}>
-                <th>
-                  <InlineMath tex={r`i=${i + 1}`} />
-                </th>
-                {row.map((value, j) => (
-                  <td key={j}>{fmt(value)}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <MuTable caption={r`$\mu_{ij}=\mu'+\alpha_i'+\beta_j'$ (same table)`} table={centered.table} />
 
       <p>
-        {additive ? (
-          <>
-            Exact match: this table is additive, so{" "}
-            <MathText text={r`$\mu_{ij}=\mu+\alpha_i+\beta_j$`} /> with the zero-sum constraints.
-          </>
-        ) : (
-          <>
-            Largest residual{" "}
-            <MathText text={r`$|\mu_{ij}-\hat\mu_{ij}|$`} /> is about {fmt(result.maxAbsResidual)}. The table is
-            not purely additive (interaction); the zero-sum <MathText text={r`$\mu,\alpha_i,\beta_j$`} /> still give
-            the unique best additive fit of this form.
-          </>
-        )}
-      </p>
-      <p className={styles.muted}>
-        Without the zero-sum constraints, many <MathText text={r`$(\mu,\alpha,\beta)$`} /> triples give the same{" "}
-        <MathText text={r`$\mu_{ij}$`} /> (shift constants between <MathText text={r`$\mu$`} /> and the effects).
-        Setting the sums to zero removes that ambiguity.
+        Same <MathText text={r`$\mu_{ij}$`} /> table both ways. So requiring{" "}
+        <MathText text={r`$\sum_i\alpha_i=0$`} /> and <MathText text={r`$\sum_j\beta_j=0$`} /> is without loss of
+        generality — it just picks one convenient parameterization.
       </p>
     </SceneFrame>
   );
