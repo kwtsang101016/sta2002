@@ -31,10 +31,10 @@ export function OutlineScene() {
       <OrderedList
         items={[
           "Why study two factors at once",
-          "One observation per cell: additive model and F tests for rows and columns",
+          "Additive model μ+α_i+β_j and why the effects can sum to zero",
+          "One observation per cell: F tests for rows and columns",
           "ANOVA table and the cars–gasoline example",
-          "Interaction: c > 1 observations per cell",
-          "Digits–array example and a concept check",
+          "Interaction: c > 1 observations per cell; digits–array example and a concept check",
         ]}
       />
       <p className={styles.muted} style={{ marginTop: 16 }}>

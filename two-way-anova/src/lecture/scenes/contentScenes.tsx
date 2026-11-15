@@ -92,6 +92,10 @@ export function AdditiveModelScene() {
           <MathText key="a" text={r`$\alpha_i$: $i$th row (factor A) effect, with $\sum_{i=1}^{a}\alpha_i=0$.`} />,
           <MathText key="b" text={r`$\beta_j$: $j$th column (factor B) effect, with $\sum_{j=1}^{b}\beta_j=0$.`} />,
           "No interaction yet: the row shift is the same in every column.",
+          <MathText
+            key="d"
+            text={r`The zero-sum constraints remove an identifiability ambiguity: without them, many $(\mu,\alpha,\beta)$ give the same $\mu_{ij}$. Try the next slide’s explorer.`}
+          />,
         ]}
       />
     </SceneFrame>

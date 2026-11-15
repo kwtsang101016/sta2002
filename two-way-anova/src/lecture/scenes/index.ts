@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import { TwoWayAnovaConceptQuiz } from "../games";
+import { TwoWayAnovaConceptQuiz, ZeroSumEffectsGame } from "../games";
 import {
   AdditiveModelScene,
   AnovaTableScene,
@@ -37,6 +37,7 @@ export const SCENES: SceneDef[] = [
   { id: "intro", chapter: "Welcome", label: "Two factors", Scene: IntroScene },
   { id: "one-obs", chapter: "Additive", label: "One obs / cell", Scene: OneObsSetupScene },
   { id: "additive", chapter: "Additive", label: "Additive means", Scene: AdditiveModelScene },
+  { id: "zero-sum", chapter: "Additive", label: "Why sum to 0", Scene: ZeroSumEffectsGame },
   { id: "hypotheses", chapter: "Additive", label: "H_A and H_B", Scene: HypothesesScene },
   { id: "means", chapter: "Additive", label: "Row / column means", Scene: MeansScene },
   { id: "partition", chapter: "SS", label: "SS partition", Scene: PartitionScene },

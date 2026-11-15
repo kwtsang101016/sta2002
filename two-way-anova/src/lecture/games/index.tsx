@@ -1,6 +1,8 @@
 import { ConceptQuiz } from "./ConceptQuiz";
 import { TWO_WAY_ANOVA_QUIZ, TWO_WAY_ANOVA_QUIZ_INTRO } from "./quizBanks";
 
+export { ZeroSumEffectsGame } from "./ZeroSumEffectsGame";
+
 export function TwoWayAnovaConceptQuiz() {
   return (
     <ConceptQuiz
