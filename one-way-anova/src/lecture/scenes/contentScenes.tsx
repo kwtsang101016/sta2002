@@ -252,19 +252,22 @@ export function PulloutDataScene() {
   return (
     <SceneFrame kicker="Example" title="Automobile window pullout tests">
       <P
-        text={r`Five stud positions; seven pullout-force trials each. Assume $X_{ij}\sim\mathrm{N}(\mu_i,\sigma^2)$. At $\alpha=0.01$, are the five position means equal?`}
+        text={r`Five stud positions; seven pullout-force trials each ($n_i=7$, $n=35$). Assume $X_{ij}\sim\mathrm{N}(\mu_i,\sigma^2)$. At $\alpha=0.01$, are the five position means equal?`}
       />
       <Table
         compact
-        headers={["", "Data (7 trials)", r`$\sum x_{ij}$`, r`$\sum x_{ij}^2$`]}
+        headers={["", "Data (7 trials)", r`$T_i=\sum_j x_{ij}$`, r`$\sum_j x_{ij}^2$`]}
         rows={[
           [r`$x_{1j}$`, "92 90 87 105 86 83 102", "645", "59847"],
           [r`$x_{2j}$`, "100 108 98 110 114 97 94", "721", "74609"],
           [r`$x_{3j}$`, "143 149 138 136 139 120 145", "970", "134936"],
           [r`$x_{4j}$`, "147 144 160 149 152 131 134", "1017", "148367"],
           [r`$x_{5j}$`, "142 155 119 134 133 146 152", "981", "138415"],
-          ["Totals", "", "4334", "556174"],
+          ["Totals", "", r`$G=4334$`, "556174"],
         ]}
+      />
+      <Note
+        text={r`Key identity: $\sum_j(x_{ij}-\bar x_{i\cdot})^2=\sum_j x_{ij}^2-T_i^2/n_i$. The group sums $T_i$ and sums of squares $\sum_j x_{ij}^2$ (or the grand totals) suffice for all ANOVA SS — raw lists are optional.`}
       />
     </SceneFrame>
   );
@@ -273,7 +276,15 @@ export function PulloutDataScene() {
 export function PulloutAnovaScene() {
   return (
     <SceneFrame kicker="Example" title="ANOVA table and decision">
-      <Note text={r`$H_0:\mu_1=\mu_2=\mu_3=\mu_4=\mu_5$, with $m=5$, $n=35$.`} />
+      <Note text={r`$H_0:\mu_1=\cdots=\mu_5$, with $m=5$, $n=35$, $G=4334$, $\sum_{i,j}x_{ij}^2=556174$.`} />
+      <Formula
+        tex={r`SS(TO)=\sum_{i,j}x_{ij}^2-\frac{G^2}{n},\quad
+SS(T)=\sum_{i=1}^{m}\frac{T_i^2}{n_i}-\frac{G^2}{n},\quad
+SS(E)=SS(TO)-SS(T).`}
+      />
+      <P
+        text={r`With these totals: $SS(TO)=19500.97$, $SS(T)=16672.11$, $SS(E)=2828.86$.`}
+      />
       <Table
         compact
         headers={["Source", "SS", "df", "MS", r`$F$`]}
