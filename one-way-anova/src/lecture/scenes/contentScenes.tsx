@@ -267,7 +267,9 @@ export function PulloutDataScene() {
         ]}
       />
       <Note
-        text={r`Key identity: $\sum_j(x_{ij}-\bar x_{i\cdot})^2=\sum_j x_{ij}^2-T_i^2/n_i$. The group sums $T_i$ and sums of squares $\sum_j x_{ij}^2$ (or the grand totals) suffice for all ANOVA SS — raw lists are optional.`}
+        text={r`Identities (no raw list needed once $T_i$ and $\sum_j x_{ij}^2$ are known):
+$\sum_j(x_{ij}-\bar x_{i\cdot})^2=\sum_j x_{ij}^2-T_i^2/n_i$ (within group $i$), and
+$\sum_{i,j}(x_{ij}-\bar x_{\cdot\cdot})^2=\sum_{i,j}x_{ij}^2-G^2/n$ (all data).`}
       />
     </SceneFrame>
   );
@@ -278,12 +280,12 @@ export function PulloutAnovaScene() {
     <SceneFrame kicker="Example" title="ANOVA table and decision">
       <Note text={r`$H_0:\mu_1=\cdots=\mu_5$, with $m=5$, $n=35$, $G=4334$, $\sum_{i,j}x_{ij}^2=556174$.`} />
       <Formula
-        tex={r`SS(TO)=\sum_{i,j}x_{ij}^2-\frac{G^2}{n},\quad
-SS(T)=\sum_{i=1}^{m}\frac{T_i^2}{n_i}-\frac{G^2}{n},\quad
-SS(E)=SS(TO)-SS(T).`}
+        tex={r`SS(TO)=\sum_{i,j}x_{ij}^2-\frac{G^2}{n},\qquad
+SS(E)=\sum_{i=1}^{m}\Bigl(\sum_j x_{ij}^2-\frac{T_i^2}{n_i}\Bigr),\qquad
+SS(T)=SS(TO)-SS(E).`}
       />
       <P
-        text={r`With these totals: $SS(TO)=19500.97$, $SS(T)=16672.11$, $SS(E)=2828.86$.`}
+        text={r`Here $SS(TO)=19500.97$, $SS(E)=2828.86$, so $SS(T)=16672.11$. (Equivalently $SS(T)=\sum_i T_i^2/n_i-G^2/n$.)`}
       />
       <Table
         compact
