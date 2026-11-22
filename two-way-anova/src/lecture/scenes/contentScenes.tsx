@@ -272,6 +272,13 @@ export function CarsDataScene() {
           [r`$\bar X_{\cdot j}$`, "25", "26", "29", "28", "27"],
         ]}
       />
+      <Note
+        text={r`Given $\sum_{i,j}X_{ij}^2=8806$ and the means above:
+$SS(TO)=\sum_{i,j}X_{ij}^2-ab\,\bar X_{\cdot\cdot}^2$,
+$SS(A)=b\sum_i(\bar X_{i\cdot}-\bar X_{\cdot\cdot})^2$,
+$SS(B)=a\sum_j(\bar X_{\cdot j}-\bar X_{\cdot\cdot})^2$,
+and $SS(E)=SS(TO)-SS(A)-SS(B)$.`}
+      />
     </SceneFrame>
   );
 }
