@@ -367,6 +367,9 @@ export function InteractionSSScene() {
   return (
     <SceneFrame kicker="Interaction" title={r`$SS(TO)=SS(A)+SS(B)+SS(AB)+SS(E)$`}>
       <Formula
+        tex={r`SS(TO)=\sum_{i=1}^{a}\sum_{j=1}^{b}\sum_{k=1}^{c}(X_{ijk}-\bar X_{\cdot\cdot\cdot})^2.`}
+      />
+      <Formula
         tex={r`SS(A)=bc\sum_i(\bar X_{i\cdot\cdot}-\bar X_{\cdot\cdot\cdot})^2,\quad
 SS(B)=ac\sum_j(\bar X_{\cdot j\cdot}-\bar X_{\cdot\cdot\cdot})^2.`}
       />
@@ -448,8 +451,14 @@ export function DigitsDataScene() {
         rows={[
           ["Down", "23.806", "10.694", "6.278", "13.593"],
           ["Across", "26.056", "6.750", "3.944", "12.250"],
-          ["Column mean", "24.931", "8.722", "5.111", ""],
+          ["Column mean", "24.931", "8.722", "5.111", "12.9215"],
         ]}
+      />
+      <Note
+        text={r`Grand mean $\bar X_{\cdot\cdot\cdot}=12.9215$ and $\sum_{i,j,k}X_{ijk}^2=28010.32$. Then
+$SS(TO)=\sum X_{ijk}^2-abc\,\bar X_{\cdot\cdot\cdot}^2$;
+$SS(A)$, $SS(B)$, $SS(AB)$ from the means as on the previous slides;
+$SS(E)=SS(TO)-SS(A)-SS(B)-SS(AB)$.`}
       />
     </SceneFrame>
   );
