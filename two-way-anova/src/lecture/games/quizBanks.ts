@@ -44,12 +44,12 @@ export const TWO_WAY_ANOVA_QUIZ: QuizQuestion[] = [
         why: r`Without replicates, interaction is absorbed into error; $SS(AB)$ appears when $c>1$.`,
       },
       {
-        text: r`$SS(E)=SS(A)\cdot SS(B)$`,
-        why: r`Sums of squares add; they are not multiplied.`,
+        text: r`$SS(TO)=SS(A)+SS(B)+SS(AB)+SS(E)$`,
+        why: r`That identity needs $c>1$ replicates per cell so $SS(AB)$ can be separated from error.`,
       },
     ],
     answer: 0,
-    explain: r`Total variation splits into row, column, and residual pieces.`,
+    explain: r`With one observation per cell, total variation splits into row, column, and residual pieces: $SS(TO)=SS(A)+SS(B)+SS(E)$.`,
   },
   {
     id: "fa-dist",
