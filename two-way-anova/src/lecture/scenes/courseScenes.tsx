@@ -1,6 +1,9 @@
 import styles from "../Lecture.module.css";
 import { usePrintMode } from "../printContext";
-import { BulletList, OrderedList, SceneFrame } from "./shared";
+import { BulletList, MathText, OrderedList, SceneFrame } from "./shared";
+
+/** Prefer String.raw for KaTeX so escapes like \mu / \alpha are not eaten by JS. */
+const r = String.raw;
 
 const COVER_HINT_LIVE = "Use ← → or the jump menu · DOWNLOAD PDF for a handout";
 const COVER_HINT_PRINT = "STA2002 · Two-way ANOVA handout";
@@ -31,10 +34,16 @@ export function OutlineScene() {
       <OrderedList
         items={[
           "Why study two factors at once",
-          "Additive model μ+α_i+β_j and why the effects can sum to zero",
+          <MathText
+            key="additive"
+            text={r`Additive model $\mu+\alpha_i+\beta_j$ and why the effects can sum to zero`}
+          />,
           "One observation per cell: F tests for rows and columns",
           "ANOVA table and the cars–gasoline example",
-          "Interaction: c > 1 observations per cell; digits–array example and a concept check",
+          <MathText
+            key="interaction"
+            text={r`Interaction: $c>1$ observations per cell; digits–array example and a concept check`}
+          />,
         ]}
       />
       <p className={styles.muted} style={{ marginTop: 16 }}>
