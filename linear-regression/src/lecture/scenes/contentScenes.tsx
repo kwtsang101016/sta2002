@@ -269,9 +269,13 @@ export function MleScene() {
 export function LikelihoodScene() {
   return (
     <SceneFrame kicker="MLEs" title="Likelihood and log-likelihood">
+      <Note
+        text={r`Define the residual sum of squares
+$H(\alpha,\beta):=\sum_{i=1}^{n}\bigl(y_i-\alpha-\beta(x_i-\bar x)\bigr)^2$.`}
+      />
       <Formula
         tex={r`L(\alpha,\beta,\sigma^2)=\bigl(2\pi\sigma^2\bigr)^{-n/2}
-\exp\Bigl\{-\dfrac1{2\sigma^2}\sum_i\bigl[y_i-\alpha-\beta(x_i-\bar x)\bigr]^2\Bigr\}`}
+\exp\Bigl\{-\dfrac{H(\alpha,\beta)}{2\sigma^2}\Bigr\}`}
       />
       <Formula
         tex={r`\ell(\alpha,\beta,\sigma^2)=-\dfrac n2\log(2\pi\sigma^2)-\dfrac{H(\alpha,\beta)}{2\sigma^2}`}
