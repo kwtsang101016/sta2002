@@ -347,11 +347,17 @@ i=1,\ldots,a,\; j=1,\ldots,b,\; k=1,\ldots,c.`}
 export function InteractionMeansScene() {
   return (
     <SceneFrame kicker="Interaction" title="Cell, row, column, and grand means">
-      <Formula tex={r`\bar X_{ij\cdot}=\frac1c\sum_{k=1}^{c}X_{ijk}`} />
       <Formula
-        tex={r`\bar X_{i\cdot\cdot}=\frac1{bc}\sum_{j,k}X_{ijk},\qquad
-\bar X_{\cdot j\cdot}=\frac1{ac}\sum_{i,k}X_{ijk},\qquad
-\bar X_{\cdot\cdot\cdot}=\frac1{abc}\sum_{i,j,k}X_{ijk}.`}
+        tex={r`\bar X_{ij\cdot}=\frac1c\sum_{k=1}^{c}X_{ijk}\sim\mathrm{N}(\mu+\alpha_i+\beta_j+\gamma_{ij},\sigma^2/c)`}
+      />
+      <Formula
+        tex={r`\bar X_{i\cdot\cdot}=\frac1{bc}\sum_{j,k}X_{ijk}\sim\mathrm{N}(\mu+\alpha_i,\sigma^2/(bc))`}
+      />
+      <Formula
+        tex={r`\bar X_{\cdot j\cdot}=\frac1{ac}\sum_{i,k}X_{ijk}\sim\mathrm{N}(\mu+\beta_j,\sigma^2/(ac))`}
+      />
+      <Formula
+        tex={r`\bar X_{\cdot\cdot\cdot}=\frac1{abc}\sum_{i,j,k}X_{ijk}\sim\mathrm{N}(\mu,\sigma^2/(abc))`}
       />
     </SceneFrame>
   );
