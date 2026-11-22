@@ -89,7 +89,7 @@ export function RolesScene() {
           <MathText key="b" text={r`$Y$: response / dependent variable.`} />,
           <MathText
             key="c"
-            text={r`Example: $Y=$ exam score, $X=$ hours spent studying.`}
+            text={r`Example: $Y$ = exam score, $X$ = hours spent studying.`}
           />,
         ]}
       />
@@ -554,7 +554,7 @@ export function CiBetaScene() {
 
 export function CiExampleAlphaScene() {
   return (
-    <SceneFrame kicker="Example" title={r`95\% CI for $\alpha$`}>
+    <SceneFrame kicker="Example" title={r`$95\%$ CI for $\alpha$`}>
       <Note text={r`$n=5$, $\hat\alpha=2.06$, $\hat\beta=0.425$, $\hat\sigma^2=0.558$.`} />
       <Formula tex={r`S_R^2=\dfrac{n}{n-2}\hat\sigma^2=0.93,\qquad t_{0.025}(3)=3.182`} />
       <Formula tex={r`2.06\pm 3.182\cdot\sqrt{0.93/5}=2.06\pm 1.37`} />
@@ -564,7 +564,7 @@ export function CiExampleAlphaScene() {
 
 export function CiExampleBetaScene() {
   return (
-    <SceneFrame kicker="Example" title={r`95\% CI for $\beta$`}>
+    <SceneFrame kicker="Example" title={r`$95\%$ CI for $\beta$`}>
       <Formula
         tex={r`\sum_i(x_i-\bar x)^2=\sum_i x_i^2-n\bar x^2=55-5\cdot 3^2=10`}
       />
@@ -602,7 +602,7 @@ export function MeanResponseCiScene() {
 
 export function MeanResponseExampleScene() {
   return (
-    <SceneFrame kicker="Example" title={r`95\% CI for $\mu(2.5)$`}>
+    <SceneFrame kicker="Example" title={r`$95\%$ CI for $\mu(2.5)$`}>
       <Formula tex={r`\hat\alpha+\hat\beta(2.5-3)=1.8475,\qquad\sum(x_i-\bar x)^2=10`} />
       <Formula
         tex={r`1.8475\pm 3.182\cdot\sqrt{0.93\bigl(\tfrac15+\tfrac{(2.5-3)^2}{10}\bigr)}=1.8475\pm 1.456`}
@@ -679,8 +679,14 @@ export function PredictionExampleScene() {
       />
       <BulletList
         items={[
-          "CI for μ(x): narrower — only parameter uncertainty.",
-          "PI for Y: wider — parameter uncertainty plus new noise ε.",
+          <MathText
+            key="a"
+            text={r`CI for $\mu(x)$: narrower — only parameter uncertainty.`}
+          />,
+          <MathText
+            key="b"
+            text={r`PI for $Y$: wider — parameter uncertainty plus new noise $\epsilon$.`}
+          />,
         ]}
       />
     </SceneFrame>
