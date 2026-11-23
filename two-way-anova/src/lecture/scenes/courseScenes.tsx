@@ -42,7 +42,7 @@ export function OutlineScene() {
           "ANOVA table and the cars–gasoline example",
           <MathText
             key="interaction"
-            text={r`Interaction: $c>1$ observations per cell; digits–array example and a concept check`}
+            text={r`Interaction: $c>1$ observations per cell; digits–array example, a concept check, and an ANOVA explorer game`}
           />,
         ]}
       />

@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import { TwoWayAnovaConceptQuiz, ZeroSumEffectsGame } from "../games";
+import { TwoWayAnovaConceptQuiz, TwoWayAnovaExplorerGame, ZeroSumEffectsGame } from "../games";
 import {
   AdditiveModelScene,
   AnovaTableScene,
@@ -56,5 +56,6 @@ export const SCENES: SceneDef[] = [
   { id: "digits-data", chapter: "Example", label: "Digits data", Scene: DigitsDataScene },
   { id: "digits-sol", chapter: "Example", label: "Digits decision", Scene: DigitsSolutionScene },
   { id: "quiz", chapter: "Game", label: "Concept check", Scene: TwoWayAnovaConceptQuiz },
+  { id: "anova-explorer", chapter: "Game", label: "ANOVA explorer", Scene: TwoWayAnovaExplorerGame },
   { id: "takeaways", chapter: "Summary", label: "Takeaways", Scene: TakeawaysScene },
 ];
