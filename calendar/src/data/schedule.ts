@@ -132,7 +132,12 @@ export const COURSE_EVENTS: CourseEvent[] = [
     kind: "lecture",
     attendanceFile: "2026-11-17.json",
   },
-  { date: "2026-11-19", title: "F-tests", kind: "lecture" },
+  {
+    date: "2026-11-19",
+    title: "F-tests",
+    kind: "lecture",
+    attendanceFile: "2026-11-19.json",
+  },
   { date: "2026-11-24", title: "Two-way ANOVA", kind: "lecture" },
   { date: "2026-11-26", title: "Introduction to regression", kind: "lecture" },
   { date: "2026-12-01", title: "More regression", kind: "lecture" },
