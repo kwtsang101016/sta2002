@@ -139,6 +139,12 @@ export const COURSE_EVENTS: CourseEvent[] = [
     attendanceFile: "2026-11-19.json",
   },
   { date: "2026-11-24", title: "Two-way ANOVA", kind: "lecture" },
+  {
+    date: "2026-11-25",
+    title: "HW5 due 23:59",
+    kind: "assignment",
+    special: true,
+  },
   { date: "2026-11-26", title: "Introduction to regression", kind: "lecture" },
   { date: "2026-12-01", title: "More regression", kind: "lecture" },
   { date: "2026-12-03", title: "Tests concerning regression", kind: "lecture" },
