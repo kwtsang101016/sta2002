@@ -145,7 +145,12 @@ export const COURSE_EVENTS: CourseEvent[] = [
     kind: "assignment",
     special: true,
   },
-  { date: "2026-11-26", title: "Introduction to regression", kind: "lecture" },
+  {
+    date: "2026-11-26",
+    title: "Introduction to regression",
+    kind: "lecture",
+    attendanceFile: "2026-11-26.json",
+  },
   { date: "2026-12-01", title: "More regression", kind: "lecture" },
   { date: "2026-12-03", title: "Tests concerning regression", kind: "lecture" },
   { date: "2026-12-08", title: "Likelihood ratio tests", kind: "lecture" },
